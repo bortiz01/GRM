@@ -1,0 +1,40 @@
+{
+  "ProjectName": "GRM",
+  "ProjectGuid": "3129f68a-8d29-48cb-84e6-5382f96cf0e4",
+  "projectVersion": 1,
+  "AppIdentifier": "com.telerik.GRM",
+  "DisplayName": "GRM",
+  "Author": "",
+  "Description": "",
+  "BundleVersion": "1.0",
+  "AndroidVersionCode": "1",
+  "iOSDeviceFamily": [
+    "1",
+    "2"
+  ],
+  "iOSBackgroundMode": [],
+  "ProjectTypeGuids": "{070BCB52-5A75-4F8C-A973-144AF0EAFCC9}",
+  "FrameworkVersion": "3.5.0",
+  "AndroidPermissions": [],
+  "DeviceOrientations": [
+    "Portrait",
+    "Landscape"
+  ],
+  "AndroidHardwareAcceleration": "false",
+  "iOSStatusBarStyle": "Default",
+  "Framework": "Cordova",
+  "WP8TileTitle": "",
+  "WP8Publisher": "",
+  "WP8Capabilities": [],
+  "WP8Requirements": [],
+  "WP8PublisherID": "{01231e52-55b8-4e7e-919c-49f5ba9fd9c0}",
+  "WP8ProductID": "{288c3117-2dcf-4c1c-96ec-cda0433a3228}",
+  "WPSdk": "8.0",
+  "WP8PackageIdentityName": "1234Telerik.GRM",
+  "WP8WindowsPublisherName": "CN=Telerik",
+  "WP8SupportedResolutions": [
+    "ID_RESOLUTION_WVGA",
+    "ID_RESOLUTION_WXGA",
+    "ID_RESOLUTION_HD720P"
+  ]
+}
