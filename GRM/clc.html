@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-clc" 
+             data-title="Filtros" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initClc"
+             data-show="showClc"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Filtros</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            <div class="error_list_container">
+                <div id="error-clc" class="error_list">
+                    <br/>
+                    Error, no hay información que mostrar
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+            <ul id="custom-listview-clc"></ul>    
+            
+            <script type="text/x-kendo-template" id="customListViewTemplate-clc">
+    			<div class="container_list">
+                <div class="report_title">
+            		<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left;  color: rgb(199,27,27)">
+            					${nombre}
+            				</td>
+                            <td style="width: 70%; text-align:right;">
+                    			<a class="button" data-role="button" onclick="detallePromo('${nombre}')" style="background-color: black; color: white; font-size:.7em;">Ver</a>        
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+                <div class="report_descp">
+            		Para ver las promociones toque el boton de ver.	
+                </div>
+                 <br />
+                </div>
+			</script>
+            
+            <script>
+               
+               function initClc(e) 
+               {
+                   var result = [];
+                   
+                   $("#custom-listview-clc").kendoMobileListView({
+                   dataSource: kendo.data.DataSource.create({data: result }),
+                   template: $("#customListViewTemplate-clc").html(),
+                   });
+               }
+               
+               function showClc(e) 
+               {
+                   try
+                    {
+                        document.getElementById("error-clc").style.display = "none";
+                        callWebServiceClc()
+                    }
+                    catch(err)
+                    {
+                         alert(error.toString());   
+                    }
+               }
+               function callWebServiceClc() 
+               {
+                    try
+                    {
+                        var repType = "GET";
+                        var repUrl = "http://localhost:1564/Home/Cartillas";
+                        var repData = 'tipo1=' + String(cartillaTipo1) + '&tipo2=' + String(cartillaTipo2) ; 
+                        var repContentType = "application/json; charset=utf-8";
+                        var repDataType = "json";
+                        var repProcessData = true; 
+                
+                        $.ajax({
+                        type          : repType, //GET or POST or PUT or DELETE verb
+                        url           : repUrl, // Location of the service
+                        data          : repData, //Data sent to server
+                        contentType   : repContentType, // content type sent to server
+                        dataType      : repDataType, //Expected data format from server
+                        processdata   : repProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceReportClc(msg);                    
+                        },
+                        error: ServiceNotReportClc// When Service call fails
+                        });
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+			   }
+                
+               function ServiceReportClc(result) 
+               {
+                    try
+                    {
+                        if (result.length != 0 ) 
+                        {
+                        	document.getElementById("error-clc").style.display = "none";
+                            document.getElementById("custom-listview-clc").style.display = "block";
+                            $("#custom-listview-clc").data("kendoMobileListView").setDataSource(kendo.data.DataSource.create({data: result }));
+                        
+                        }
+                        else
+                        {
+                            document.getElementById("error-clc").style.display = "block";
+                            document.getElementById("custom-listview-clc").style.display = "none";
+                        }
+                        
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+               }
+
+               function ServiceNotReportClc(result) 
+               {
+                    alert("Error en conexión.");
+               }
+                
+               function NavigateBackCliente(e) 
+               {
+                   app.navigate("#:back");
+                   //app.navigate("inicio.html");    
+               }
+               
+               function detallePromo( name ) 
+               {
+                   cartillaNombre = String(name);
+                   if (cartillaTipo1 == 1) 
+                   {	
+                       app.navigate("boni.html","overlay:left");
+                   }
+                   else if ( cartillaTipo1 == 2 )
+                   {
+                       app.navigate("desc.html","overlay:left");   
+                   }
+                   
+               }
+            </script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-reportes" 
+             data-title="Reportes" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initReportes"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Reportes</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
+            <ul id="custom-listview-report"></ul>    
+            
+            <script type="text/x-kendo-template" id="customListViewTemplate-report">
+    			<div class="container_list">
+                <div class="report_title">
+            		<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left;  color: rgb(199,27,27)">
+            					${name}
+            				</td>
+                            <td style="width: 70%; text-align:right;">
+                    			<a class="button" data-role="button" onclick="reportClick(${id},${col});" style="background-color: black; color: white; font-size:.7em;">Ver</a>        
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+    			<div class="report_descp">
+            		${des}	
+                </div>
+                 <br />
+                </div>
+			</script>
+            
+            <script>
+               function restartReportes()
+               {
+                   callWebServiceReprotes(); 
+               }
+               function initReportes(e) 
+               {
+                   callWebServiceReprotes(); 
+               }
+               function reportClick(index,col)
+               {
+                   param_index = index;
+                   param_col = col;
+                   
+                   if( col == 1 )
+                   {
+                       app.navigate("Reporte001.html","slide:left");
+                       callWebServiceDeitel001(index,col);
+                   }
+                   else if( col == 2 )
+                   {
+                       app.navigate("Reporte002.html","slide:left");
+                       callWebServiceDeitel002(index,col);
+                   }
+                   else if( col == 3 )
+                   {
+                       app.navigate("Reporte003.html","slide:left"); 
+                       callWebServiceDeitel003(index,col);
+                          
+                   }else if( col == 4 )
+                   {
+                       app.navigate("Reporte004.html","slide:left");    
+                   }
+                   else if( col == 5 )
+                   {
+                       app.navigate("Reporte005.html","slide:left");    
+                       app.navigate("Reporte005.html","slide:left");    
+                   }
+                   //callWebServiceDeitel(index,col);
+               }
+                
+               function callWebServiceReprotes() 
+               {
+                    try
+                    {
+                        var repType = "GET";
+                        var repUrl = "http://portal.diapa.net:120/Home/ListaReportes";
+                        var repData = 'id=' + String(id) ; 
+                        var repContentType = "application/json; charset=utf-8";
+                        var repDataType = "json";
+                        var repProcessData = true; 
+                
+                        $.ajax({
+                        type          : repType, //GET or POST or PUT or DELETE verb
+                        url           : repUrl, // Location of the service
+                        data          : repData, //Data sent to server
+                        contentType   : repContentType, // content type sent to server
+                        dataType      : repDataType, //Expected data format from server
+                        processdata   : repProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceReport(msg);                    
+                        },
+                        error: ServiceNotReport// When Service call fails
+                        });
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+			   }
+                
+               function ServiceReport(result) 
+               {
+                    try
+                    {
+                        $("#custom-listview-report").kendoMobileListView({
+                        dataSource: kendo.data.DataSource.create({data: result }),
+                        template: $("#customListViewTemplate-report").html(),
+                        });
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+               }
+
+               function ServiceNotReport(result) 
+               {
+                    alert("Error en conexión.");
+               }
+                
+               function NavigateBackR(e) 
+               {
+                   app.navigate("#:back");
+                   //app.navigate("inicio.html");    
+               }
+            </script>
+        </div>
+    </body>
+</html>

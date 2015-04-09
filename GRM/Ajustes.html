@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-ajustes" 
+             data-title="Ajustes" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initAjustes"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Ajustes</span>
+                    <a onClick="NavigateBackToHome()" data-align="right" data-role="button" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
+            <script>
+               
+               function initAjustes(e) 
+               {
+                   callWebServiceReprotes(); 
+               }
+                
+               function NavigateBackA(e) 
+               {
+                   app.navigate("inicio.html");   
+               }
+            </script>
+
+        </div>
+    </body>
+</html>

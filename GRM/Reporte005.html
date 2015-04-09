@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-reportes05" 
+             data-title="Reportes" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initReportes"
+            >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Reportes</span>
+                    <a onClick="NavigateBackToHome();" data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
+            <ul id="listview-report005"></ul>   
+            
+            <script type="text/x-kendo-template" id="reporteTemplate-05">
+    			<div class="list_title">
+                	<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+            					${name}
+            				</td>
+            			</tr>
+                        <tr>
+                        	<td style="width: 70%; text-align:left;">
+            					<div class="sub_titulo">${des}</div>
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+                <br/>
+    			<div class="list_percentage">
+            		<div class="template_label">${l1}</div>
+                    <div class="template_value">${t1}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">${l2}</div>
+                    <div class="template_value">${t2}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">${l3}</div>
+                    <div class="template_value">${t3}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">${l4}</div>
+                    <div class="template_value">${t4}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">${l5}</div>
+                    <div class="template_value">${t5}</div>
+                </div>
+                <br />
+			</script>
+        </div>
+    </body>
+</html>

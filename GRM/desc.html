@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-desc" 
+             data-title="Descuentos" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initDesc"
+             data-show="showDesc"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Descuentos</span>
+                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div> 
+            
+            <ul id="custom-listview-desc"  data-template="customListViewTemplate-desc" data-role="listview"></ul>
+            
+            <script type="text/x-kendo-template" id="customListViewTemplate-desc">
+    			<div class="list_title">
+                	<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 98%; text-align:left; color: rgb(199,27,27)">
+            				    ${nombre}
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">Inicio</div>
+                    <div class="template_value">${inicio}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Fin</div>
+                    <div class="template_value">${fin}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Des. Diapa</div>
+                    <div class="template_value">${diapa}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Des. Proveedor</div>
+                    <div class="template_value">${proveedor}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Des. Total</div>
+                    <div class="template_value">${total}</div>
+                </div>
+                <br />
+			</script>
+            
+            <script> 
+                function initDesc(e) 
+                {
+                    var result = [];
+                   
+                   $("#custom-listview-desc").kendoMobileListView({
+                   dataSource: kendo.data.DataSource.create({data: result }),
+                   template: $("#customListViewTemplate-desc").html(),
+                   });
+                }
+                
+                function showDesc(e) 
+               {
+                   try
+                    {
+                        callWebServiceListDesc();   
+                    }
+                    catch(err)
+                    {
+                         alert(error.toString());   
+                    }
+               }
+                
+                function callWebServiceListDesc() 
+            	{
+                    try
+                    {
+                        var vType = "GET";
+                        var vUrl = "http://localhost:1564/Home/CartillasDetalle";
+                        var vData = 'tipo1=2&tipo2=' + String(cartillaTipo2) + '&nombre=' + String(cartillaNombre)  ;
+                        var vContentType = "application/json; charset=utf-8";
+                        var vDataType = "json";
+                        var vProcessData = true; 
+                
+                        $.ajax({
+                        type          : vType, //GET or POST or PUT or DELETE verb
+                        url           : vUrl, // Location of the service
+                        data          : vData, //Data sent to server
+                        contentType   : vContentType, // content type sent to server
+                        dataType      : vDataType, //Expected data format from server
+                        processdata   : vProcessData, //True or False
+                        success       : function(msg) 
+                        {
+                            ServiceListDesc(msg);                    
+                        },
+                        error: ServiceNotListDesc// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceListDesc(result) 
+                {
+                    try
+                    {   
+                        dataVendedores = new kendo.data.DataSource({
+                            data: result
+                        });
+                        
+                        $("#custom-listview-desc").data("kendoMobileListView").setDataSource(dataVendedores);
+                    }
+                    catch(err)
+                    {
+                            alert("error");  
+                         alert(err.toString());   
+                    }
+                     
+                }
+
+                function ServiceNotListDesc(result) 
+                {
+                    alert("Error en conexión.");
+                }          
+            </script>
+        </div>
+    </body>
+</html>

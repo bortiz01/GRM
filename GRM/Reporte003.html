@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-reportes03" 
+             data-title="Reportes" 
+             data-role="view"
+             data-transition="zoom"
+             data-init="initReportes003"
+            >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Reportes</span>
+                    <a onClick="NavigateBackToHome();" data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
+            <ul id="listview-report003"  data-template="reporteTemplate-03" data-role="listview"></ul>   
+            
+            <script type="text/x-kendo-template" id="reporteTemplate-03">
+    			<div class="list_title">
+                	<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+            					${name}
+            				</td>
+            			</tr>
+                        <tr>
+                        	<td style="width: 70%; text-align:left;">
+            					<div class="sub_titulo">${des}</div>
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+                <br/>
+    			<div class="list_percentage">
+            		<div class="template_label">${l1}</div>
+                    <div class="template_value">${t1}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">${l2}</div>
+                    <div class="template_value">${t2}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">${l3}</div>
+                    <div class="template_value">${t3}</div>
+                </div>
+                <br />
+			</script>
+            
+            <script>
+                function initReportes003(e)
+                {
+                    callWebServiceDeitel003(param_index,param_col); 
+                }
+                
+                function backReporte003(e) 
+                {
+                     app.navigate("#:back"); 
+                }
+               
+                function callWebServiceDeitel003(index,col) 
+               {
+                    try
+                    {
+                        var detType = "GET";
+                        var detUrl = "http://portal.diapa.net:120/home/Detalle";
+                        var detData = 'id=' + String(index) ; 
+                        var detContentType = "application/json; charset=utf-8";
+                        var detDataType = "json";
+                        var detProcessData = true; 
+                
+                        $.ajax({
+                        type          : detType, //GET or POST or PUT or DELETE verb
+                        url           : detUrl, // Location of the service
+                        data          : detData, //Data sent to server
+                        contentType   : detContentType, // content type sent to server
+                        dataType      : detDataType, //Expected data format from server
+                        processdata   : detProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceDeitel003(msg,col);                    
+                        },
+                        error: ServiceNotDeitel003// When Service call fails
+                        });
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+			   }
+               
+               function ServiceDeitel003(result,col) 
+               {
+                    try
+                    {
+                        var index = -1; 
+                        var data = new Array();
+                        var newLine = null;
+                        var count =  -1;
+                        var idx = -1;
+                        
+                        for (var i = 0; i < result.length; i++)
+                        {
+                            if( String(index) != String(result[i].ID)  )
+                            {
+                               if( newLine != null )
+                               {
+                                    data.push( newLine );     
+                               }
+                                index = result[i].ID; 
+                                count = 1;
+                                newLine = [];
+                            }
+                            else
+                            {
+                                count = count + 1;
+                            }
+                            
+                            newLine.ID = result[i].ID; 
+                            newLine.name = result[i].NAME;
+                            newLine.des = result[i].DES;
+                            
+                            switch(count)
+                            {
+                                case 1:
+                                    newLine.l1 = result[i].lavel;
+                                    newLine.t1 = result[i].value;
+                                    break;
+                                case 2: 
+                                    newLine.l2 = result[i].lavel;
+                                    newLine.t2 = result[i].value;
+                                    break;
+                                case 3: 
+                                    newLine.l3 = result[i].lavel;
+                                    newLine.t3 = result[i].value;
+                                    break;
+                                case 4: 
+                                    data[idx].l4 = result[i].lavel;
+                                    data[idx].t4 = result[i].value;
+                                    break;
+                                case 5:
+                                    data[idx].l5 = result[i].lavel;
+                                    data[idx].t5 = result[i].value;
+                                    break;
+                                case 6:
+                                    data[idx].l6 = result[i].lavel;
+                                    data[idx].t6 = result[i].value;
+                                    break;
+                                case 7:
+                                    data[idx].l7 = result[i].lavel;
+                                    data[idx].t7 = result[i].value;
+                                    break;
+                                case 8:
+                                    data[idx].l8 = result[i].lavel;
+                                    data[idx].t8 = result[i].value;
+                                    break;
+                                case 9:
+                                    data[idx].l9 = result[i].lavel;
+                                    data[idx].t9 = result[i].value;
+                                    break;
+                                case 10:
+                                    data[idx].l10 = result[i].lavel;
+                                    data[idx].t10 = result[i].value;
+                                    break;
+                            }
+                            
+                        } 
+                        if( newLine != null )
+                        {
+                            data.push( newLine );     
+                        }
+                        
+                        data.sort(compare003);
+                        
+                        var dataReporte003 = new kendo.data.DataSource({
+                            data: data
+                        });
+                        
+                        $("#listview-report003").data("kendoMobileListView").setDataSource(dataReporte003); 
+                    }
+                    catch(err)
+                    {
+                         alert(error.toString());   
+                    }
+               }
+
+               function ServiceNotDeitel003(result) 
+               {
+                    alert("Error en conexión.");
+               }
+               
+                function compare003(var1, var2)
+                {
+                    return parseInt(var1.ID) > parseFloat(var2.ID);
+                }
+            </script>
+        </div>
+    </body>
+</html>

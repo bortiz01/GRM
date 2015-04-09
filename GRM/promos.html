@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-promos" 
+             data-title="Promociones" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initPromos"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Promociones</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
+            <ul id="custom-listview-promo"></ul>    
+            
+            <script type="text/x-kendo-template" id="customListViewTemplate-promo">
+    			<div class="container_list">
+                <div class="report_title">
+            		<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left;  color: rgb(199,27,27)">
+            					${name}
+            				</td>
+                            <td style="width: 70%; text-align:right;">
+                    			<a class="button" data-role="button" onclick="goToNext(${id});" style="background-color: black; color: white; font-size:.7em;">Ver</a>        
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+    			<div class="report_descp">
+            		${des}	
+                </div>
+                 <br />
+                </div>
+			</script>
+            
+            <script>
+               
+               function initPromos(e) 
+               {
+                   try
+                    {
+                        var promos = 
+                        [
+                            { "name" : "Bonificaciones", "id" : 1,  "des" : "Cartilla de las bonificaciones"},
+                            { "name" : "Descuentos" , "id" : 2, "des" : "Cartilla de descuentos" },
+                        ];
+                        
+                        $("#custom-listview-promo").kendoMobileListView({
+                        dataSource: kendo.data.DataSource.create({data: promos }),
+                        template: $("#customListViewTemplate-promo").html(),
+                        });
+                    }
+                    catch(err)
+                    {
+                         alert(error.toString());   
+                    }
+               }
+          
+               function NavigateBackPromos(e) 
+               {
+                   app.navigate("#:back");
+                   //app.navigate("inicio.html");    
+               }
+                
+               function goToNext(id) 
+               {
+                   cartillaTipo1 = id;
+                   app.navigate("cliente-lista-centro.html","slide:left"); 
+               }
+            </script>
+        </div>
+    </body>
+</html>

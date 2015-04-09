@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+
+    </head>
+    <style type="text/css"> 
+            body
+            {
+                pointer-events: all !important;
+            }
+    </style>
+    
+    <body>
+        
+        <div id="tabstrip-home" 
+             data-title="Inicio" 
+             data-role="view"
+             data-init="initHome"
+             >
+            <div data-role="header">
+               
+            </div>    
+            
+            <div class="indicators_container">
+            	Venta y Cobro
+                <div id="two_panel_container">
+                    <div class="porcentaje_container">
+                        <span id="vpor" class="porcentaje_label">00.0%</span>
+                    </div>
+                    <div class="porcentaje_container">
+                        <span id="cpor" class="porcentaje_label">00.0%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="week_container">
+            	<ul data-role="buttongroup" data-index="0" data-select="onSelect">
+                	<li style="background-color: #C71B1B;">&nbsp;S01&nbsp;</li>
+                	<li style="background-color: #C71B1B;">&nbsp;S02&nbsp;</li>
+                	<li style="background-color: #C71B1B;">&nbsp;S03&nbsp;</li>
+                	<li style="background-color: #C71B1B;">&nbsp;S04&nbsp;</li>
+            	</ul>
+            </div>
+            
+            <div class="indicators_container">
+                Avance de Venta 
+                <div class="deitel_container" >
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Proyectado
+                            </td>
+                            <td class="right_column">
+                                <label id="v1">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Ejecutado
+                            </td>
+                            <td class="right_column">
+                                <label id="v2">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Diferencia
+                            </td>
+                            <td class="right_column">
+                                <label id="v3">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                SKU Activos
+                            </td>
+                            <td class="right_column">
+                                <label id="v4">0.00</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                Avance de Cobro 
+                <div class="deitel_container">
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Proyectado
+                            </td>
+                            <td class="right_column">
+                                <label id="c1">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Ejecutado
+                            </td>
+                            <td class="right_column">
+                                <label id="c2">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Diferencia
+                            </td>
+                            <td class="right_column">
+                                <label id="c3">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Dias Prom. Pago
+                            </td>
+                            <td class="right_column">
+                                <label id="c4">0.00</label>
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+            </div>
+            <div style="margin:auto; width:95%; padding-top:1.5em;">
+                <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click003()">Informe del Día</a><br/>
+                <div style="padding:.1em;"></div>
+                <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()">Supervisar</a><br/>
+                <div style="padding:.1em;"></div>
+                <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click002()">Reportes</a><br/>
+                <div style="padding:.1em;"></div>
+                <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()">Promociones</a><br/>
+                
+            </div>
+            
+            <script>
+            
+             
+                function initHome(e) 
+                {
+                    callWebService("1") ;
+                }
+                
+                function onSelect(e) 
+                {
+                    try
+                    {
+                        var index = this.current().index();
+                        index = index + 1;
+                        callWebService(String(index)) ;
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());    
+                    }
+                    
+                }
+                function callWebService(semana)
+                {
+                    try
+                    {
+                        var vaType = "GET";
+                        var vaUrl = "http://portal.diapa.net:120/Home/VentaPorSemana";
+                        var vaData = 'Codigo=' + String(codigo) + '&Tipo=' + String(tipo) + '&Semana=' + String(semana); 
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        data          : vaData, //Data sent to server
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceFind(msg);                    
+                        },
+                        error: ServiceNotFind// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFind(result) 
+                {
+                    try
+                    {
+                        var v1 = result.Proyectado_Venta;
+                        var v2 = result.Ejecutado_Venta;
+                        var v3 = v1 - v2;
+                        var v4 = result.sku;
+                        
+                        var c1 = result.Proyectado_Cobro;
+                        var c2 = result.Ejecutado_Cobro;
+                        var c3 = c1 - c2;
+                        var c4 = result.dias;
+                        
+                        var vpor = 0;
+                        if( v1 != 0 )
+                        {
+                            vpor = ( v2 / v1 ) * 100.00;
+                        }
+                        
+                        var cpor = 0;
+                        if( c1 != 0 )
+                        {
+                            cpor = ( c2 / c1 ) * 100.00;
+                        }
+                        
+                        document.getElementById("v1").innerHTML  = "L. " + String(v1.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("v2").innerHTML  = "L. " + String(v2.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("v3").innerHTML  = "L. " + String(v3.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("v4").innerHTML  = String(v4);
+                        
+                        document.getElementById("c1").innerHTML  = "L. " +String(c1.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("c2").innerHTML  = "L. " +String(c2.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("c3").innerHTML  = "L. " + String(c3.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("c4").innerHTML  = String(c4);
+                        
+                        document.getElementById("vpor").innerHTML  = String(vpor.toFixed(2)) + "%";
+                        document.getElementById("cpor").innerHTML  = String(cpor.toFixed(2)) + "%";
+                        
+                    }
+                    catch(err)
+                    {
+                         alert(error.toString());   
+                    }
+                     
+                }
+                
+                function ServiceNotFind(result) 
+                {
+                    alert("Error en conexión.");
+                }
+                
+                function Click001() 
+                {
+                    if ( tipo = 40) 
+                    {
+                       codigoTempG = codigo;
+                       app.navigate("Vendedores.html","slide:left");   
+                    }
+                    else if( tipo = 10 ) 
+                    {
+                    	
+                    }
+                    else if( tipo = 20 ) 
+                    {
+                    	
+                    }
+                    else if( tipo = 30 ) 
+                    {
+                    	
+                    }
+                    
+                }
+                function Click002() 
+                {
+                    app.navigate("Reportes.html","slide:left");
+                }
+                function Click003() 
+                {
+                    app.navigate("Informacion.html","overlay:up");
+                }
+                function Click004() 
+                {
+                    app.navigate("promos.html","overlay:left");
+                }
+
+            </script>
+        </div>   
+    </body>
+</html>
