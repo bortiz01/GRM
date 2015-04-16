@@ -17,7 +17,7 @@
              data-title="Reportes" 
              data-role="view"
              data-transition="fade"
-             data-show="initReportes"
+             data-show="showReportes005"
             >
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
@@ -26,7 +26,7 @@
                 </div>
             </div>
             
-            <ul id="listview-report005"></ul>   
+            <ul id="listview-report005" data-template="reporteTemplate-05" data-role="listview"></ul>   
             
             <script type="text/x-kendo-template" id="reporteTemplate-05">
     			<div class="list_title">
@@ -43,7 +43,6 @@
             			</tr>
             		</table>
                 </div>
-                <br/>
     			<div class="list_percentage">
             		<div class="template_label">${label0}</div>
                     <div class="template_value">${value0}</div>
@@ -67,7 +66,8 @@
                 <br />
 			</script>
             <script>
-                function initReportes005(e)
+                
+                function showReportes005(e)
                 {
                     callWebServiceDeitel005(param_index,param_col); 
                 }
@@ -98,7 +98,7 @@
                         success       : function(msg) {//On Successfull service call
                             ServiceDeitel005(msg);                    
                         },
-                        error: ServiceNotDeitel003// When Service call fails
+                        error: ServiceNotDeitel005// When Service call fails
                         });
                     }
                     catch(err)

@@ -128,13 +128,15 @@
             </div>
             <div style="margin:auto; width:95%; padding-top:1.5em;">
                 <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click003()">Informe del Día</a><br/>
+                
                 <div style="padding:.1em;"></div>
                 <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()">Supervisar</a><br/>
+                
                 <div style="padding:.1em;"></div>
                 <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click002()">Reportes</a><br/>
+                
                 <div style="padding:.1em;"></div>
                 <a data-role="button" data-animated="true" style="width:90%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()">Promociones</a><br/>
-                
             </div>
             
             <script>
@@ -204,7 +206,7 @@
                         var c1 = result.Proyectado_Cobro;
                         var c2 = result.Ejecutado_Cobro;
                         var c3 = c1 - c2;
-                        var c4 = result.dias;
+                        var c4 = parseFloat(result.dias).toFixed(2); 
                         
                         var vpor = 0;
                         if( v1 != 0 )
