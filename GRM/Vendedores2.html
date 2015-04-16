@@ -80,9 +80,9 @@
                     
                 }
                 
-                function show2() 
+                function show2(e) 
                 {
-                    callWebServiceList2(codigoTempS,getType(codigoTempS));   
+                    callWebServiceList2(codigoTempS,getType2(codigoTempS));   
                 }
                 
                 function callWebServiceList2(codigo,tipo) 
@@ -160,8 +160,7 @@
                     }
                     catch(err)
                     {
-                            alert("error");  
-                         alert(err.toString());   
+                        alert(err.toString());   
                     }
                      
                 }
@@ -173,7 +172,7 @@
                 
                 function listClick2(var1) 
             	{
-                    var tipo = getType(var1);
+                    var tipo = getType2(var1);
                     if( tipo == 30 )
                     {
                         alert("No hay detalles que mostrar.");    

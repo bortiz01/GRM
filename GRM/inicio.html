@@ -248,22 +248,24 @@
                 
                 function Click001() 
                 {
-                    if ( tipo = 40) 
+                    if ( tipo == 40) 
                     {
                        codigoTempG = codigo;
                        app.navigate("Vendedores.html","slide:left");   
                     }
-                    else if( tipo = 10 ) 
+                    else if( tipo == 10 ) 
                     {
-                    	
+                       codigoTempS = codigo;
+                       app.navigate("Vendedores2.html","slide:left");	
                     }
-                    else if( tipo = 20 ) 
+                    else if( tipo == 20 ) 
                     {
-                    	
+                       codigoTempV = codigo;
+                       app.navigate("Vendedores3.html","slide:left");	
                     }
-                    else if( tipo = 30 ) 
+                    else if( tipo == 30 ) 
                     {
-                    	
+                      alert("Esta opción no esta disponible para su perfil")	
                     }
                     
                 }
