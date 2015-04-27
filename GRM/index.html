@@ -28,9 +28,9 @@
                 <div id="main_panel">
                     <img src="./styles/images/diapa.png" style="height:80px; width:120px;">
                     <br/>
-                    <input value="dmartinez" id="username"  type="text" name="username" placeholder="Nombre de usuario" />
+                    <input value="" id="username"  type="text" name="username" placeholder="Nombre de usuario" />
                     <br/>
-                    <input value="qwerty" id="password"  type="password" name="password" placeholder="Contraseña"/>
+                    <input value="" id="password"  type="password" name="password" placeholder="Contraseña"/>
                     <br/>
                     <div id="contenedor_boton">
                         <a data-role="button" onclick="login()" style="background-color: black; color: white; font-size: .9em">Ingresar</a>    
@@ -71,7 +71,30 @@
             
             $( document ).ready(function() 
             {
-                
+                try 
+                {
+                	
+                    if (localStorage.getItem("username") != undefined) 
+                    {
+                        document.getElementById("username").value  = localStorage.getItem("username");
+			        }
+		            else 
+                    {
+			             document.getElementById("username").value  = "";
+		            }
+                    
+                    if (localStorage.getItem("password") != undefined) 
+                    {
+                        document.getElementById("password").value  = localStorage.getItem("password");
+			        }
+		            else 
+                    {
+			             document.getElementById("password").value  = "";
+		            }
+                } catch (ex) 
+                {
+                    alert("Error al cargar datos de memoria");
+                }
             });
             
             function login() 
@@ -80,7 +103,10 @@
                 {
                     username = element = document.getElementById("username").value;
                     password = element = document.getElementById("password").value;
-                
+                    
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("password", password);
+                    
                     if ( username == null || username == "")
                     {
                         alert("Complete el nombre de usuario."); 
