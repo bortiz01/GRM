@@ -70,7 +70,7 @@
                         </tr>
                     </table> 
                 </div>
-                Venta del Dia
+                Venta del Día
                 <div class="deitel_container">
                     <table class="deitel_table">
                         <tr>
@@ -91,6 +91,88 @@
                         </tr>
                     </table> 
                 </div>
+                Cartera
+                <div class="deitel_container">
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                No vencido
+                            </td>
+                            <td class="right_column">
+                                <label id="cartera1">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Vencido de 0 a 30
+                            </td>
+                            <td class="right_column">
+                                <label id="cartera2">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Vencido de 31 a 60
+                            </td>
+                            <td class="right_column">
+                                <label id="cartera3">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Vencido de 61 a 90
+                            </td>
+                            <td class="right_column">
+                                <label id="cartera4">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Vencido más de 90
+                            </td>
+                            <td class="right_column">
+                                <label id="cartera5">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Total cartera
+                            </td>
+                            <td class="right_column">
+                                <label id="cartera6">L. 0.00</label>
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+                Clientes Efectivos
+                <div class="deitel_container">
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Total clientes
+                            </td>
+                            <td class="right_column">
+                                <label id="efectivos1">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Clientes con venta
+                            </td>
+                            <td class="right_column">
+                                <label id="efectivos2">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Porcentaje clientes activos
+                            </td>
+                            <td class="right_column">
+                                <label id="efectivos3">L. 0.00</label>
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
             </div>
             
             <script>
@@ -106,6 +188,7 @@
                     try
                     {
                         var vaType = "GET";
+                        //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
                         var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
                         var vaData = 'Codigo=' + String(codigo) + '&Tipo=' + String(tipo); 
                         var vaContentType = "application/json; charset=utf-8";
@@ -144,12 +227,34 @@
                         var d1 = result.VENTA;
                         var d2 = result.DEMANDA;
                         
+                        var cartera1 = result.VENCIDONO;
+                        var cartera2 = result.VENCIDO30;
+                        var cartera3 = result.VENCIDO60;
+                        var cartera4 = result.VENCIDO90;
+                        var cartera5 = result.VENCIDOMAS;
+                        var cartera6 = result.TOTAL;
+                        
+                        var efectivos1 = result.CTOTAL;
+                        var efectivos2 = result.CVENTA;
+                        var efectivos3 = result.CAVANCE;
+                        
                         document.getElementById("i1").innerHTML  = String(i1);
                         document.getElementById("i2").innerHTML  = String(i2);
                         document.getElementById("i3").innerHTML  = String(i3);
                         document.getElementById("i4").innerHTML  = String(i4);
                         document.getElementById("d1").innerHTML  = String(d1);
                         document.getElementById("d2").innerHTML  = String(d2);
+                        
+                        document.getElementById("cartera1").innerHTML  = String(cartera1);
+                        document.getElementById("cartera2").innerHTML  = String(cartera2);
+                        document.getElementById("cartera3").innerHTML  = String(cartera3);
+                        document.getElementById("cartera4").innerHTML  = String(cartera4);
+                        document.getElementById("cartera5").innerHTML  = String(cartera5);
+                        document.getElementById("cartera6").innerHTML  = String(cartera6);
+                        
+                        document.getElementById("efectivos1").innerHTML  = String(efectivos1);
+                        document.getElementById("efectivos2").innerHTML  = String(efectivos2);
+                        document.getElementById("efectivos3").innerHTML  = String(efectivos3);
                     }
                     catch(err)
                     {

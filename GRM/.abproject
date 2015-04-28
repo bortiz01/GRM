@@ -5,7 +5,7 @@
   "AppIdentifier": "com.telerik.GRM",
   "DisplayName": "GRM",
   "Author": "Daniel Martinez",
-  "Description": "Aplicacion para monitoreo de ventas",
+  "Description": "Gestor de Rendimiento Móvil",
   "BundleVersion": "1.0",
   "AndroidVersionCode": "1",
   "iOSDeviceFamily": [

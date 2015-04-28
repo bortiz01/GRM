@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+
+    </head>
+    <style type="text/css"> 
+            body
+            {
+                pointer-events: all !important;
+            }
+    </style>
+    
+    <body>
+        
+        <div id="tabstrip-perfil" 
+             data-title="Mi Perfil" 
+             data-role="view"
+             data-show="initMiPerfil"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Mi Perfil</span>
+                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div> 
+            
+            <div class="indicators_container">
+                
+                <!--<div style="width:40%;  display:inline-block; vertical-align:top; text-align:center;">
+                    Código SAP
+                    <div class="deitel_container">
+                        <span class="porcentaje_label">130</span>
+                    </div>
+                </div>-->
+                <div style="width:95%;  display:inline-block;">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="font-size:0.8em;">
+                                <input value="" id="password1"  type="password" name="password1" placeholder="Contraseña actual" style="width:100%"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:0.8em;">
+                                <input value="" id="password2"  type="password" name="password2" placeholder="Nueva contraseña" style="width:100%"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:0.8em;">
+                                <input value="" id="password3"  type="password" name="password3" placeholder="Confirmar contraseña" style="width:100%"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="text-align:right;">
+                                <a data-role="button" onclick="ServicioMiPerfil()" style="background-color: black; color: white; font-size: .8em">Cambiar</a>
+                            </td>
+                        </tr>
+                        
+                        
+                    </table>
+                </div>
+                <div style=" padding:.4em;">
+                    *La contraseña debe tener más de 6 caracteres y no deber ser igual a la contraseña anterior.     
+                </div>
+            </div>
+            
+            <script>
+            
+             
+                function initMiPerfil(e) 
+                {
+                    try 
+                {
+                	if (localStorage.getItem("password") != undefined) 
+                    {
+                        document.getElementById("password1").value  = localStorage.getItem("password");
+			        }
+		            else 
+                    {
+			             document.getElementById("password1").value  = "";
+		            }
+                } catch (ex) 
+                {
+                    alert("Error al cargar datos de memoria");
+                }
+                }
+                
+                function ServicioMiPerfil()
+                {
+                    try
+                    {
+                        var password1 = document.getElementById("password1").value;
+                        var password2 = document.getElementById("password2").value;
+                        var password3 = document.getElementById("password3").value;
+                        
+                        if ( password1 == null || password1 == "" ) 
+                        {
+                             alert("Debe brindar la contraseña actual.");   	
+                             return;
+                        }
+                        
+                        if ( password2 == null || password2 == "" ) 
+                        {
+                             alert("Debe brindar la contraseña nueva.");   	
+                             return;
+                        }
+                        
+                        if ( password3 == null || password3 == "" ) 
+                        {
+                             alert("Debe brindar la confirmación de la contraseña nueva.");   	
+                             return;
+                        }
+                        
+                        var vaType = "GET";
+                        //var vaUrl = "/Home/InformacionDelDia";
+                        var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
+                        var vaData = 'username=' + String(username) + 
+                                     '&actual=' + String(password1) + 
+                                     '&nueva=' + String(password2) + 
+                                     '&confirmacion=' + String(password3);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        data          : vaData, //Data sent to server
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceFoundMiPerfil(msg);                    
+                        },
+                        error: ServiceNotFindMiPerfil// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFoundMiPerfil(result) 
+                {
+                    try
+                    {                          
+                        if ( String(result.MENSAJE) == "Contraseña actualizada con éxito." ) 
+                        {
+                            var newpassword = document.getElementById("password2").value;
+                            document.getElementById("password1").value = newpassword;
+                            document.getElementById("password2").value = "";
+                            document.getElementById("password3").value = "";
+                            
+                            localStorage.setItem("password", newpassword);
+                        }
+                        
+                        alert(String(result.MENSAJE));	
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function ServiceNotFindMiPerfil(result) 
+                {
+                    alert("Error en conexión.");
+                }
+                
+            </script>
+        </div>   
+    </body>
+</html>
