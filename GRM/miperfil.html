@@ -78,19 +78,20 @@
                 function initMiPerfil(e) 
                 {
                     try 
-                {
-                	if (localStorage.getItem("password") != undefined) 
                     {
-                        document.getElementById("password1").value  = localStorage.getItem("password");
-			        }
-		            else 
+                	    if (localStorage.getItem("password") != undefined) 
+                        {
+                            document.getElementById("password1").value  = localStorage.getItem("password");
+			            }
+		                else 
+                        {
+			                document.getElementById("password1").value  = "";
+		                }
+                    } 
+                    catch (ex) 
                     {
-			             document.getElementById("password1").value  = "";
-		            }
-                } catch (ex) 
-                {
-                    alert("Error al cargar datos de memoria");
-                }
+                        alert("Error al cargar datos de memoria");
+                    }
                 }
                 
                 function ServicioMiPerfil()

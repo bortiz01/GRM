@@ -9,6 +9,7 @@
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js"></script>
     </head>
     
     <style type="text/css"> 
@@ -73,7 +74,8 @@
             {
                 try 
                 {
-                	
+                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
+                    
                     if (localStorage.getItem("username") != undefined) 
                     {
                         document.getElementById("username").value  = localStorage.getItem("username");
@@ -119,9 +121,26 @@
                       return;
                     }
                     
+                    var latitude = "NONE";
+                    var longitude = "NONE";
+                    
+                    if (localStorage.getItem("latitude") != undefined) 
+                    {
+                        latitude = localStorage.getItem("latitude");
+			        }
+                    
+                    if (localStorage.getItem("longitude") != undefined) 
+                    {
+                        longitude = localStorage.getItem("longitude");
+			        }
+                    
                     varType = "GET";
+                    //varUrl = "http://portal.diapa.net:120/home/Autentificar";
                     varUrl = "http://portal.diapa.net:120/home/Autentificar";
-                    varData = 'Email=' + String(username) + '&Password='+ String(password); 
+                    varData = 'Email=' + String(username) + 
+                              '&Password='+ String(password) +
+                              '&Latitud='+ String(latitude) +
+                              '&Longitud='+ String(longitude) ; 
                     varContentType = "application/json; charset=utf-8";
                     varDataType = "json";
                     varProcessData = true; 
@@ -174,6 +193,22 @@
             {
                 alert("No se pudo autentificar al usuario.");
             }
+            
+            function encontrado(position) 
+            {
+                //alert("[" + position.coords.latitude + "," + position.coords.longitude + "]");
+                localStorage.setItem("latitude", String(position.coords.latitude));
+                localStorage.setItem("longitude", String(position.coords.longitude));
+            }
+            
+            function noencontrado(error) 
+            {
+                localStorage.removeItem("latitude");
+                localStorage.removeItem("longitude");
+                alert("Error, " + error.message);
+            }
+            
+            
         </script>
         
     </body>
