@@ -28,11 +28,18 @@
              data-show="initAjustes"
              >
             <div id="map-canvas"></div>
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Mapa</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
             <script>
                function initAjustes(e) 
                {
                   document.getElementById("map-canvas").style.width = String($(window).width()) + "px";
-                  document.getElementById("map-canvas").style.height = String($(window).height()) + "px";
+                  document.getElementById("map-canvas").style.height = String($(window).height() - 35 ) + "px";
                   initialize();
                }   
                function initialize() 
