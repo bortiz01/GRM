@@ -65,6 +65,10 @@
                 	<div class="template_label">Dias Prom. Pago</div>
                     <div class="template_value">${per_dias}</div>
                 </div>
+                <div class="list_percentage">
+                	<div class="template_label">Acciones</div>
+                    <div class="template_value"><a onclick="goToMap()">Ver Mapa</a></div>
+                </div>
                 <br />
 			</script>
             
@@ -237,6 +241,19 @@
                             return 20;
                         default:
                             return 30;
+                    }
+                }
+                
+                function goToMap() 
+                {
+                    try
+                    {
+                        //alert("works!!!");
+                        app.navigate("ajustes.html","overlay:left");   
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
                     }
                 }
             </script>
