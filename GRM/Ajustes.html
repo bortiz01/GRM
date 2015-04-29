@@ -38,13 +38,14 @@
             <script>
                function initAjustes(e) 
                {
+                  alert("works...");
                   document.getElementById("map-canvas").style.width = String($(window).width()) + "px";
                   document.getElementById("map-canvas").style.height = String($(window).height() - 35 ) + "px";
                   initialize();
                }   
                function initialize() 
               {
-                   //alert("works");
+                   alert("works");
                     var mapCanvas = document.getElementById('map-canvas');
                     var mapOptions = {
                       center: new google.maps.LatLng(14.0421531, -87.1908476),
