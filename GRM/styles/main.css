@@ -27,7 +27,7 @@ body, html
     margin-right:auto;
     margin-left:auto;
 }
-#tabstrip-promos .km-content 
+#tabstrip-mapa .km-content 
 {
     text-align:center;
     padding-top: .5em;
@@ -35,11 +35,8 @@ body, html
     background-image:url('../styles/images/background.png');
     background-position:center; 
     */
-    background-color: #f0f0f0;
     height:100%;
     width:100%;
-    margin-right:auto;
-    margin-left:auto;
 }
 #tabstrip-cliente .km-content 
 {

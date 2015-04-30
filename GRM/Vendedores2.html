@@ -66,6 +66,18 @@
                 	<div class="template_label">Dias Prom. Pago</div>
                     <div class="template_value">${per_dias}</div>
                 </div>
+                <div class="list_percentage">
+                	<div class="template_label">Localizar</div>
+                    <div class="template_value">
+                        <a onclick="goToMapSupervisor(${id})" style="text-decoration: underline;">Ver Mapa</a>
+                    </div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Número Celular</div>
+                    <div class="template_value">
+                        <a href="tel:${telefono}" style="text-decoration: underline;">llamar</a>
+                    </div>
+                </div>
                 <br />
 			</script>
             
@@ -244,6 +256,78 @@
                         default:
                             return 30;
                     }
+                }
+                function goToMapSupervisor(codigoS) 
+                {
+                    try
+                    {
+                        var vType = "GET";
+                        var vUrl = "http://portal.diapa.net:120/Home/GetCoordenadas";
+                        var vData = 'codigo=' + String(codigoS) + '&tipo=' + String(getType(codigoS))  ;
+                        var vContentType = "application/json; charset=utf-8";
+                        var vDataType = "json";
+                        var vProcessData = true; 
+                
+                        $.ajax({
+                        type          : vType, //GET or POST or PUT or DELETE verb
+                        url           : vUrl, // Location of the service
+                        data          : vData, //Data sent to server
+                        contentType   : vContentType, // content type sent to server
+                        dataType      : vDataType, //Expected data format from server
+                        processdata   : vProcessData, //True or False
+                        success       : function(msg) 
+                        {//On Successfull service call
+                            ServiceListMapS(msg);                    
+                        },
+                        error: ServiceNotListMapS// When Service call fails
+                        });
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+                }
+                
+                function ServiceListMapS(result) 
+                {
+                    try
+                    {
+                        if ( result.latitud == null ) 
+                        {
+                            alert("No hay coordenadas para el usuario especificado");
+                            return;	
+                        }
+                        
+                        if ( result.latitud == undefined ) 
+                        {
+                            alert("No hay coordenadas para el usuario especificado");
+                            return;	
+                        }
+                        
+                        if ( result.latitud == "" ) 
+                        {
+                            alert("No hay coordenadas para el usuario especificado");
+                            return;	
+                        }
+                         
+                        alert( "Fecha actualización: " + String(result.fecha) + " " + String(result.hora) );
+                        
+                        glatitud = parseFloat(result.latitud);
+                        glongitud = parseFloat(result.longitud);
+                        
+                        app.navigate("mapa.html","overlay:left");   
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                     
+                }
+                
+                function ServiceNotListMapS(result) 
+                {
+                    alert("Error en conexión.");
                 }
             </script>
         </div>

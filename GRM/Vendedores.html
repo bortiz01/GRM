@@ -66,8 +66,16 @@
                     <div class="template_value">${per_dias}</div>
                 </div>
                 <div class="list_percentage">
-                	<div class="template_label">Acciones</div>
-                    <div class="template_value"><a onclick="goToMap()">Ver Mapa</a></div>
+                	<div class="template_label">Localizar</div>
+                    <div class="template_value">
+                        <a onclick="goToMapGerente(${id})" style="text-decoration: underline;">Ver Mapa</a>
+                    </div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Número Celular</div>
+                    <div class="template_value">
+                        <a href="tel:${telefono}" style="text-decoration: underline;">llamar</a>
+                    </div>
                 </div>
                 <br />
 			</script>
@@ -244,17 +252,77 @@
                     }
                 }
                 
-                function goToMap() 
+                function goToMapGerente(codigoG) 
                 {
                     try
                     {
-                        //alert("works!!!");
-                        app.navigate("ajustes.html","overlay:left");   
+                        var vType = "GET";
+                        var vUrl = "http://portal.diapa.net:120/Home/GetCoordenadas";
+                        var vData = 'codigo=' + String(codigoG) + '&tipo=' + String(getType(codigoG))  ;
+                        var vContentType = "application/json; charset=utf-8";
+                        var vDataType = "json";
+                        var vProcessData = true; 
+                
+                        $.ajax({
+                        type          : vType, //GET or POST or PUT or DELETE verb
+                        url           : vUrl, // Location of the service
+                        data          : vData, //Data sent to server
+                        contentType   : vContentType, // content type sent to server
+                        dataType      : vDataType, //Expected data format from server
+                        processdata   : vProcessData, //True or False
+                        success       : function(msg) 
+                        {//On Successfull service call
+                            ServiceListMapG(msg);                    
+                        },
+                        error: ServiceNotListMapG// When Service call fails
+                        });
+                        
                     }
                     catch(err)
                     {
                         alert(err.toString());
                     }
+                }
+                
+                function ServiceListMapG(result) 
+                {
+                    try
+                    {
+                        if ( result.latitud == null ) 
+                        {
+                            alert("No hay coordenadas para el usuario especificado");
+                            return;	
+                        }
+                        
+                        if ( result.latitud == undefined ) 
+                        {
+                            alert("No hay coordenadas para el usuario especificado");
+                            return;	
+                        }
+                        
+                        if ( result.latitud == "" ) 
+                        {
+                            alert("No hay coordenadas para el usuario especificado");
+                            return;	
+                        }
+                         
+                        alert( "Fecha actualización: " + String(result.fecha) + " " + String(result.hora) );
+                        
+                        glatitud = parseFloat(result.latitud);
+                        glongitud = parseFloat(result.longitud);
+                        
+                        app.navigate("mapa.html","overlay:left");   
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                     
+                }
+                
+                function ServiceNotListMapG(result) 
+                {
+                    alert("Error en conexión.");
                 }
             </script>
         </div>
