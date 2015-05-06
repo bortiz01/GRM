@@ -120,13 +120,43 @@
                              return;
                         }
                         
+                        if ( password2.length < 6 ) 
+                        {
+                            alert("La contraseña nueva debe tener más de 6 caracteres");   	
+                            return;	
+                        }
+                        
+                        if ( password2.localeCompare(password1) == 0 ) 
+                        {
+                            alert("La contraseña nueva debe ser diferente de la contraseña anterior");   	
+                            return;	
+                        }
+                        
+                        if (password2.localeCompare(password3)  == 0) 
+                        {
+                            alert("La contraseña nueva no concuerda con la confirmación");   	
+                            return;	
+                        }
+                        
+                        var Key1 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV1 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var hash1 = CryptoJS.AES.encrypt(password1,Key1,{iv:IV1, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
+                        var Key2 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV2 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var hash2 = CryptoJS.AES.encrypt(password2,Key2,{iv:IV2, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
+                        var Key3 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV3 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var hash3 = CryptoJS.AES.encrypt(password3,Key3,{iv:IV3, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
                         var vaType = "GET";
-                        //var vaUrl = "/Home/InformacionDelDia";
-                        var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
+                        //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
+                        var vaUrl = "http://localhost:1564/Home/CambioContraseña";
                         var vaData = 'username=' + String(username) + 
-                                     '&actual=' + String(password1) + 
-                                     '&nueva=' + String(password2) + 
-                                     '&confirmacion=' + String(password3);
+                                     '&actual=' + String(hash1) + 
+                                     '&nueva=' + String(hash2) + 
+                                     '&confirmacion=' + String(hash3);
                         var vaContentType = "application/json; charset=utf-8";
                         var vaDataType = "json";
                         var vaProcessData = true; 
@@ -178,7 +208,6 @@
                 {
                     alert("Error en conexión.");
                 }
-                
             </script>
         </div>   
     </body>

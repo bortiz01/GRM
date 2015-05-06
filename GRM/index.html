@@ -5,11 +5,12 @@
         <meta charset="utf-8" />
         <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
         <link href="styles/main.css" rel="stylesheet" />
-
+        <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js"></script>
+        
     </head>
     
     <style type="text/css"> 
@@ -98,7 +99,7 @@
 		            }
                 } catch (ex) 
                 {
-                    alert("Error al cargar datos de memoria");
+                    //alert("Error al cargar datos de memoria");
                 }
             });
             
@@ -137,11 +138,17 @@
                         longitude = localStorage.getItem("longitude");
 			        }
                     
+                    
+                    var text = password;   
+                    var Key = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                    var IV = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                    var encryptedText = CryptoJS.AES.encrypt(text,Key,{iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
                     varType = "GET";
                     //varUrl = "http://portal.diapa.net:120/home/Autentificar";
-                    varUrl = "http://portal.diapa.net:120/home/Autentificar";
+                    varUrl = "http://localhost:1564/home/Autentificar";
                     varData = 'Email=' + String(username) + 
-                              '&Password='+ String(password) +
+                              '&Password='+ encryptedText +
                               '&Latitud='+ String(latitude) +
                               '&Longitud='+ String(longitude) ; 
                     varContentType = "application/json; charset=utf-8";
@@ -210,8 +217,6 @@
                 localStorage.removeItem("longitude");
                 alert("Error, " + error.message);
             }
-            
-            
         </script>
         
     </body>
