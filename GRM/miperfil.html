@@ -132,7 +132,7 @@
                             return;	
                         }
                         
-                        if (password2.localeCompare(password3)  == 0) 
+                        if (password2.localeCompare(password3)  != 0) 
                         {
                             alert("La contraseña nueva no concuerda con la confirmación");   	
                             return;	
@@ -152,7 +152,7 @@
                     
                         var vaType = "GET";
                         //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
-                        var vaUrl = "http://localhost:1564/Home/CambioContraseña";
+                        var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
                         var vaData = 'username=' + String(username) + 
                                      '&actual=' + String(hash1) + 
                                      '&nueva=' + String(hash2) + 

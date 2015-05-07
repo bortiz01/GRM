@@ -17,7 +17,7 @@
              data-title="Vendedores" 
              data-role="view"
              data-transition="fade"
-             data-init="initVendedores"
+             data-show="initVendedores"
              >
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
@@ -83,7 +83,7 @@
             <script>
                 function initVendedores(e) 
                 {
-                    callWebServiceList(codigoTempG,getType(codigoTempG));   
+                    callWebServiceList(codigoTempG,40);   
                 }
                 
                 function restart() 
@@ -258,7 +258,7 @@
                     {
                         var vType = "GET";
                         var vUrl = "http://portal.diapa.net:120/Home/GetCoordenadas";
-                        var vData = 'codigo=' + String(codigoG) + '&tipo=' + String(getType(codigoG))  ;
+                        var vData = 'codigo=' + String(codigoG) + '&tipo=' + String(10)  ;
                         var vContentType = "application/json; charset=utf-8";
                         var vDataType = "json";
                         var vProcessData = true; 

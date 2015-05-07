@@ -140,7 +140,7 @@
                 
                 <div style="text-align:center;">
                     <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click005()">Cambio Contraseña</a>
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="">Ajustes</a>
+                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click006()">Soporte</a>
                 </div>
                 
             </div>
@@ -293,15 +293,7 @@
                 }
                 function Click006() 
                 {
-                    try
-                    {
-                        //alert("works!!!");
-                        app.navigate("ajustes.html","overlay:left");   
-                    }
-                    catch(err)
-                    {
-                        alert(err.toString());
-                    }
+                    app.navigate("Ajustes.html","overlay:left");
                 }
             </script>
         </div>   

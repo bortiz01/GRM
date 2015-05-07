@@ -8,62 +8,136 @@
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
-        <style>
-            html, body, #map-canvas
-            {
-                height: 100%;
-            }
-            #map-canvas
-            {
-                width: 100%;
-            }
-        </style>
-        
     </head>
     <body>
         <div id="tabstrip-ajustes" 
-             data-title="Ajustes" 
+             data-title="Soporte" 
              data-role="view"
              data-transition="fade"
              data-show="initAjustes"
              >
-            <div id="map-canvas"></div>
+            
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
-                    <span data-role="view-title">Mapa</span>
+                    <span data-role="view-title">Soporte</span>
                     <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div>
             
+            <div class="indicators_container">
+               
+                <div style="width:95%;  display:inline-block;">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="font-size:0.8em;">
+                                <input value="" id="titulo"  type="text" name="titulo" placeholder="Asunto" style="width:100%"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:0.8em;">
+                                <textarea id="mensaje" placeholder="Mensaje" rows="8" style="resize: none; width:100%;"></textarea>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="text-align:right;">
+                                <a data-role="button" onclick="ServicioAjustes()" style="background-color: black; color: white; font-size: .8em">Enviar</a>
+                            </td>
+                        </tr>
+                        
+                        
+                    </table>
+                </div>
+                <div style=" padding:.4em;">
+                    *Su mensaje se le enviará vía correo electrónico a los encargados de soporte y se le contestará en breve.     
+                </div>
+            </div>
+            
             <script>
-               function initAjustes(e) 
-               {
-                  //alert("works...");
-                  document.getElementById("map-canvas").style.width = String($(window).width()) + "px";
-                  document.getElementById("map-canvas").style.height = String($(window).height() - 35 ) + "px";
-                  initialize();
-               }   
-               function initialize() 
-              {
-                   //alert("works");
-                    var mapCanvas = document.getElementById('map-canvas');
-                    var mapOptions = {
-                      center: new google.maps.LatLng(14.0421531, -87.1908476),
-                      zoom: 8,
-                      mapTypeId: google.maps.MapTypeId.ROADMAP
+                
+                function initAjustes(e) 
+                {
+                    document.getElementById("mensaje").value = "";
+                    document.getElementById("titulo").value = "";
+                }
+                
+                function ServicioAjustes()
+                {
+                    try
+                    {
+                        var asunto = document.getElementById("titulo").value;
+                        var mensaje = document.getElementById("mensaje").value;
+                        
+                        if ( asunto == null || mensaje == "" ) 
+                        {
+                             alert("Debe completar el asunto y el mensaje.");   	
+                             return;
+                        }
+                        
+                        
+                        if ( asunto == null || mensaje == "" ) 
+                        {
+                             alert("Debe completar el asunto y el mensaje.");  	
+                             return;
+                        }
+                        
+                        var vaType = "GET";
+                        //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
+                        var vaUrl = "http://localhost:1564/Home/EnviarMensaje";
+                        var vaData = 'username=' + String(username) + 
+                                     '&asunto=' + String(asunto) + 
+                                     '&mensaje=' + String(mensaje);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        data          : vaData, //Data sent to server
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceFoundAjustes(msg);                    
+                        },
+                        error: ServiceNotFindAjustes// When Service call fails
+                        });
+                        
+                        
                     }
-                    var map = new google.maps.Map(mapCanvas, mapOptions)
-                  
-                   var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(14.0421531, -87.1908476),
-                        map: map,
-                        title: "Ubicacion del vendedor [29/04/2015 9:28:00 am]",
-                        animation: google.maps.Animation.DROP
-                    });
-              }
-              
-              //alert("works");
-              //google.maps.event.addDomListener(window, 'load', initialize)
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFoundAjustes(result) 
+                {
+                    try
+                    {                          
+                        if ( String(result.STATUS) == "X" ) 
+                        {
+                            document.getElementById("titulo").value = "";
+                            document.getElementById("mensaje").value = "";
+                            
+                            alert("Su mensaje ha sido enviado con éxito");
+                        }
+                        else
+                        {
+                            alert("Error al enviar el mensaje, vuelva a intentarlo.");
+                        }
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function ServiceNotFindAjustes(result) 
+                {
+                    alert("Error al enviar el mensaje, vuelva a intentarlo.");
+                }
             </script>
         </div>
     </body>
