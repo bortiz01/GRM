@@ -31,6 +31,7 @@
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
                     <span data-role="view-title">Mapa</span>
+                    <a id="gfecha" data-align="left" data-role="button" style="background-color: black; color: white;">Fecha: 07-05-2015</a>
                     <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div>
@@ -38,7 +39,8 @@
             <script>
                function initMapa(e) 
                {
-                  //alert("works...");
+                  document.getElementById("gfecha").innerHTML = gfecha + " " + ghora;
+                   
                   document.getElementById("map-canvas").style.width = String($(window).width()) + "px";
                   document.getElementById("map-canvas").style.height = String($(window).height() - 35 ) + "px";
                   initializeMapa();

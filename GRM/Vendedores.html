@@ -305,12 +305,11 @@
                             alert("No hay coordenadas para el usuario especificado");
                             return;	
                         }
-                         
-                        alert( "Fecha actualización: " + String(result.fecha) + " " + String(result.hora) );
                         
                         glatitud = parseFloat(result.latitud);
                         glongitud = parseFloat(result.longitud);
-                        
+                        gfecha = String(result.fecha);
+                        ghora = String(result.hora);
                         app.navigate("mapa.html","overlay:left");   
                     }
                     catch(err)
