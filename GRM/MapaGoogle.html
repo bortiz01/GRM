@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+      <div id="view-google-map" 
+             data-title="Google Map" 
+             data-role="view"
+             >
+            <div id="map"></div>
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Mapa</span>
+                    <a id="gfecha" data-align="left" data-role="button" style="background-color: black; color: white;">Fecha: 07-05-2015</a>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+      </div>
+      <script>
+          var map;
+          function initMap() 
+          {
+              var uluru = {lat: glatitud, lng: glongitud};
+              
+              var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 4,
+                  center: uluru
+              });
+              
+              var marker = new google.maps.Marker({
+                  position: uluru,
+                  map: map
+              });
+              
+              document.getElementById("gfecha").innerHTML = gfecha + " " + ghora;
+              document.getElementById("map").style.width = String($(window).width()) + "px";
+              document.getElementById("map").style.height = String($(window).height() - 35 ) + "px";
+          }
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUnERkULujuZ-VolJUfViFhEAfcK2oSl8&callback=initMap" async defer>
+      </script>
+  </body>
+</html>

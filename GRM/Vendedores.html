@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Reporte</title>
+        <title>Supervisar</title>
         <meta charset="utf-8" />
         <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
         <link href="styles/main.css" rel="stylesheet" />
@@ -9,8 +9,7 @@
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-
+        <script src="kendo/js/CriptoJS/js"></script>
     </head>
     <body>
         <div id="tabstrip-vendedores" 
@@ -41,7 +40,7 @@
             			</tr>
             		</table>
                 </div>
-    			<div class="list_percentage">
+                <div class="list_percentage">
             		<div class="template_label">Avance de Venta</div>
                     <div class="template_value">${per_venta}</div>
                 </div>
@@ -58,23 +57,9 @@
                     <div class="template_value">${per_cobro}</div>
                 </div>
                 <div class="list_percentage">
-                	<div class="template_label">SKU Activos</div>
-                    <div class="template_value">${per_sku}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Dias Prom. Pago</div>
-                    <div class="template_value">${per_dias}</div>
-                </div>
-                <div class="list_percentage">
                 	<div class="template_label">Localizar</div>
                     <div class="template_value">
                         <a onclick="goToMapGerente(${id})" style="text-decoration: underline;">Ver Mapa</a>
-                    </div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Número Celular</div>
-                    <div class="template_value">
-                        <a href="tel:${telefono}" style="text-decoration: underline;">llamar</a>
                     </div>
                 </div>
                 <br />
@@ -97,6 +82,7 @@
                     {
                         var vType = "GET";
                         var vUrl = "http://portal.diapa.net:120/Home/VendedoresList";
+                        //var vUrl = "http://localhost:1564/home/VendedoresList";
                         var vData = 'Codigo=' + String(codigo) + '&Tipo=' + String(tipo)  ;
                         var vContentType = "application/json; charset=utf-8";
                         var vDataType = "json";
@@ -154,8 +140,7 @@
                             
                             result[i].per_hoy = "L. " + String(result[i].venta.toFixed(2));
                             result[i].per_demanda = "L. " + String(result[i].demanda.toFixed(2));
-                            result[i].per_sku = String(result[i].sku.toFixed(2));
-                            result[i].per_dias = String(result[i].dias.toFixed(2));
+                            
                         }
                         
                         dataVendedores = new kendo.data.DataSource({
@@ -185,9 +170,9 @@
                     }
                     else
                     {
+                        
                         codigoTempS = var1;
-                        app.navigate("Vendedores2.html","slide:left")
-                        //callWebServiceList(var1, tipo);    
+                        app.navigate("Vendedores2.html","fade");
                     }  
                 }
                 
@@ -310,7 +295,7 @@
                         glongitud = parseFloat(result.longitud);
                         gfecha = String(result.fecha);
                         ghora = String(result.hora);
-                        app.navigate("mapa.html","overlay:left");   
+                        app.navigate("MapaGoogle.html","fade");   
                     }
                     catch(err)
                     {

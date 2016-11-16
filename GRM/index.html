@@ -3,13 +3,16 @@
     <head>
         <title>Diapa</title>
         <meta charset="utf-8" />
-        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        
         <link href="styles/main.css" rel="stylesheet" />
-        <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+       
+        
+        <script src="kendo/js/CriptoJS/aes.js"></script>
         <script src="cordova.js"></script>
+        
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js"></script>
         
     </head>
     
@@ -75,6 +78,7 @@
             var glongitud = 0.00;
             var gfecha = "";
             var ghora = "";
+            var filtrarLibro = false;
             
             $( document ).ready(function() 
             {
@@ -147,8 +151,8 @@
                     var encryptedText = CryptoJS.AES.encrypt(text,Key,{iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
                     
                     varType = "GET";
-                    //varUrl = "http://portal.diapa.net:120/home/Autentificar";
                     varUrl = "http://portal.diapa.net:120/home/Autentificar";
+                    //varUrl = "http://localhost:1564/home/Autentificar";
                     varData = 'Email=' + String(username) + 
                               '&Password='+ encryptedText +
                               '&Latitud='+ String(latitude) +
@@ -189,12 +193,12 @@
                         codigo = parseInt(result.Codigo_Venta); 
                         id = parseInt(result.id);
                         tipo = parseInt(result.Tipo);
-                    
                         app.navigate("inicio.html","zoom");
                     }
                 }
                 catch(err)
                 {    
+                    alert("Error al autentificar espercial")
                     codigo = 0;
                     id = 0;
                     alert("Sus credenciales no son validas.");
@@ -208,7 +212,6 @@
             
             function encontrado(position) 
             {
-                //alert("[" + position.coords.latitude + "," + position.coords.longitude + "]");
                 localStorage.setItem("latitude", String(position.coords.latitude));
                 localStorage.setItem("longitude", String(position.coords.longitude));
             }

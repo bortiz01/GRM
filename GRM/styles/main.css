@@ -279,6 +279,31 @@ body, html
     margin-right:auto;
     margin-left:auto;
 }
+#tabstrip-libro .km-content 
+{
+    text-align:center;
+    padding-top: 1em;
+    background-image:url('../styles/images/background.png');
+    background-position:center; 
+    height:100%;
+    width:100%;
+    margin-right:auto;
+    margin-left:auto;
+}
+#tabstrip-libro-ruta .km-content 
+{
+    text-align:center;
+    padding-top: .5em;
+    /*
+    background-image:url('../styles/images/background.png');
+    background-position:center; 
+    */
+    background-color: #f0f0f0;
+    height:100%;
+    width:100%;
+    margin-right:auto;
+    margin-left:auto;
+}
 #panel
 {
     background-image:url('../styles/images/login_back.png');
@@ -459,3 +484,17 @@ body, html
 { 
     padding: .5em;
 }
+
+.scan_container
+{
+
+    color: #404040;
+    background-color: #eaeaea;
+    width: 38%;
+    margin-right:auto;
+    margin-left:auto;
+    box-shadow: 0px 5px 5px black;
+    border-radius:5px;
+}
+
+

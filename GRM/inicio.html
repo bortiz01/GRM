@@ -23,7 +23,7 @@
         <div id="tabstrip-home" 
              data-title="Inicio" 
              data-role="view"
-             data-init="initHome"
+             data-show="initHome"
              >
             <div data-role="header">
                
@@ -129,18 +129,18 @@
             <div style="margin:auto; width:100%; padding-top:1em;">
                 
                 <div style="text-align:center;">
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click003()">Informe del Día</a>
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()">Supervisar</a>
+                    <a id="aBoton1" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click003()">Informe del Día</a>
+                    <a id="aBoton2" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()">Supervisar</a>
                 </div>
                 
                 <div style="text-align:center;">
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click002()">Reportes</a>
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()">Promociones</a>
+                    <a id="aBoton3" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click002()">Reportes</a>
+                    <a id="aBoton4" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()">Promociones</a>
                 </div>
                 
                 <div style="text-align:center;">
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click005()">Cambio Contraseña</a>
-                    <a data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click006()">Soporte</a>
+                    <a id="aBoton5" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click005()">Cambio Contraseña</a>
+                    <a id="aBoton6" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click006()">Soporte</a>
                 </div>
                 
             </div>
@@ -150,6 +150,19 @@
              
                 function initHome(e) 
                 {
+                    if ( tipo == 40 || tipo == 10 || tipo == 20) 
+                    {
+                         document.getElementById("aBoton2").innerHTML = "Supervisar" 
+                    }    
+                    else if( tipo == 30 ) 
+                    {
+                         document.getElementById("aBoton2").innerHTML = "Libro Rutas" 	
+                    }
+                    else
+                    {
+                         document.getElementById("aBoton2").innerHTML = "No Aplica" 	
+                    }
+                    
                     callWebService("1") ;
                 }
                 
@@ -173,7 +186,7 @@
                     try
                     {
                         var vaType = "GET";
-                        var vaUrl = "http://portal.diapa.net:120/Home/VentaPorSemana";
+                        var vaUrl = "http://portal.diapa.net:120/home/VentaPorSemana";
                         var vaData = 'Codigo=' + String(codigo) + '&Tipo=' + String(tipo) + '&Semana=' + String(semana); 
                         var vaContentType = "application/json; charset=utf-8";
                         var vaDataType = "json";
@@ -271,29 +284,29 @@
                     }
                     else if( tipo == 30 ) 
                     {
-                      alert("Esta opción no esta disponible para su perfil")	
+                       app.navigate("Libro.html","slide:left");		
                     }
                     
                 }
                 function Click002() 
                 {
-                    app.navigate("Reportes.html","slide:left");
+                    app.navigate("Reportes.html","slide:right");
                 }
                 function Click003() 
                 {
-                    app.navigate("Informacion.html","overlay:up");
+                    app.navigate("Informacion.html","slide:right");
                 }
                 function Click004() 
                 {
-                    app.navigate("promos.html","overlay:left");
+                    app.navigate("promos.html","slide:left");
                 }
                 function Click005() 
                 {
-                    app.navigate("miperfil.html","overlay:left");
+                    app.navigate("miperfil.html","slide:right");
                 }
                 function Click006() 
                 {
-                    app.navigate("Ajustes.html","overlay:left");
+                    app.navigate("Ajustes.html","slide:left");
                 }
             </script>
         </div>   

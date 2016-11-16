@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+    </head>
+    <body>
+        <div id="tabstrip-libro" 
+             data-title="Libro de Rutas" 
+             data-role="view"
+             data-transition="fade"
+             data-show="showLibro"
+             >
+            <div id="menuLibro" data-role="header">
+                <div  data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Libro de Ruta</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            <div style="margin:auto; width:100%;">
+                <div style="text-align:center;">
+                    <a  id="aBotonCargar" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:86%; font-size: 1.1em; background-color: #00b312;" 
+                        onClick="CargarClientes()">Cargar
+                    </a>
+                </div>
+            </div>
+            <br />
+            <div class="indicators_container">
+                Estadisticas del Libro
+                <div class="deitel_container" >
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Ruta
+                            </td>
+                            <td class="right_column">
+                                <label id="lb1">10002050</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Día
+                            </td>
+                            <td class="right_column">
+                                <label id="lb2">Martes</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Clientes
+                            </td>
+                            <td class="right_column">
+                                <label id="lb3">190</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Visitados
+                            </td>
+                            <td class="right_column">
+                                <label id="lb4">167</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Pendientes
+                            </td>
+                            <td class="right_column">
+                                <label id="lb5">23</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="divBtnLibros" style="margin:auto; width:100%; padding-top:1em;">
+                <div style="text-align:center;">
+                    <a  id="btnPendientes" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" 
+                        onClick="goToPendientes()">Pendientes
+                    </a>
+                    <a  id="btnTodos" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" 
+                        onClick="goToTodos()">Todos 
+                    </a>
+                </div>
+            </div>
+      
+            <div style="margin:auto; width:100%; padding-top:1em;">
+                <div style="text-align:center;">
+                    <img id="imgScan" src="styles/images/scan.png" 
+                         width="20" 
+                         height="20" 
+                         onClick="scanCode()">
+                </div>
+            </div>
+            <script>
+                function showLibro(e) 
+                {
+                    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+                    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+
+                    var height1 = document.getElementById('divBtnLibros').offsetHeight
+                    var height2 = document.getElementById('menuLibro').offsetHeight
+                    
+                    var my_div = document.getElementById('divBtnLibros');
+                    var box1 = { left: 0, top: 0 };
+                    try 
+                    {
+                        box1 = my_div.getBoundingClientRect();
+                    } 
+                    catch(e) 
+                    {}
+                    
+                    var v1 = box1.top + height1;
+                    var v2 = height2;
+                    var v3 = h - v1 - v2;
+                    
+                    var v4 = v3 * 0.9;
+                    
+                    document.getElementById('imgScan').style.width = v4 + "px";
+                    document.getElementById('imgScan').style.height = v4 + "px";
+                    
+                    leerLibro();
+                }
+                
+                function CargarClientes() 
+                {
+                    var libro = localStorage.getItem("libro");
+                    
+                    if (libro == null) 
+                    {
+                    	callWebServiceLR();
+                    }
+                    else
+                    {
+                        localStorage.removeItem("libro");    
+                        leerLibro();
+                    }
+                }
+                
+                function callWebServiceLR()
+                {
+                    try
+                    {
+                        var vaType = "GET";
+                        var vaUrl = "http://portal.diapa.net:120/home/Libro";
+                        //var vaUrl = "http://localhost:1564/home/Libro";
+                        var vaData = 'Vendedor=' + String(codigo);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        data          : vaData, //Data sent to server
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceFindLB(msg);                    
+                        },
+                        error: ServiceNotFindLB// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFindLB(result) 
+                {
+                    try
+                    { 
+                        localStorage.setItem('libro', JSON.stringify(result));
+                        document.getElementById("aBotonCargar").innerHTML = "Descargar";
+                        leerLibro();
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function ServiceNotFindLB(result) 
+                {
+                    alert("Error en conexión.");
+                }
+                
+                function leerLibro() 
+                {
+                    try
+                    { 
+                        var libro = JSON.parse(localStorage.getItem("libro"));
+                        
+                        var ruta = "No Definida";
+                        var dia = "No Definido";
+                        var clientes = 0;
+                        var visitados = 0;
+                        var pendientes = 0;
+                        
+                        if (libro != null) 
+                        {
+                            for (var i = 0; i < libro.length; i++)
+                            { 
+                                ruta = libro[i].ruta;
+                                dia = libro[i].dia;
+                                clientes++;
+                                if (libro[i].visitado)
+                                {
+                                     visitados++;       	
+                                }
+                                else
+                                {
+                                     pendientes++;   
+                                }
+                            }
+                            document.getElementById("aBotonCargar").innerHTML = "Descargar";
+                            document.getElementById("aBotonCargar").style.backgroundColor = "#00b312";
+                            document.getElementById("btnPendientes").style.visibility = 'visible';
+                            document.getElementById("imgScan").style.visibility = 'visible';
+                            document.getElementById("btnTodos").style.visibility = 'visible';
+                        }
+                        else
+                        {
+                            document.getElementById("aBotonCargar").innerHTML = "Cargar";
+                            document.getElementById("aBotonCargar").style.backgroundColor = "#C71B1B";
+                            document.getElementById("btnPendientes").style.visibility = 'hidden';
+                            document.getElementById("imgScan").style.visibility = 'hidden';
+                            document.getElementById("btnTodos").style.visibility = 'hidden';
+                        }
+                        
+                        document.getElementById("lb1").innerHTML = ruta;
+                        document.getElementById("lb2").innerHTML = dia;
+                        document.getElementById("lb3").innerHTML = clientes;
+                        document.getElementById("lb4").innerHTML = visitados;
+                        document.getElementById("lb5").innerHTML = pendientes;
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                function goToPendientes() 
+                {
+                    filtrarLibro = true;
+                    app.navigate("LibroRuta.html","fade");
+                }
+                    
+                function goToTodos() 
+                {
+                    filtrarLibro = false;
+                    app.navigate("LibroRuta.html","fade");
+                }
+                
+                function scanCode() 
+                {
+                    cordova.plugins.barcodeScanner.scan(
+                        function(result) 
+                        { 
+                            setTimeout(function() 
+                            {
+                                if( !result.cancelled )
+                                {
+                                    var cliente = result.text;
+                                    registrarVisita(cliente);
+                                }                      
+                            }, 0);
+                        }, // success
+                        function(error) 
+                        { 
+                            alert("Scanning failed: " + error);
+                        }  // error
+                    );
+                }
+                function registrarVisita(cliente) 
+                {
+                    try
+                    {
+                        var libro = JSON.parse(localStorage.getItem("libro"));
+                        for (var i = 0; i < libro.length; i++)
+                        {
+                            if( libro[i].codigo == cliente )
+                            {
+                                if( libro[i].visitado )
+                                {
+                                    if (!confirm('¿Desea replazar el marcaje del cliente ' + libro[i].nombre + '?')) 
+                                    {
+                                        return;
+                                    } 
+                                }
+                                
+                                navigator.geolocation.getCurrentPosition(encontradoLB, noencontradoLB,{enableHighAccuracy: true});
+                                
+                                var lat = 0;
+                                var lon = 0;
+                    
+                                if (localStorage.getItem("latitude") != undefined) 
+                                {
+                                    lat = localStorage.getItem("latitude");
+			                    }
+                    
+                                if (localStorage.getItem("longitude") != undefined) 
+                                {
+                                    lon = localStorage.getItem("longitude");
+			                    }
+                                
+                                libro[i].visitado = true;
+                                libro[i].latitud = lat;
+                                libro[i].longitud = lon;
+                                
+                                localStorage.setItem('libro', JSON.stringify(libro));
+                                leerLibro();
+                                
+                                var mensaje = "Cliente "  + libro[i].nombre + " registrado con éxito."
+                                alert(mensaje)
+                                return;
+                            }
+                        } 
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());   
+                    }
+                }
+                function encontradoLB(position) 
+                {
+                    localStorage.setItem("latitude", String(position.coords.latitude));
+                    localStorage.setItem("longitude", String(position.coords.longitude));
+                }
+            
+                function noencontradoLB(error) 
+                {
+                    localStorage.removeItem("latitude");
+                    localStorage.removeItem("longitude");
+                }
+            </script>
+        </div>
+    </body>
+</html>

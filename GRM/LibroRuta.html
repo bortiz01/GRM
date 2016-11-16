@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Libro de Rutas</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="kendo/js/CriptoJS/js"></script>
+    </head>
+    <body>
+        <div id="tabstrip-libro-ruta" 
+             data-title="Libro de Ruta" 
+             data-role="view"
+             data-transition="fade"
+             data-show="showLibroRuta"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Libro de Rutas</span>
+                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div> 
+            
+            <ul id="custom-listview-libro"  data-template="customListViewTemplate" data-role="listview"></ul>
+            
+            <script type="text/x-kendo-template" id="customListViewTemplate">
+    			<div class="list_title">
+                	<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+            					${nombre}
+            				</td>
+                            <td style="width: 70%; text-align:right;">
+                    			<a class="button" data-role="button" onclick="scanCode();" style="background-color: black; color: white; font-size:.8em;">Scan</a>
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+    			<div class="list_percentage">
+            		<div class="template_label">Código SAP</div>
+                    <div class="template_value">${codigo}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">Día de Visita</div>
+                    <div class="template_value">${dia}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label">Orden</div>
+                    <div class="template_value">${orden}</div>
+                </div>
+                <br />
+			</script>
+            
+            <script>
+                function showLibroRuta(e) 
+                {
+                    var libro = JSON.parse(localStorage.getItem("libro"));
+                    
+                    if( libro != null )
+                    {
+                        var pendientes = [];
+                        
+                        if( filtrarLibro )
+                        {
+                            pendientes = libro.filter(noVisitado);
+                        }
+                        else
+                        {
+                            pendientes = libro.filter(todos);
+                        }
+                        
+                        var dataLibroRuta = new kendo.data.DataSource({
+                            data: pendientes
+                        });
+                        
+                        $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataLibroRuta);
+                    }
+                }
+                
+                function noVisitado(item) 
+                {
+                    return !item.visitado;
+                }
+                
+                function todos(item) 
+                {
+                    return true;
+                }
+            </script>
+        </div>
+    </body>
+</html>
