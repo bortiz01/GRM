@@ -70,6 +70,8 @@
                 function initVendedores3(e) 
                 {
                     callWebServiceList3(codigoTempV,20);
+                    var scroller = e.view.scroller;
+                    scroller.reset();
                 }
                 
                 function callWebServiceList3(codigo,tipo) 
@@ -275,10 +277,11 @@
                             return;	
                         }
                          
-                        glatitud = parseFloat(result.latitud);
-                        glongitud = parseFloat(result.longitud);
-                        gfecha = String(result.fecha);
-                        ghora = String(result.hora);
+                        localStorage.setItem("latitudeMG", parseFloat(result.latitud));
+                        localStorage.setItem("longitudeMG", parseFloat(result.longitud));
+                                    
+                        localStorage.setItem("fechaMG", String(result.fecha));
+                        localStorage.setItem("horaMG", String(result.hora));
                         
                         app.navigate("MapaGoogle.html","fade");   
                     }

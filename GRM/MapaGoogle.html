@@ -22,33 +22,119 @@
       <div id="view-google-map" 
              data-title="Google Map" 
              data-role="view"
+             data-show="showMapaGoogle"
              >
             <div id="map"></div>
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
                     <span data-role="view-title">Mapa</span>
-                    <a id="gfecha" data-align="left" data-role="button" style="background-color: black; color: white;">Fecha: 07-05-2015</a>
+                    <a id="gfecha" data-align="left" data-role="button" style="background-color: black; color: white;"></a>
                     <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div>
       </div>
       <script>
-          var map;
-          function initMap() 
+          function initMap()
           {
-              var uluru = {lat: glatitud, lng: glongitud};
+              var lat = 0;
+              var lon = 0;
+              var f = '';
+              var h = '';
               
-              var map = new google.maps.Map(document.getElementById('map'), {
-                  zoom: 4,
+              if (localStorage.getItem("latitudeMG") != undefined) 
+              {
+                  lat =  parseFloat(localStorage.getItem("latitudeMG"));
+			  }
+                    
+              if (localStorage.getItem("longitudeMG") != undefined) 
+              {
+                  lon =  parseFloat(localStorage.getItem("longitudeMG"));
+			  }
+              
+              if (localStorage.getItem("fechaMG") != undefined) 
+              {
+                  f = localStorage.getItem("fechaMG");
+			  }
+                    
+              if (localStorage.getItem("horaMG") != undefined) 
+              {
+                  h = localStorage.getItem("horaMG");
+			  }
+              
+              if( marker != null )
+              {
+                  marker.setMap(null);                  
+              }
+              
+              var uluru = {lat: lat, lng: lon};
+              
+              map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 12,
                   center: uluru
               });
               
-              var marker = new google.maps.Marker({
+              marker = new google.maps.Marker({
                   position: uluru,
-                  map: map
+                  map: map,
+                  animation: google.maps.Animation.DROP,
               });
               
-              document.getElementById("gfecha").innerHTML = gfecha + " " + ghora;
+              document.getElementById("gfecha").innerHTML = f + " " + h;    
+              document.getElementById("map").style.width = String($(window).width()) + "px";
+              document.getElementById("map").style.height = String($(window).height() - 35 ) + "px";
+          }
+          
+          function showMapaGoogle(e)
+          {   
+              if( map == null )
+              {
+                  return;
+              }
+              
+              var lat = 0;
+              var lon = 0;
+              var f = '';
+              var h = '';
+              
+              if (localStorage.getItem("latitudeMG") != undefined) 
+              {
+                  lat =  parseFloat(localStorage.getItem("latitudeMG"));
+			  }
+                    
+              if (localStorage.getItem("longitudeMG") != undefined) 
+              {
+                  lon =  parseFloat(localStorage.getItem("longitudeMG"));
+			  }
+              
+              if (localStorage.getItem("fechaMG") != undefined) 
+              {
+                  f = localStorage.getItem("fechaMG");
+			  }
+                    
+              if (localStorage.getItem("horaMG") != undefined) 
+              {
+                  h = localStorage.getItem("horaMG");
+			  }
+              
+              if( marker != null )
+              {
+                  marker.setMap(null);                  
+              }
+              
+              var uluru = {lat: lat, lng: lon};
+
+              marker = new google.maps.Marker({
+                position: uluru,
+                map: map,
+                animation: google.maps.Animation.DROP,
+              });
+              
+              var center = new google.maps.LatLng(lat, lon);
+              map.panTo(center);
+              
+              //map.set(myOptions);
+              
+              document.getElementById("gfecha").innerHTML = f + " " + h;    
               document.getElementById("map").style.width = String($(window).width()) + "px";
               document.getElementById("map").style.height = String($(window).height() - 35 ) + "px";
           }

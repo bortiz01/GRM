@@ -70,6 +70,8 @@
                 function initVendedores2(e) 
                 {
                     callWebServiceList2(codigoTempS,10); 
+                    var scroller = e.view.scroller;
+                    scroller.reset();
                 }
                 
                 function callWebServiceList2(codigo,tipo) 
@@ -168,7 +170,7 @@
                     else
                     {
                         codigoTempV = var1;
-                        app.navigate("Vendedores3.html","fade");
+                        app.navigate("Vendedores3.html","slide:left");
                         //callWebServiceList(var1, tipo);    
                     }  
                 }
@@ -287,10 +289,11 @@
                             return;	
                         }
                          
-                        glatitud = parseFloat(result.latitud);
-                        glongitud = parseFloat(result.longitud);
-                        gfecha = String(result.fecha);
-                        ghora = String(result.hora);
+                        localStorage.setItem("latitudeMG", parseFloat(result.latitud));
+                        localStorage.setItem("longitudeMG", parseFloat(result.longitud));
+                                    
+                        localStorage.setItem("fechaMG", String(result.fecha));
+                        localStorage.setItem("horaMG", String(result.hora));
                         
                         app.navigate("MapaGoogle.html","fade");   
                     }

@@ -35,7 +35,16 @@
             					${nombre}
             				</td>
                             <td style="width: 70%; text-align:right;">
-                    			<a class="button" data-role="button" onclick="scanCode();" style="background-color: black; color: white; font-size:.8em;">Scan</a>
+                    			#if(visitado){#
+                                    <a  class="button" 
+                                        data-role="button" 
+                                        onclick="verEnMapa(${codigo})" 
+                                        style="background-color: black; color: white; font-size:.8em;">Ver
+                                    </a>
+                                #}else{#
+                                    
+                                #}#
+                                
             				</td>
             			</tr>
             		</table>
@@ -45,12 +54,18 @@
                     <div class="template_value">${codigo}</div>
                 </div>
                 <div class="list_percentage">
-            		<div class="template_label">Día de Visita</div>
-                    <div class="template_value">${dia}</div>
+            		<div class="template_label">Tipo Cliente</div>
+                    <div class="template_value">${tipo}</div>
                 </div>
                 <div class="list_percentage">
-                	<div class="template_label">Orden</div>
-                    <div class="template_value">${orden}</div>
+                	<div class="template_label">Visitado</div>
+                    <div class="template_value">
+                        #if(visitado){#
+                            Si
+                        #}else{#
+                            No
+                        #}#
+                    </div>
                 </div>
                 <br />
 			</script>
@@ -70,7 +85,7 @@
                         }
                         else
                         {
-                            pendientes = libro.filter(todos);
+                            pendientes = libro.filter(siVisitado);
                         }
                         
                         var dataLibroRuta = new kendo.data.DataSource({
@@ -78,17 +93,49 @@
                         });
                         
                         $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataLibroRuta);
+                        var scroller = e.view.scroller;
+                        scroller.reset();
                     }
                 }
-                
                 function noVisitado(item) 
                 {
                     return !item.visitado;
                 }
-                
-                function todos(item) 
+                function siVisitado(item) 
                 {
-                    return true;
+                    return item.visitado;
+                }
+                function verEnMapa(cliente) 
+                {
+                    try
+                    {
+                        var libro = JSON.parse(localStorage.getItem("libro"));
+                        for (var i = 0; i < libro.length; i++)
+                        {
+                            if( libro[i].codigo == cliente)
+                            {
+                                if( libro[i].visitado )
+                                {
+                                    localStorage.setItem("latitudeMG", String(libro[i].latitud));
+                                    localStorage.setItem("longitudeMG", String(libro[i].longitud));
+                                    
+                                    localStorage.setItem("fechaMG", String(libro[i].fecha));
+                                    localStorage.setItem("horaMG", String(libro[i].hora));
+                                    
+                                    app.navigate("MapaGoogle.html","fade");  
+                                }
+                                else
+                                {
+                                    alert("No se ha visitado el cliente");   
+                                }
+                            }   
+                        } 
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());   
+                    }
                 }
             </script>
         </div>

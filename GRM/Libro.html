@@ -40,22 +40,6 @@
                     <table class="deitel_table">
                         <tr>
                             <td class="left_column">
-                                Ruta
-                            </td>
-                            <td class="right_column">
-                                <label id="lb1">10002050</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="left_column">
-                                Día
-                            </td>
-                            <td class="right_column">
-                                <label id="lb2">Martes</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="left_column">
                                 Clientes
                             </td>
                             <td class="right_column">
@@ -93,7 +77,7 @@
                         data-role="button" 
                         data-animated="true" 
                         style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" 
-                        onClick="goToTodos()">Todos 
+                        onClick="goToVisitados()">Visitados
                     </a>
                 </div>
             </div>
@@ -209,8 +193,6 @@
                     { 
                         var libro = JSON.parse(localStorage.getItem("libro"));
                         
-                        var ruta = "No Definida";
-                        var dia = "No Definido";
                         var clientes = 0;
                         var visitados = 0;
                         var pendientes = 0;
@@ -219,8 +201,6 @@
                         {
                             for (var i = 0; i < libro.length; i++)
                             { 
-                                ruta = libro[i].ruta;
-                                dia = libro[i].dia;
                                 clientes++;
                                 if (libro[i].visitado)
                                 {
@@ -246,8 +226,6 @@
                             document.getElementById("btnTodos").style.visibility = 'hidden';
                         }
                         
-                        document.getElementById("lb1").innerHTML = ruta;
-                        document.getElementById("lb2").innerHTML = dia;
                         document.getElementById("lb3").innerHTML = clientes;
                         document.getElementById("lb4").innerHTML = visitados;
                         document.getElementById("lb5").innerHTML = pendientes;
@@ -263,7 +241,7 @@
                     app.navigate("LibroRuta.html","fade");
                 }
                     
-                function goToTodos() 
+                function goToVisitados() 
                 {
                     filtrarLibro = false;
                     app.navigate("LibroRuta.html","fade");
@@ -324,15 +302,19 @@
                                 libro[i].visitado = true; 
                                 libro[i].latitud = lat;
                                 libro[i].longitud = lon;
+                                libro[i].fecha = fechaDeHoy();
+                                libro[i].hora = horaDeHoy();
                                 
                                 localStorage.setItem('libro', JSON.stringify(libro));
                                 leerLibro();
                                 
-                                var mensaje = "Cliente "  + libro[i].nombre + " registrado con éxito."
+                                var mensaje = "Cliente "  + libro[i].nombre + " registrado con éxito. \n";
+                                mensaje += "Fecha: " + libro[i].fecha + " Hora: " + libro[i].hora;
                                 alert(mensaje)
                                 return;
                             }
                         } 
+                        alert( "Código " + cliente + " no encontrado" )
                         
                     }
                     catch(err)
@@ -350,6 +332,49 @@
                 {
                     localStorage.removeItem("latitude");
                     localStorage.removeItem("longitude");
+                }
+                
+                function fechaDeHoy()
+                {
+                    var today = new Date();
+                    var dd = today.getDate();
+                    var mm = today.getMonth()+1; //January is 0!
+                    var yyyy = today.getFullYear();
+
+                    if(dd<10) {
+                        dd='0'+dd
+                    } 
+
+                    if(mm<10) {
+                        mm='0'+mm
+                    } 
+
+                    today = dd +'/' + mm + '/' + yyyy;
+                    
+                    return today;
+                }
+                
+                function horaDeHoy()
+                {
+                    var today = new Date();
+                    
+                    var hh = today.getHours();
+                    var mm = today.getMinutes(); 
+                    var ss = today.getSeconds();
+
+                    if(hh<10) {
+                        hh='0'+ hh
+                    } 
+                    if(mm<10) {
+                        mm='0'+mm
+                    } 
+                    if(ss<10) {
+                        ss='0'+ss
+                    } 
+                    
+                    today = hh+':'+mm+':'+ss;
+                    
+                    return today;
                 }
             </script>
         </div>
