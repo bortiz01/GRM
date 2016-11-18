@@ -25,6 +25,15 @@
                 </div>
             </div> 
             
+            <div class="error_list_container">
+                <div id="error-clc" class="error_list">
+                    <br/>
+                    No hay información que mostrar
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+            
             <ul id="custom-listview-libro"  data-template="customListViewTemplate" data-role="listview"></ul>
             
             <script type="text/x-kendo-template" id="customListViewTemplate">
@@ -73,6 +82,8 @@
             <script>
                 function showLibroRuta(e) 
                 {
+                    document.getElementById("error-clc").style.display = "none";   
+                    
                     var libro = JSON.parse(localStorage.getItem("libro"));
                     
                     if( libro != null )
@@ -88,13 +99,24 @@
                             pendientes = libro.filter(siVisitado);
                         }
                         
-                        var dataLibroRuta = new kendo.data.DataSource({
-                            data: pendientes
-                        });
+                        if( pendientes.length == 0 )
+                        {
+                            document.getElementById("error-clc").style.display = "block";   
+                        }
+                        else
+                        {
+                            var dataLibroRuta = new kendo.data.DataSource({
+                                data: pendientes
+                            });
                         
-                        $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataLibroRuta);
-                        var scroller = e.view.scroller;
-                        scroller.reset();
+                            $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataLibroRuta);
+                            var scroller = e.view.scroller;
+                            scroller.reset();
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("error-clc").style.display = "block";   
                     }
                 }
                 function noVisitado(item) 

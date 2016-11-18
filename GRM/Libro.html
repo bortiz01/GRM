@@ -112,7 +112,7 @@
                     var v2 = height2;
                     var v3 = h - v1 - v2;
                     
-                    var v4 = v3 * 0.9;
+                    var v4 = v3 * 0.7;
                     
                     document.getElementById('imgScan').style.width = v4 + "px";
                     document.getElementById('imgScan').style.height = v4 + "px";
@@ -130,8 +130,9 @@
                     }
                     else
                     {
-                        localStorage.removeItem("libro");    
-                        leerLibro();
+                        callWebServiceRV();
+                        //localStorage.removeItem("libro");    
+                        //leerLibro();
                     }
                 }
                 
@@ -139,6 +140,7 @@
                 {
                     try
                     {
+                        app.pane.loader.show();
                         var vaType = "GET";
                         var vaUrl = "http://portal.diapa.net:120/home/Libro";
                         //var vaUrl = "http://localhost:1564/home/Libro";
@@ -175,9 +177,11 @@
                         localStorage.setItem('libro', JSON.stringify(result));
                         document.getElementById("aBotonCargar").innerHTML = "Descargar";
                         leerLibro();
+                        app.pane.loader.hide();
                     }
                     catch(err)
                     {
+                        app.pane.loader.hide();
                          alert(err.toString());   
                     }
                 }
@@ -375,6 +379,70 @@
                     today = hh+':'+mm+':'+ss;
                     
                     return today;
+                }
+                
+                function callWebServiceRV()
+                {
+                    try
+                    {
+                        app.pane.loader.show();
+                        var txtLibro = "";                        
+                        var libro = JSON.parse(localStorage.getItem("libro"));
+                        
+                        for (var i = 0; i < libro.length; i++)
+                        {
+                            txtLibro += libro[i].codigo + "|" + 
+                                        libro[i].latitud + "|" + 
+                                        libro[i].longitud + "|" +
+                                        libro[i].fecha + "|" + 
+                                        libro[i].hora + ";";
+                        }
+                        
+                        var vaType = "POST";
+                        //var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
+                        var vaUrl = "http://localhost:1564/home/RegistarVisitas";
+                        //var vaData = 'Vendedor=' + String(codigo) + '&Text=' + String(txtLibro);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                        
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        cache         : false,
+                        data          : "{ 'Vendedor': '80', 'Text': '" + txtLibro + "' }",
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceFindRV(msg);                    
+                        },
+                        error: function(xhr, ajaxOptions, thrownError){ 
+                            
+                            app.pane.loader.hide();
+                            alert("Error en conexión.");
+                        }
+                        });  
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFindRV(result) 
+                {
+                    try
+                    { 
+                        app.pane.loader.hide();
+                        leerLibro();   
+                        
+                        alert("Registro de visitas enviados con éxito");
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
                 }
             </script>
         </div>
