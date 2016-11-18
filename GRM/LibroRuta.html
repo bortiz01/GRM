@@ -82,7 +82,7 @@
             <script>
                 function showLibroRuta(e) 
                 {
-                    document.getElementById("error-clc").style.display = "none";   
+                     document.getElementById("error-clc").style.display = "none";   
                     
                     var libro = JSON.parse(localStorage.getItem("libro"));
                     
@@ -102,6 +102,10 @@
                         if( pendientes.length == 0 )
                         {
                             document.getElementById("error-clc").style.display = "block";   
+                            var dataVacia = new kendo.data.DataSource({
+                                data: []
+                            });
+                            $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataVacia);
                         }
                         else
                         {
@@ -119,6 +123,7 @@
                         document.getElementById("error-clc").style.display = "block";   
                     }
                 }
+                
                 function noVisitado(item) 
                 {
                     return !item.visitado;
