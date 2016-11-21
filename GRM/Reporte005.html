@@ -70,6 +70,8 @@
                 function showReportes005(e)
                 {
                     callWebServiceDeitel005(param_index,param_col); 
+                    var scroller = e.view.scroller;
+                    scroller.reset();
                 }
                 
                 function backReporte005(e) 
@@ -81,6 +83,8 @@
                {
                     try
                     {
+                        var codigo = getCodigo();
+                        
                         var detType = "GET";
                         var detUrl = "http://portal.diapa.net:120/home/Detalle";
                         var detData = 'id=' + String(index) + '&codigo=' + String(codigo); 
@@ -116,6 +120,7 @@
                         });
                         
                         $("#listview-report005").data("kendoMobileListView").setDataSource(dataReporte005); 
+                        
                     }
                     catch(err)
                     {

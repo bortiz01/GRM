@@ -42,7 +42,7 @@
             </div>
             
             <div id="week_container">
-            	<ul data-role="buttongroup" data-index="0" data-select="onSelect">
+            	<ul id="buttongroup" data-role="buttongroup" data-select="onSelect">
                 	<li style="background-color: #C71B1B;">&nbsp;S01&nbsp;</li>
                 	<li style="background-color: #C71B1B;">&nbsp;S02&nbsp;</li>
                 	<li style="background-color: #C71B1B;">&nbsp;S03&nbsp;</li>
@@ -140,16 +140,16 @@
                 
                 <div style="text-align:center;">
                     <a id="aBoton5" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click005()">Cambio Contraseña</a>
-                    <a id="aBoton6" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click006()">Soporte</a>
+                    <a id="aBoton6" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click006()">Cerrar Sesión</a>
                 </div>
                 
             </div>
             
             <script>
-            
-             
                 function initHome(e) 
                 {
+                    var tipo = getTipo();
+                    
                     if ( tipo == 40 || tipo == 10 || tipo == 20) 
                     {
                          document.getElementById("aBoton2").innerHTML = "Supervisar" 
@@ -163,7 +163,9 @@
                          document.getElementById("aBoton2").innerHTML = "No Aplica" 	
                     }
                     
-                    callWebService("1") ;
+                    var buttongroup = $("#buttongroup").data("kendoMobileButtonGroup");
+                    buttongroup.select(0);
+                    callWebService(1);
                 }
                 
                 function onSelect(e) 
@@ -173,18 +175,20 @@
                         var index = this.current().index();
                         index = index + 1;
                         callWebService(String(index)) ;
-                        
                     }
                     catch(err)
                     {
                         alert(err.toString());    
                     }
-                    
                 }
+                
                 function callWebService(semana)
                 {
                     try
                     {
+                        var codigo = getCodigo();
+                        var tipo = getTipo();
+                        
                         var vaType = "GET";
                         var vaUrl = "http://portal.diapa.net:120/home/VentaPorSemana";
                         var vaData = 'Codigo=' + String(codigo) + '&Tipo=' + String(tipo) + '&Semana=' + String(semana); 
@@ -267,6 +271,9 @@
                 
                 function Click001() 
                 {
+                    var codigo = getCodigo();
+                    var tipo = getTipo();
+                    
                     if ( tipo == 40) 
                     {
                        codigoTempG = codigo;
@@ -286,7 +293,6 @@
                     {
                        app.navigate("Libro.html","slide:left");		
                     }
-                    
                 }
                 function Click002() 
                 {
@@ -306,7 +312,16 @@
                 }
                 function Click006() 
                 {
-                    app.navigate("Ajustes.html","slide:left");
+                    if (!confirm('¿Desea cerrar sesión?')) 
+                    {
+                        return;
+                    } 
+                    
+                    localStorage.removeItem("codigo");
+                    localStorage.removeItem("tipo");
+                    localStorage.removeItem("id");
+                    
+                    app.navigate("#:back");
                 }
             </script>
         </div>   

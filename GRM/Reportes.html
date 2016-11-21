@@ -26,7 +26,7 @@
                 </div>
             </div>
             
-            <ul id="custom-listview-report"></ul>    
+            <ul id="custom-listview-report" data-template="customListViewTemplate-report" data-role="listview"></ul>    
             
             <script type="text/x-kendo-template" id="customListViewTemplate-report">
     			<div class="container_list">
@@ -57,6 +57,9 @@
                function initReportes(e) 
                {
                    callWebServiceReprotes(); 
+                   
+                   var scroller = e.view.scroller;
+                   scroller.reset();
                }
                function reportClick(index,col)
                {
@@ -93,6 +96,8 @@
                {
                     try
                     {
+                        var id = getId();
+                        
                         var repType = "GET";
                         var repUrl = "http://portal.diapa.net:120/Home/ListaReportes";
                         var repData = 'id=' + String(id) ; 
@@ -115,7 +120,7 @@
                     }
                     catch(err)
                     {
-                        alert(err.toString());
+                        alert("Error en la llamada" + err.toString());
                     }
 			   }
                 
@@ -123,26 +128,21 @@
                {
                     try
                     {
-                        $("#custom-listview-report").kendoMobileListView({
-                        dataSource: kendo.data.DataSource.create({data: result }),
-                        template: $("#customListViewTemplate-report").html(),
+                        var dataReportes = new kendo.data.DataSource({
+                            data: result
                         });
+                        
+                        $("#custom-listview-report").data("kendoMobileListView").setDataSource(dataReportes); 
                     }
                     catch(err)
                     {
-                         alert(err.toString());   
+                         alert("Error en el resultado " + err.toString());   
                     }
                }
 
                function ServiceNotReport(result) 
                {
                     alert("Error en conexión.");
-               }
-                
-               function NavigateBackR(e) 
-               {
-                   app.navigate("#:back");
-                   //app.navigate("inicio.html");    
                }
             </script>
         </div>

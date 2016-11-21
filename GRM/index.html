@@ -29,6 +29,7 @@
         <div id="view-login" 
              data-title="Login" 
              data-role="view"
+             data-show="loginShow"
              >
                 <div id="main_panel">
                     <img src="./styles/images/diapa.png" style="height:80px; width:120px;">
@@ -50,11 +51,11 @@
                 app.navigate("#:back");
             }
             
-            var username;
-            var password;
-            var codigo;
-            var tipo;
-            var id;
+            //var username;
+            //var password;
+            //var codigo;
+            //var tipo;
+            //var id;
             var app;
             var param_index = 0;
             var param_col = 0;
@@ -115,8 +116,8 @@
             {
                 try
                 {
-                    username = element = document.getElementById("username").value;
-                    password = element = document.getElementById("password").value;
+                    var username = element = document.getElementById("username").value;
+                    var password = element = document.getElementById("password").value;
                     
                     localStorage.setItem("username", username);
                     localStorage.setItem("password", password);
@@ -188,21 +189,25 @@
                 {
                     if (result.Codigo_Venta == null) 
                     {
+                        localStorage.removeItem("codigo");
+                        localStorage.removeItem("tipo");
+                        localStorage.removeItem("id");
                     	alert("Sus credenciales no son validas.");
                     }
                     else
                     {
-                        codigo = parseInt(result.Codigo_Venta); 
-                        id = parseInt(result.id);
-                        tipo = parseInt(result.Tipo);
+                        localStorage.setItem("codigo", String(result.Codigo_Venta));
+                        localStorage.setItem("tipo", String(result.Tipo));
+                        localStorage.setItem("id", String(result.id));
+                        
                         app.navigate("inicio.html","zoom");
                     }
                 }
                 catch(err)
-                {    
-                    alert("Error al autentificar espercial")
-                    codigo = 0;
-                    id = 0;
+                {   
+                    localStorage.removeItem("codigo");
+                    localStorage.removeItem("tipo");
+                    localStorage.removeItem("id");
                     alert("Sus credenciales no son validas.");
                 }
             }
@@ -223,6 +228,52 @@
                 localStorage.removeItem("latitude");
                 localStorage.removeItem("longitude");
                 alert("Error, " + error.message);
+            }
+            
+            function loginShow()
+            {
+                var codigo = getCodigo();
+                
+                if( codigo != -1 )
+                {
+                    app.navigate("inicio.html","zoom");
+                }
+            } 
+            
+            function getCodigo()
+            {
+                var codigo = -1;
+                    
+                if (localStorage.getItem("codigo") != undefined) 
+                {
+                    codigo = parseInt(localStorage.getItem("codigo"));
+			    }
+                
+                return codigo;
+            }
+            
+            function getTipo()
+            {
+                var tipo = -1;
+                    
+                if (localStorage.getItem("tipo") != undefined) 
+                {
+                    tipo = parseInt(localStorage.getItem("tipo"));
+			    }
+                
+                return tipo;
+            }
+            
+            function getId()
+            {
+                var id = -1;
+                    
+                if (localStorage.getItem("id") != undefined) 
+                {
+                    id = parseInt(localStorage.getItem("id"));
+			    }
+                
+                return id;
             }
         </script>
         

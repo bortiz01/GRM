@@ -73,6 +73,8 @@
                {
                     try
                     {
+                        var codigo = getCodigo();
+                        
                         var detType = "GET";
                         var detUrl = "http://portal.diapa.net:120/home/Detalle";
                         var detData = 'id=' + String(index) + '&codigo=' + String(codigo); 
@@ -108,6 +110,7 @@
                         });
                         
                         $("#listview-report003").data("kendoMobileListView").setDataSource(dataReporte003); 
+                        
                     }
                     catch(err)
                     {

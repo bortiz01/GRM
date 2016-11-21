@@ -59,6 +59,9 @@
                 function initReportes002(e)
                 {
                     callWebServiceDeitel002(param_index,param_col); 
+                    
+                    var scroller = e.view.scroller;
+                        scroller.reset();
                 }
                 
                 function backReporte002(e) 
@@ -184,6 +187,7 @@
                         });
                         
                         $("#listview-report002").data("kendoMobileListView").setDataSource(dataReporte002); 
+                        
                     }
                     catch(err)
                     {

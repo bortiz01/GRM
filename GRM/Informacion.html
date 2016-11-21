@@ -176,8 +176,6 @@
             </div>
             
             <script>
-            
-             
                 function initInfo(e) 
                 {
                     ServicioInfoDias();
@@ -187,6 +185,9 @@
                 {
                     try
                     {
+                        var codigo = getCodigo();
+                        var tipo = getTipo();
+                        
                         var vaType = "GET";
                         var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
                         //var vaUrl = "http://localhost:1564/home/InformacionDelDia";
