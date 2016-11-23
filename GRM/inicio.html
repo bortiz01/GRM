@@ -150,17 +150,25 @@
                 {
                     var tipo = getTipo();
                     
-                    if ( tipo == 40 || tipo == 10 || tipo == 20) 
+                    if ( tipo == 40 || tipo == 10) 
                     {
                          document.getElementById("aBoton2").innerHTML = "Supervisar" 
-                    }    
+                         document.getElementById("aBoton4").innerHTML = "Promociones" 
+                    }
+                    else if( tipo == 20 )
+                    {
+                        document.getElementById("aBoton2").innerHTML = "Supervisar" 
+                        document.getElementById("aBoton4").innerHTML = "Registrar Clientes" 
+                    }
                     else if( tipo == 30 ) 
                     {
-                         document.getElementById("aBoton2").innerHTML = "Libro Rutas" 	
+                         document.getElementById("aBoton2").innerHTML = "Libro Rutas" 
+                         document.getElementById("aBoton4").innerHTML = "Promociones" 
                     }
                     else
                     {
                          document.getElementById("aBoton2").innerHTML = "No Aplica" 	
+                         document.getElementById("aBoton4").innerHTML = "No Aplica" 
                     }
                     
                     var buttongroup = $("#buttongroup").data("kendoMobileButtonGroup");
@@ -304,7 +312,16 @@
                 }
                 function Click004() 
                 {
-                    app.navigate("promos.html","slide:left");
+                    var tipo = getTipo();
+                    
+                    if( tipo == 20 )
+                    {
+                        app.navigate("RegistrarClientes.html","slide:left");
+                    }
+                    else
+                    {
+                        app.navigate("promos.html","slide:left");
+                    }
                 }
                 function Click005() 
                 {

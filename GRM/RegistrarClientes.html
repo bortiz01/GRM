@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Registrar Cliente</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+    </head>
+    <body>
+        <div id="tabstrip-libro" 
+             data-title="Libro de Rutas" 
+             data-role="view"
+             data-transition="fade"
+             data-show="showRClientes"
+             >
+            <div id="menuLibro" data-role="header">
+                <div  data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Registrar Clientes</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            <div style="margin:auto; width:100%;">
+                <div style="text-align:center;">
+                    <a  id="aBotonCargar" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:86%; font-size: 1.1em; background-color: #00b312;" 
+                        onClick="CargarClientes()">Descargar
+                    </a>
+                </div>
+            </div>
+            <br />
+            <div class="indicators_container">
+                Clientes
+                <div class="deitel_container" >
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Registrados
+                            </td>
+                            <td class="right_column">
+                                <label id="lb3">0</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div style="margin:auto; width:100%; padding-top:1em;">
+                <div style="text-align:center;">
+                    <img id="imgScan" src="styles/images/scan.png" 
+                         width="20" 
+                         height="20" 
+                         onClick="scanCodeCliente()">
+                </div>
+            </div>
+            <script>
+                function showRClientes(e) 
+                {
+                    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+                    
+                    var v1 = w * 0.7;
+                    
+                    document.getElementById('imgScan').style.width = v1 + "px";
+                    document.getElementById('imgScan').style.height = v1 + "px";
+                    
+                    leerClientes();
+                }
+                
+                function leerClientes() 
+                {
+                    try
+                    { 
+                        var clientes = JSON.parse(localStorage.getItem("clientes"));
+                        
+                        if( clientes != null )
+                        {
+                            var registrados = clientes.length;
+                            document.getElementById("lb3").innerHTML = registrados;
+                            return;
+                        }
+                        
+                        document.getElementById("lb3").innerHTML = 0;
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function scanCodeCliente() 
+                {
+                    cordova.plugins.barcodeScanner.scan(
+                        function(result) 
+                        { 
+                            setTimeout(function() 
+                            {
+                                if( !result.cancelled )
+                                {
+                                    var codigo = result.text;
+                                    registrarCliente(codigo);
+                                }                      
+                            }, 0);
+                        }, // success
+                        function(error) 
+                        { 
+                            alert("Scanning failed: " + error);
+                        }  // error
+                    );
+                }
+                
+                function registrarCliente(codigo)
+                {
+                    try
+                    {
+                        var clientes = JSON.parse(localStorage.getItem("clientes"));
+                        
+                        if( clientes == null )
+                        {
+                            clientes = [];
+                        }
+                        
+                        for( var i = 0; i < clientes.length; i++ )
+                        {
+                            if( clientes[i].codigo == codigo )
+                            {
+                                if( !confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?') )
+                                {
+                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
+                                    var lat = getLatitud();
+                                    var lon = getLongitud();
+                                    
+                                    clientes[i].codigo = codigo;
+                                    clientes[i].latitud = lat;
+                                    clientes[i].longitud = lon;
+                                    
+                                    localStorage.setItem("clientes",JSON.stringify(clientes));
+                                    leerClientes();
+                                    
+                                    alert("Cliente: " + codigo + ", registrado con éxito.");
+                                }
+                                return;
+                            }
+                        }
+                        
+                        navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
+                                
+                        var lat = getLatitud();
+                        var lon = getLongitud();
+                        
+                        var jcliente = [];
+                        jcliente.codigo = codigo;
+                        jcliente.latitud = lat;
+                        jcliente.longitud = lon;
+                        
+                        clientes.push( jcliente );
+                        
+                        localStorage.setItem("clientes",JSON.stringify(clientes));
+                        leerClientes();
+                        
+                        alert("Cliente: " + codigo + ", registrado con éxito.");
+                    }
+                    catch(err)
+                    {
+                        alert("Error al registrar el cliente");
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
