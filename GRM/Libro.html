@@ -29,8 +29,7 @@
                         data-role="button" 
                         data-animated="true" 
                         style="display:inline-block; width:86%; font-size: 1.1em; background-color: #00b312;" 
-                        onClick="CargarClientes()">Cargar
-                    </a>
+                        onClick="CargarClientes()">Cargar </a>
                 </div>
             </div>
             <br />
@@ -71,17 +70,15 @@
                         data-role="button" 
                         data-animated="true" 
                         style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" 
-                        onClick="goToPendientes()">Pendientes
-                    </a>
+                        onClick="goToPendientes()">Pendientes </a>
                     <a  id="btnTodos" 
                         data-role="button" 
                         data-animated="true" 
                         style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" 
-                        onClick="goToVisitados()">Visitados
-                    </a>
+                        onClick="goToVisitados()">Visitados </a>
                 </div>
             </div>
-      
+
             <div style="margin:auto; width:100%; padding-top:1em;">
                 <div style="text-align:center;">
                     <img id="imgScan" src="styles/images/scan.png" 
@@ -91,57 +88,48 @@
                 </div>
             </div>
             <script>
-                function showLibro(e) 
-                {
+                function showLibro(e) {
                     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
                     var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-
+                
                     var height1 = document.getElementById('divBtnLibros').offsetHeight
                     var height2 = document.getElementById('menuLibro').offsetHeight
-                    
+                
                     var my_div = document.getElementById('divBtnLibros');
                     var box1 = { left: 0, top: 0 };
-                    try 
-                    {
+                    try {
                         box1 = my_div.getBoundingClientRect();
-                    } 
-                    catch(e) 
-                    {}
-                    
+                    } catch (e) {
+                    }
+                
                     var v1 = box1.top + height1;
                     var v2 = height2;
                     var v3 = h - v1 - v2;
-                    
+                
                     var v4 = v3 * 0.7;
-                    
+                
                     document.getElementById('imgScan').style.width = v4 + "px";
                     document.getElementById('imgScan').style.height = v4 + "px";
                     
                     leerLibro();
                 }
                 
-                function CargarClientes() 
-                {
+                function CargarClientes() {
                     var libro = localStorage.getItem("libro");
                     
-                    if (libro == null) 
-                    {
-                    	callWebServiceLR();
-                    }
-                    else
-                    {
+                    if (libro == null) {
+                        callWebServiceLR();
+                    } else {
                         callWebServiceRV();
                         //localStorage.removeItem("libro");    
                         //leerLibro();
                     }
                 }
                 
-                function callWebServiceLR()
-                {
-                    try
-                    {
+                function callWebServiceLR() {
+                    try {
                         app.pane.loader.show();
-                        
+                
                         var codigo = getCodigo();
                         var vaType = "GET";
                         var vaUrl = "http://portal.diapa.net:120/home/Libro";
@@ -152,69 +140,53 @@
                         var vaProcessData = true; 
                 
                         $.ajax({
-                        type          : vaType, //GET or POST or PUT or DELETE verb
-                        url           : vaUrl, // Location of the service
-                        data          : vaData, //Data sent to server
-                        contentType   : vaContentType, // content type sent to server
-                        dataType      : vaDataType, //Expected data format from server
-                        processdata   : vaProcessData, //True or False
-                        success       : function(msg) {//On Successfull service call
-                            ServiceFindLB(msg);                    
-                        },
-                        error: ServiceNotFindLB// When Service call fails
-                        });
-                        
-                        
-                    }
-                    catch(err)
-                    {
+                                   type          : vaType, //GET or POST or PUT or DELETE verb
+                                   url           : vaUrl, // Location of the service
+                                   data          : vaData, //Data sent to server
+                                   contentType   : vaContentType, // content type sent to server
+                                   dataType      : vaDataType, //Expected data format from server
+                                   processdata   : vaProcessData, //True or False
+                                   success       : function(msg) {//On Successfull service call
+                                       ServiceFindLB(msg);                    
+                                   },
+                                   error: ServiceNotFindLB// When Service call fails
+                               });
+                    } catch (err) {
                         alert(err.toString());
                     }
-				}
+                }
                 
-                function ServiceFindLB(result) 
-                {
-                    try
-                    { 
+                function ServiceFindLB(result) {
+                    try { 
                         localStorage.setItem('libro', JSON.stringify(result));
                         document.getElementById("aBotonCargar").innerHTML = "Descargar";
                         leerLibro();
                         app.pane.loader.hide();
-                    }
-                    catch(err)
-                    {
+                    } catch (err) {
                         app.pane.loader.hide();
                         alert(err.toString());   
                     }
                 }
                 
-                function ServiceNotFindLB(result) 
-                {
+                function ServiceNotFindLB(result) {
                     alert("Error en conexión.");
                 }
                 
-                function leerLibro() 
-                {
-                    try
-                    { 
+                function leerLibro() {
+                    try { 
                         var libro = JSON.parse(localStorage.getItem("libro"));
-                        
+                
                         var clientes = 0;
                         var visitados = 0;
                         var pendientes = 0;
-                        
-                        if (libro != null) 
-                        {
-                            for (var i = 0; i < libro.length; i++)
-                            { 
+                
+                        if (libro != null) {
+                            for (var i = 0; i < libro.length; i++) { 
                                 clientes++;
-                                if (libro[i].visitado)
-                                {
-                                     visitados++;       	
-                                }
-                                else
-                                {
-                                     pendientes++;   
+                                if (libro[i].visitado) {
+                                    visitados++;       	
+                                } else {
+                                    pendientes++;   
                                 }
                             }
                             document.getElementById("aBotonCargar").innerHTML = "Descargar";
@@ -222,175 +194,147 @@
                             document.getElementById("btnPendientes").style.visibility = 'visible';
                             document.getElementById("imgScan").style.visibility = 'visible';
                             document.getElementById("btnTodos").style.visibility = 'visible';
-                        }
-                        else
-                        {
+                        } else {
                             document.getElementById("aBotonCargar").innerHTML = "Cargar";
                             document.getElementById("aBotonCargar").style.backgroundColor = "#C71B1B";
                             document.getElementById("btnPendientes").style.visibility = 'hidden';
                             document.getElementById("imgScan").style.visibility = 'hidden';
                             document.getElementById("btnTodos").style.visibility = 'hidden';
                         }
-                        
+                
                         document.getElementById("lb3").innerHTML = clientes;
                         document.getElementById("lb4").innerHTML = visitados;
                         document.getElementById("lb5").innerHTML = pendientes;
-                    }
-                    catch(err)
-                    {
-                         alert(err.toString());   
+                    } catch (err) {
+                        alert(err.toString());   
                     }
                 }
                 
-                function goToPendientes() 
-                {
+                function goToPendientes() {
                     filtrarLibro = true;
-                    app.navigate("LibroRuta.html","fade");
-                }
-                    
-                function goToVisitados() 
-                {
-                    filtrarLibro = false;
-                    app.navigate("LibroRuta.html","fade");
+                    app.navigate("LibroRuta.html", "fade");
                 }
                 
-                function scanCode() 
-                {
+                function goToVisitados() {
+                    filtrarLibro = false;
+                    app.navigate("LibroRuta.html", "fade");
+                }
+                
+                function scanCode() {
                     cordova.plugins.barcodeScanner.scan(
-                        function(result) 
-                        { 
-                            setTimeout(function() 
-                            {
-                                if( !result.cancelled )
-                                {
-                                    var cliente = result.text;
-                                    registrarVisita(cliente);
+                        function(result) { 
+                            setTimeout(function() {
+                                if (!result.cancelled) {
+                                    codigoRegistro = result.text;
+                                    window.plugins.ReadSettings.read([], readWSRegVisita, readWSRegVisitaError);
                                 }                      
                             }, 0);
                         }, // success
-                        function(error) 
-                        { 
+                        function(error) { 
                             alert("Scanning failed: " + error);
                         }  // error
-                    );
+                        );
                 }
                 
-                function registrarVisita(cliente) 
-                {
-                    try
-                    {
+                function registrarVisita(cliente) {
+                    try {
                         var libro = JSON.parse(localStorage.getItem("libro"));
-                        for (var i = 0; i < libro.length; i++)
-                        {
-                            if( libro[i].codigo == cliente )
-                            {
-                                if( libro[i].visitado )
-                                {
-                                    if (!confirm('¿Desea replazar el marcaje del cliente ' + libro[i].nombre + '?')) 
-                                    {
+                        for (var i = 0; i < libro.length; i++) {
+                            if (String(libro[i].codigo) == String(cliente)) {
+                                if (libro[i].visitado) {
+                                    if (!confirm('¿Desea replazar el marcaje del cliente ' + libro[i].nombre + '?')) {
                                         return;
                                     } 
                                 }
-                                
-                                navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
-                                
+                
+                                navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
+                                   
                                 var lat = getLatitud();
                                 var lon = getLongitud();
-                    
+                
                                 libro[i].visitado = true; 
                                 libro[i].latitud = lat;
                                 libro[i].longitud = lon;
                                 libro[i].fecha = fechaDeHoy();
                                 libro[i].hora = horaDeHoy();
-                                
+                
                                 localStorage.setItem('libro', JSON.stringify(libro));
                                 leerLibro();
-                                
-                                var mensaje = "Cliente "  + libro[i].nombre + " registrado con éxito. \n";
+                
+                                var mensaje = "Cliente " + libro[i].nombre + " registrado con éxito. \n";
                                 mensaje += "Fecha: " + libro[i].fecha + " Hora: " + libro[i].hora;
                                 alert(mensaje)
                                 return;
                             }
                         } 
-                        alert( "Código " + cliente + " no encontrado" )
-                        
-                    }
-                    catch(err)
-                    {
+                        alert("Código " + cliente + " no encontrado")
+                    } catch (err) {
                         alert(err.toString());   
                     }
                 }
                 
-                function encontradoLB(position) 
-                {
+                function encontradoLB(position) {
                     localStorage.setItem("latitude", String(position.coords.latitude));
                     localStorage.setItem("longitude", String(position.coords.longitude));
                 }
-            
-                function noencontradoLB(error) 
-                {
+                
+                function noencontradoLB(error) {
                     localStorage.removeItem("latitude");
                     localStorage.removeItem("longitude");
                 }
                 
-                function fechaDeHoy()
-                {
+                function fechaDeHoy() {
                     var today = new Date();
                     var dd = today.getDate();
-                    var mm = today.getMonth()+1; //January is 0!
+                    var mm = today.getMonth() + 1; //January is 0!
                     var yyyy = today.getFullYear();
 
-                    if(dd<10) {
-                        dd='0'+dd
+                    if (dd < 10) {
+                        dd = '0' + dd
                     } 
-
-                    if(mm<10) {
-                        mm='0'+mm
+                
+                    if (mm < 10) {
+                        mm = '0' + mm
                     } 
-
-                    today = dd +'/' + mm + '/' + yyyy;
-                    
+                
+                    today = dd + '/' + mm + '/' + yyyy;
+                
                     return today;
                 }
                 
-                function horaDeHoy()
-                {
+                function horaDeHoy() {
                     var today = new Date();
-                    
+                
                     var hh = today.getHours();
                     var mm = today.getMinutes(); 
                     var ss = today.getSeconds();
-
-                    if(hh<10) {
-                        hh='0'+ hh
+                
+                    if (hh < 10) {
+                        hh = '0' + hh
                     } 
-                    if(mm<10) {
-                        mm='0'+mm
+                    if (mm < 10) {
+                        mm = '0' + mm
                     } 
-                    if(ss<10) {
-                        ss='0'+ss
+                    if (ss < 10) {
+                        ss = '0' + ss
                     } 
-                    
-                    today = hh+':'+mm+':'+ss;
-                    
+                
+                    today = hh + ':' + mm + ':' + ss;
+                
                     return today;
                 }
                 
-                function callWebServiceRV()
-                {
-                    try
-                    {
+                function callWebServiceRV() {
+                    try {
                         app.pane.loader.show();
                         var txtLibro = "";                        
                         var libro = JSON.parse(localStorage.getItem("libro"));
                         var codigo = getCodigo();
-                        
+                
                         var contador = 0;
-                        
-                        for (var i = 0; i < libro.length; i++)
-                        {
-                            if( libro[i].visitado )
-                            {
+                
+                        for (var i = 0; i < libro.length; i++) {
+                            if (libro[i].visitado) {
                                 contador++;
                                 
                                 txtLibro += libro[i].codigo + "|" + 
@@ -401,19 +345,17 @@
                             }
                         }
                         
-                        if( contador == 0 )
-                        {
+                        if (contador == 0) {
                             app.pane.loader.hide();
-                            if (!confirm('No hay visitas que enviar ¿Desea borrar la lista de clientes?')) 
-                            {
+                            if (!confirm('No hay visitas que enviar ¿Desea borrar la lista de clientes?')) {
                                 return;
                             }
-                            
+                
                             localStorage.removeItem("libro");
                             leerLibro();   
                             return;
                         }
-                        
+                
                         var vaType = "POST";
                         //var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
                         var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
@@ -421,44 +363,53 @@
                         var vaContentType = "application/json; charset=utf-8";
                         var vaDataType = "json";
                         var vaProcessData = true; 
-                        
+                
                         $.ajax({
-                        type          : vaType, //GET or POST or PUT or DELETE verb
-                        url           : vaUrl, // Location of the service
-                        cache         : false,
-                        data          : "{ 'Vendedor': '" + codigo + "', 'Text': '" + txtLibro + "' }",
-                        contentType   : vaContentType, // content type sent to server
-                        dataType      : vaDataType, //Expected data format from server
-                        processdata   : vaProcessData, //True or False
-                        success       : function(msg) {//On Successfull service call
-                            ServiceFindRV(msg);                    
-                        },
-                        error: function(xhr, ajaxOptions, thrownError){ 
-                            
-                            app.pane.loader.hide();
-                            alert("Error en conexión.");
-                        }
-                        });  
-                    }
-                    catch(err)
-                    {
+                                   type          : vaType, //GET or POST or PUT or DELETE verb
+                                   url           : vaUrl, // Location of the service
+                                   cache         : false,
+                                   data          : "{ 'Vendedor': '" + codigo + "', 'Text': '" + txtLibro + "' }",
+                                   contentType   : vaContentType, // content type sent to server
+                                   dataType      : vaDataType, //Expected data format from server
+                                   processdata   : vaProcessData, //True or False
+                                   success       : function(msg) {//On Successfull service call
+                                       ServiceFindRV(msg);                    
+                                   },
+                                   error: function(xhr, ajaxOptions, thrownError) { 
+                                       app.pane.loader.hide();
+                                       alert("Error en conexión.");
+                                   }
+                               });  
+                    } catch (err) {
                         alert(err.toString());
                     }
-				}
+                }
                 
-                function ServiceFindRV(result) 
-                {
-                    try
-                    { 
+                function ServiceFindRV(result) {
+                    try { 
                         app.pane.loader.hide();
+                        localStorage.removeItem("libro");
                         leerLibro();   
-                        
                         alert("Registro de visitas enviados con éxito");
+                    } catch (err) {
+                        alert(err.toString());   
                     }
-                    catch(err)
-                    {
-                         alert(err.toString());   
+                }
+                
+                function readWSRegVisita(resultado) {    
+                    if (resultado != null) {
+                        if (resultado == "SI") {
+                            registrarVisita(codigoRegistro);
+                        } else {
+                            alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                        }
+                    } else {
+                        alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
                     }
+                }
+                
+                function readWSRegVisitaError() {
+                    alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
                 }
             </script>
         </div>

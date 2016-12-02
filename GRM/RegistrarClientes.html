@@ -29,8 +29,7 @@
                         data-role="button" 
                         data-animated="true" 
                         style="display:inline-block; width:86%; font-size: 1.1em; background-color: #00b312;" 
-                        onClick="CargarClientes()">Descargar
-                    </a>
+                        onClick="callWSSendClientes()">Descargar </a>
                 </div>
             </div>
             <br />
@@ -58,86 +57,69 @@
                 </div>
             </div>
             <script>
-                function showRClientes(e) 
-                {
+                function showRClientes(e) {
                     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-                    
+                
                     var v1 = w * 0.7;
-                    
+                
                     document.getElementById('imgScan').style.width = v1 + "px";
                     document.getElementById('imgScan').style.height = v1 + "px";
-                    
+                
                     leerClientes();
                 }
                 
-                function leerClientes() 
-                {
-                    try
-                    { 
+                function leerClientes() {
+                    try { 
                         var clientes = JSON.parse(localStorage.getItem("clientes"));
-                        
-                        if( clientes != null )
-                        {
+                
+                        if (clientes != null) {
                             var registrados = clientes.length;
                             document.getElementById("lb3").innerHTML = registrados;
                             return;
                         }
-                        
+                
                         document.getElementById("lb3").innerHTML = 0;
-                    }
-                    catch(err)
-                    {
-                         alert(err.toString());   
+                    } catch (err) {
+                        alert(err.toString());   
                     }
                 }
                 
-                function scanCodeCliente() 
-                {
+                function scanCodeCliente() {
                     cordova.plugins.barcodeScanner.scan(
-                        function(result) 
-                        { 
-                            setTimeout(function() 
-                            {
-                                if( !result.cancelled )
-                                {
-                                    var codigo = result.text;
-                                    registrarCliente(codigo);
+                        function(result) { 
+                            setTimeout(function() {
+                                if (!result.cancelled) {
+                                    codigoCliente = result.text;
+                                    window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
                                 }                      
                             }, 0);
                         }, // success
-                        function(error) 
-                        { 
+                        function(error) { 
                             alert("Scanning failed: " + error);
                         }  // error
-                    );
+                        );
                 }
                 
-                function registrarCliente(codigo)
-                {
-                    try
-                    {
+                function registrarCliente(codigo) {
+                    try {
                         var clientes = JSON.parse(localStorage.getItem("clientes"));
-                        
-                        if( clientes == null )
-                        {
+                
+                        if (clientes == null) {
                             clientes = [];
                         }
-                        
-                        for( var i = 0; i < clientes.length; i++ )
-                        {
-                            if( clientes[i].codigo == codigo )
-                            {
-                                if( !confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?') )
-                                {
-                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
+                
+                        for (var i = 0; i < clientes.length; i++) {
+                            if (clientes[i].codigo == codigo) {
+                                if (!confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?')) {
+                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
                                     var lat = getLatitud();
                                     var lon = getLongitud();
-                                    
+                
                                     clientes[i].codigo = codigo;
                                     clientes[i].latitud = lat;
                                     clientes[i].longitud = lon;
-                                    
-                                    localStorage.setItem("clientes",JSON.stringify(clientes));
+                
+                                    localStorage.setItem("clientes", JSON.stringify(clientes));
                                     leerClientes();
                                     
                                     alert("Cliente: " + codigo + ", registrado con éxito.");
@@ -145,53 +127,120 @@
                                 return;
                             }
                         }
-                        
-                        navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
-                                
+                
+                        navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
+                
                         var lat = getLatitud();
                         var lon = getLongitud();
-                        
+                
                         var jcliente = [];
                         jcliente.codigo = codigo;
                         jcliente.latitud = lat;
                         jcliente.longitud = lon;
+                
+                        //clientes.push(jcliente);
                         
-                        clientes.push( jcliente );
                         
-                        localStorage.setItem("clientes",JSON.stringify(clientes));
+                        clientes.push(
+                            { codigo: codigo, latitud: lat, longitud: lon}
+                        );
+                        
+                        localStorage.setItem("clientes", JSON.stringify(clientes));
                         leerClientes();
-                        
+                
                         alert("Cliente: " + codigo + ", registrado con éxito.");
-                    }
-                    catch(err)
-                    {
+                    } catch (err) {
                         alert("Error al registrar el cliente");
                     }
+                }
+                
+                function callWSSendClientes() {
+                    try {
+                        app.pane.loader.show();
+                        var txtClientes = "";                        
+                        var clientes = JSON.parse(localStorage.getItem("clientes"));
+                        var id = getId();
+                
+                        var contador = 0;
+                
+                        for (var i = 0; i < clientes.length; i++) {
+                            contador++;
+                            txtClientes += clientes[i].codigo + "|" + 
+                                           clientes[i].latitud + "|" + 
+                                           clientes[i].longitud + ";";
+                        }
+                        
+                        if (contador == 0) {
+                            app.pane.loader.hide();
+                
+                            alert("No hay registros de clientes pendientes de enviar");
+                            localStorage.removeItem("clientes");
+                            leerClientes();   
+                            return;
+                        }
+                        
+                        alert(txtClientes);
+                        
+                        var vaType = "POST";
+                        //var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
+                        var vaUrl = "http://portal.diapa.net:120/home/RegistarClientes";
+                        //var vaData = 'Vendedor=' + String(codigo) + '&Text=' + String(txtLibro);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                        
+                        $.ajax({
+                                   type          : vaType, //GET or POST or PUT or DELETE verb
+                                   url           : vaUrl, // Location of the service
+                                   cache         : false,
+                                   data          : "{ 'UsuarioId': '" + id + "', 'Text': '" + txtClientes + "' }",
+                                   contentType   : vaContentType, // content type sent to server
+                                   dataType      : vaDataType, //Expected data format from server
+                                   processdata   : vaProcessData, //True or False
+                                   success       : function(msg) {//On Successfull service call
+                                       ServiceFindRV(msg);                    
+                                   },
+                                   error: function(xhr, ajaxOptions, thrownError) { 
+                                       app.pane.loader.hide();
+                                       alert("Error en conexión.");
+                                   }
+                               });  
+                    } catch (err) {
+                        alert(err.toString());
+                    }
+                }
+                
+                function ServiceFindRV(result) {
+                    try { 
+                        
+                        alert( result.MENSAJE );
+                        
+                        app.pane.loader.hide();
+                        localStorage.removeItem("clientes");
+                        leerClientes();   
+                        alert("Registro de visitas enviados con éxito");
+                    } catch (err) {
+                        alert(err.toString());   
+                    }
+                }
+                function readWSRegCliente(resultado) {    
+                    if (resultado != null) {
+                        if (resultado == "SI") {
+                            registrarCliente(codigoCliente);
+                        } else {
+                            alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                        }
+                    } else {
+                        alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                    }
+                }
+                
+                function readWSRegClienteError() {
+                    alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
                 }
             </script>
         </div>
     </body>
 </html>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                

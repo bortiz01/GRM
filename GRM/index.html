@@ -3,51 +3,48 @@
     <head>
         <title>Diapa</title>
         <meta charset="utf-8" />
-        
+
         <link href="styles/main.css" rel="stylesheet" />
         <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
-       
-        
+
         <script src="kendo/js/CriptoJS/aes.js"></script>
         <script src="cordova.js"></script>
-        
+
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
-        
     </head>
-    
+
     <style type="text/css"> 
-            body
-            {
-                pointer-events: all !important;
-            }
+        body
+        {
+            pointer-events: all !important;
+        }
     </style>
-    
+
     <body>
-        
+
         <!--Login-->
         <div id="view-login" 
              data-title="Login" 
              data-role="view"
              data-show="loginShow"
              >
-                <div id="main_panel">
-                    <img src="./styles/images/diapa.png" style="height:80px; width:120px;">
-                    <br/>
-                    <input value="" id="username"  type="text" name="username" placeholder="Nombre de usuario" />
-                    <br/>
-                    <input value="" id="password"  type="password" name="password" placeholder="Contraseña"/>
-                    <br/>
-                    <div id="contenedor_boton">
-                        <a data-role="button" onclick="login()" style="background-color: black; color: white; font-size: .9em">Ingresar</a>    
-                    </div>
+            <div id="main_panel">
+                <img src="./styles/images/diapa.png" style="height:80px; width:120px;">
+                <br/>
+                <input value="" id="username"  type="text" name="username" placeholder="Nombre de usuario" />
+                <br/>
+                <input value="" id="password"  type="password" name="password" placeholder="Contraseña"/>
+                <br/>
+                <div id="contenedor_boton">
+                    <a data-role="button" onclick="login()" style="background-color: black; color: white; font-size: .9em">Ingresar</a>
                 </div>
+            </div>
         </div>
         <script>
             app = new kendo.mobile.Application($(document.body));
             
-            function NavigateBackToHome() 
-            {   
+            function NavigateBackToHome() {   
                 app.navigate("#:back");
             }
             
@@ -82,224 +79,203 @@
             var filtrarLibro = false;
             var map = null;
             var marker = null;
+            var next = "";
+            var codigoCliente = "";
+            var codigoRegistro = "";
             
-            $( document ).ready(function() 
-            {
-                try 
-                {
-                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado,{enableHighAccuracy: true});
-                    
-                    if (localStorage.getItem("username") != undefined) 
-                    {
-                        document.getElementById("username").value  = localStorage.getItem("username");
-			        }
-		            else 
-                    {
-			             document.getElementById("username").value  = "";
-		            }
-                    
-                    if (localStorage.getItem("password") != undefined) 
-                    {
-                        document.getElementById("password").value  = localStorage.getItem("password");
-			        }
-		            else 
-                    {
-			             document.getElementById("password").value  = "";
-		            }
-                } catch (ex) 
-                {
-                    //alert("Error al cargar datos de memoria");
+            $(document).ready(function() {
+                try {
+                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
+            
+                    if (localStorage.getItem("username") != undefined) {
+                        document.getElementById("username").value = localStorage.getItem("username");
+                    } else {
+                        document.getElementById("username").value = "";
+                    }
+            
+                    if (localStorage.getItem("password") != undefined) {
+                        document.getElementById("password").value = localStorage.getItem("password");
+                    } else {
+                        document.getElementById("password").value = "";
+                    }
+                } catch (ex) {
+                    alert("Error al cargar datos de memoria. " + ex.message);
                 }
             });
             
-            function login() 
-            {
-                try
-                {
+            function login() {
+                try {
                     var username = element = document.getElementById("username").value;
                     var password = element = document.getElementById("password").value;
-                    
+            
                     localStorage.setItem("username", username);
                     localStorage.setItem("password", password);
-                    
-                    if ( username == null || username == "")
-                    {
+            
+                    if (username == null || username == "") {
                         alert("Complete el nombre de usuario."); 
                         return;  
                     }
-                
-                    if ( password == null || password == "")
-                    {
-                      alert("Complete la contraseña."); 
-                      return;
+            
+                    if (password == null || password == "") {
+                        alert("Complete la contraseña."); 
+                        return;
                     }
-                    
+            
                     var latitude = "NONE";
                     var longitude = "NONE";
-                    
-                    if (localStorage.getItem("latitude") != undefined) 
-                    {
+            
+                    if (localStorage.getItem("latitude") != undefined) {
                         latitude = localStorage.getItem("latitude");
-			        }
-                    
-                    if (localStorage.getItem("longitude") != undefined) 
-                    {
+                    }
+            
+                    if (localStorage.getItem("longitude") != undefined) {
                         longitude = localStorage.getItem("longitude");
-			        }
-                    
-                    
+                    }
+            
                     var text = password;   
                     var Key = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
                     var IV = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                    var encryptedText = CryptoJS.AES.encrypt(text,Key,{iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-                    
+                    var encryptedText = CryptoJS.AES.encrypt(text, Key, {iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+            
                     varType = "GET";
                     varUrl = "http://portal.diapa.net:120/home/Autentificar";
                     //varUrl = "http://localhost:1564/home/Autentificar";
                     varData = 'Email=' + String(username) + 
-                              '&Password='+ encryptedText +
-                              '&Latitud='+ String(latitude) +
-                              '&Longitud='+ String(longitude) ; 
+                              '&Password=' + encryptedText +
+                              '&Latitud=' + String(latitude) +
+                              '&Longitud=' + String(longitude) ; 
                     varContentType = "application/json; charset=utf-8";
                     varDataType = "json";
                     varProcessData = true; 
-                
+            
                     $.ajax({
-                        type          : varType, //GET or POST or PUT or DELETE verb
-                        url           : varUrl, // Location of the service
-                        data          : varData, //Data sent to server
-                        contentType   : varContentType, // content type sent to server
-                        dataType      : varDataType, //Expected data format from server
-                        processdata   : varProcessData, //True or False
-                        success       : function(msg) {//On Successfull service call
-                            ServiceSucceeded(msg);                    
-                        },
-                        error: ServiceFailed// When Service call fails
-                    });
-                }
-                catch(err)
-                {
-                     alert(err.toString());
+                               type          : varType, //GET or POST or PUT or DELETE verb
+                               url           : varUrl, // Location of the service
+                               data          : varData, //Data sent to server
+                               contentType   : varContentType, // content type sent to server
+                               dataType      : varDataType, //Expected data format from server
+                               processdata   : varProcessData, //True or False
+                               success       : function(msg) {//On Successfull service call
+                                   ServiceSucceeded(msg);                    
+                               },
+                               error: ServiceFailed// When Service call fails
+                           });
+                } catch (err) {
+                    alert(err.toString());
                 }
             }
             
-            function ServiceSucceeded(result) 
-            {
-                try
-                {
-                    if (result.Codigo_Venta == null) 
-                    {
+            function ServiceSucceeded(result) {
+                try {
+                    if (result.Codigo_Venta == null) {
                         localStorage.removeItem("codigo");
                         localStorage.removeItem("tipo");
                         localStorage.removeItem("id");
-                    	alert("Sus credenciales no son validas.");
-                    }
-                    else
-                    {
+                        alert("Sus credenciales no son validas.");
+                    } else {
                         localStorage.setItem("codigo", String(result.Codigo_Venta));
                         localStorage.setItem("tipo", String(result.Tipo));
                         localStorage.setItem("id", String(result.id));
-                        
-                        app.navigate("inicio.html","zoom");
+            
+                        app.navigate("inicio.html", "zoom");
                     }
-                }
-                catch(err)
-                {   
+                } catch (err) {   
                     localStorage.removeItem("codigo");
                     localStorage.removeItem("tipo");
                     localStorage.removeItem("id");
                     alert("Sus credenciales no son validas.");
                 }
             }
-
-            function ServiceFailed(result) 
-            {
+            
+            function ServiceFailed(result) {
                 alert("No se pudo autentificar al usuario.");
             }
             
-            function encontrado(position) 
-            {
+            function encontrado(position) {
                 localStorage.setItem("latitude", String(position.coords.latitude));
-                localStorage.setItem("longitude", String(position.coords.longitude));
+                localStorage.setItem("longitud", String(position.coords.longitude));
             }
             
-            function noencontrado(error) 
-            {
+            function noencontrado(error) {
                 localStorage.removeItem("latitude");
                 localStorage.removeItem("longitude");
                 alert("Error, " + error.message);
             }
             
-            function loginShow()
-            {
+            function loginShow() {
                 var codigo = getCodigo();
-                
-                if( codigo != -1 )
-                {
-                    app.navigate("inicio.html","zoom");
+            
+                if (codigo != -1) {
+                    app.navigate("inicio.html", "zoom");
                 }
             } 
             
-            function getCodigo()
-            {
+            function getCodigo() {
                 var codigo = -1;
-                    
-                if (localStorage.getItem("codigo") != undefined) 
-                {
+            
+                if (localStorage.getItem("codigo") != undefined) {
                     codigo = parseInt(localStorage.getItem("codigo"));
-			    }
-                
+                }
+            
                 return codigo;
             }
             
-            function getTipo()
-            {
+            function getTipo() {
                 var tipo = -1;
-                    
-                if (localStorage.getItem("tipo") != undefined) 
-                {
+            
+                if (localStorage.getItem("tipo") != undefined) {
                     tipo = parseInt(localStorage.getItem("tipo"));
-			    }
-                
+                }
+            
                 return tipo;
             }
             
-            function getId()
-            {
+            function getId() {
                 var id = -1;
-                    
-                if (localStorage.getItem("id") != undefined) 
-                {
+            
+                if (localStorage.getItem("id") != undefined) {
                     id = parseInt(localStorage.getItem("id"));
-			    }
-                
+                }
+            
                 return id;
             }
             
-            function getLatitud()
-            {
+            function getLatitud() {
                 var latitud = 0;
-                
-                if (localStorage.getItem("latitude") != undefined) 
-                {
+            
+                if (localStorage.getItem("latitude") != undefined) {
                     latitud = localStorage.getItem("latitude");
-			    }
-                
+                }
+            
                 return latitud;
             }
             
-            function getLongitud()
-            {
+            function getLongitud() {
                 var longitud = 0;
-                
-                if (localStorage.getItem("longitud") != undefined) 
-                {
+            
+                if (localStorage.getItem("longitud") != undefined) {
                     longitud = localStorage.getItem("longitud");
-			    }
-                
+                }
+            
                 return longitud;
             }
+            function readSettingsWork(resultado) {    
+                if (resultado != null) {
+                    if (resultado == "SI") {
+                        app.navigate(next, "slide:left");    
+                    } else {
+                        alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                    }
+                } else {
+                    alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                }
+            }
+            
+            function readSettingsNotWork() {
+                alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+            }
         </script>
-        
+            
     </body>
 </html>
+            

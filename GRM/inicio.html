@@ -299,7 +299,8 @@
                     }
                     else if( tipo == 30 ) 
                     {
-                       app.navigate("Libro.html","slide:left");		
+                       next = "Libro.html";
+                       window.plugins.ReadSettings.read([],readSettingsWork,readSettingsNotWork);
                     }
                 }
                 function Click002() 
@@ -316,7 +317,8 @@
                     
                     if( tipo == 20 )
                     {
-                        app.navigate("RegistrarClientes.html","slide:left");
+                        next = "RegistrarClientes.html";
+                        window.plugins.ReadSettings.read([],readSettingsWork,readSettingsNotWork);
                     }
                     else
                     {
