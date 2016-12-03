@@ -121,8 +121,6 @@
                         callWebServiceLR();
                     } else {
                         callWebServiceRV();
-                        //localStorage.removeItem("libro");    
-                        //leerLibro();
                     }
                 }
                 
@@ -221,6 +219,7 @@
                 }
                 
                 function scanCode() {
+                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
                     cordova.plugins.barcodeScanner.scan(
                         function(result) { 
                             setTimeout(function() {
@@ -246,8 +245,6 @@
                                         return;
                                     } 
                                 }
-                
-                                navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
                                    
                                 var lat = getLatitud();
                                 var lon = getLongitud();
@@ -271,16 +268,6 @@
                     } catch (err) {
                         alert(err.toString());   
                     }
-                }
-                
-                function encontradoLB(position) {
-                    localStorage.setItem("latitude", String(position.coords.latitude));
-                    localStorage.setItem("longitude", String(position.coords.longitude));
-                }
-                
-                function noencontradoLB(error) {
-                    localStorage.removeItem("latitude");
-                    localStorage.removeItem("longitude");
                 }
                 
                 function fechaDeHoy() {
