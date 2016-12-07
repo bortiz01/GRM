@@ -82,10 +82,12 @@
             var next = "";
             var codigoCliente = "";
             var codigoRegistro = "";
+            var options = { enableHighAccuracy: true, maximumAge:500 };
             
             $(document).ready(function() {
                 try {
-                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
+                    
+                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, options);
             
                     if (localStorage.getItem("username") != undefined) {
                         document.getElementById("username").value = localStorage.getItem("username");
@@ -264,18 +266,20 @@
                     if (resultado == "SI") {
                         app.navigate(next, "slide:left");    
                     } else {
-                        alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                        alert(String(resultado));
                     }
                 } else {
-                    alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                    alert("Error, no se pueden leer la configuración de su celular");
                 }
             }
             
             function readSettingsNotWork() {
-                alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                alert("Error, no se pueden leer la configuración de su celular");
             }
+            
+            
         </script>
             
     </body>
 </html>
-            
+    

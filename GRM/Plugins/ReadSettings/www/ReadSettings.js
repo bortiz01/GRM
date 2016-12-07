@@ -7,6 +7,10 @@ ReadSettings.prototype.read = function (arg0, success, error) {
   cordova.exec(success, error, "ReadSettings", "readDateAndTime", [arg0]);
 };
 
+ReadSettings.prototype.exit = function (arg0, success, error) {
+  cordova.exec(success, error, "ReadSettings", "exitApp", [arg0]);
+};
+
 ReadSettings.install = function () {
   if (!window.plugins) {
     window.plugins = {};

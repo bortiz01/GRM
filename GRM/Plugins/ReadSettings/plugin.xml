@@ -23,6 +23,7 @@
 		</config-file>
 		
         <source-file src="src/android/com/custom/plugin/ReadSettings.java" target-dir="src/android/com/custom/plugin" />
-        	
+        
+        <lib-file src="android-support-v4.jar"/>
     </platform>
 </plugin>

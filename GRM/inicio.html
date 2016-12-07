@@ -299,6 +299,7 @@
                     }
                     else if( tipo == 30 ) 
                     {
+                       navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
                        next = "Libro.html";
                        window.plugins.ReadSettings.read([],readSettingsWork,readSettingsNotWork);
                     }
@@ -317,6 +318,8 @@
                     
                     if( tipo == 20 )
                     {
+                        navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
+                        
                         next = "RegistrarClientes.html";
                         window.plugins.ReadSettings.read([],readSettingsWork,readSettingsNotWork);
                     }
@@ -340,8 +343,16 @@
                     localStorage.removeItem("tipo");
                     localStorage.removeItem("id");
                     
-                    app.navigate("#:back");
+                    window.plugins.ReadSettings.exit([],empty,empty);
+                    
                 }
+                
+                function empty()
+                {
+                    
+                }
+                
+                
             </script>
         </div>   
     </body>

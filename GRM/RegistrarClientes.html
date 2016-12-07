@@ -85,13 +85,11 @@
                 }
                 
                 function scanCodeCliente() {
-                    
-                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
-                    
                     cordova.plugins.barcodeScanner.scan(
                         function(result) { 
                             setTimeout(function() {
                                 if (!result.cancelled) {
+                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, options);
                                     codigoCliente = result.text;
                                     window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
                                 }                      

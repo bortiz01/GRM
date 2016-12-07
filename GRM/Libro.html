@@ -219,11 +219,11 @@
                 }
                 
                 function scanCode() {
-                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
                     cordova.plugins.barcodeScanner.scan(
                         function(result) { 
                             setTimeout(function() {
                                 if (!result.cancelled) {
+                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, options);
                                     codigoRegistro = result.text;
                                     window.plugins.ReadSettings.read([], readWSRegVisita, readWSRegVisitaError);
                                 }                      
@@ -259,7 +259,7 @@
                                 leerLibro();
                 
                                 var mensaje = "Cliente " + libro[i].nombre + " registrado con éxito. \n";
-                                mensaje += "Fecha: " + libro[i].fecha + " Hora: " + libro[i].hora;
+                                mensaje += "\nFecha: " + libro[i].fecha + "\nHora: " + libro[i].hora;
                                 alert(mensaje)
                                 return;
                             }
@@ -388,15 +388,15 @@
                         if (resultado == "SI") {
                             registrarVisita(codigoRegistro);
                         } else {
-                            alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                            alert(String(resultado));
                         }
                     } else {
-                        alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                        alert("Error, no se puede leer la configuración de su celular");
                     }
                 }
                 
                 function readWSRegVisitaError() {
-                    alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                    alert("Error, no se puede leer la configuración de su celular");
                 }
             </script>
         </div>
