@@ -299,9 +299,7 @@
                     }
                     else if( tipo == 30 ) 
                     {
-                       navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
-                       next = "Libro.html";
-                       window.plugins.ReadSettings.read([],readSettingsWork,readSettingsNotWork);
+                       app.navigate("Libro.html","slide:left");
                     }
                 }
                 function Click002() 
@@ -318,10 +316,7 @@
                     
                     if( tipo == 20 )
                     {
-                        navigator.geolocation.getCurrentPosition(encontrado, noencontrado, {enableHighAccuracy: true});
-                        
-                        next = "RegistrarClientes.html";
-                        window.plugins.ReadSettings.read([],readSettingsWork,readSettingsNotWork);
+                        app.navigate("RegistrarClientes.html","slide:right");
                     }
                     else
                     {

@@ -223,7 +223,6 @@
                         function(result) { 
                             setTimeout(function() {
                                 if (!result.cancelled) {
-                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, options);
                                     codigoRegistro = result.text;
                                     window.plugins.ReadSettings.read([], readWSRegVisita, readWSRegVisitaError);
                                 }                      
@@ -246,8 +245,8 @@
                                     } 
                                 }
                                    
-                                var lat = getLatitud();
-                                var lon = getLongitud();
+                                var lat = getLatitudX();
+                                var lon = getLongitudX();
                 
                                 libro[i].visitado = true; 
                                 libro[i].latitud = lat;
@@ -385,18 +384,29 @@
                 
                 function readWSRegVisita(resultado) {    
                     if (resultado != null) {
-                        if (resultado == "SI") {
-                            registrarVisita(codigoRegistro);
-                        } else {
-                            alert(String(resultado));
+                        
+                        if( resultado.latitud <= 0 ||  resultado.longitud <= 0)
+                        {
+                            alert("Error, no se ha logrado obtener la ubicación geográfica. Vuelva a intentarlo");   
+                            return;
                         }
+                        
+                        localStorage.setItem("latitudeX", String(resultado.latitud));
+                        localStorage.setItem("longitudX", String(resultado.longitud));
+                        
+                        registrarVisita(codigoRegistro);
+                        
                     } else {
-                        alert("Error, no se puede leer la configuración de su celular");
+                        alert("Error, no se ha logrado obtener la ubicación geográfica. Vuelva a intentarlo");
                     }
                 }
                 
-                function readWSRegVisitaError() {
-                    alert("Error, no se puede leer la configuración de su celular");
+                function readWSRegVisitaError(mensaje) {
+                    if (mensaje != null) {
+                        alert(String(mensaje));   
+                    } else {
+                        alert("Error, no se puede leer la configuración de su celular");    
+                    }
                 }
             </script>
         </div>

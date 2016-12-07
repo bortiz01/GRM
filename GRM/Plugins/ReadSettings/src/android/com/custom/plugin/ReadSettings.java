@@ -30,6 +30,12 @@ import android.content.Context;
 import android.support.v4.app.ActivityCompat;
 //import android.support.v7.app.AppCompatActivity;
 
+import android.os.IBinder;
+import android.app.Service;
+import android.content.Intent;
+import android.location.LocationListener;
+import android.os.Bundle;
+
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -57,6 +63,77 @@ public class ReadSettings extends CordovaPlugin {
     //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void readDateAndTime(CallbackContext callbackContext) 
 	{    
+        String mensaje = "";
+
+        if (!this.isDateAndTimeFromNetwork()) {
+            mensaje += "Error, debe tomar la fecha y hora de la red.";
+        }
+
+        if (isMockLocationEnabled()) {
+            if( mensaje.length() > 0 )
+            {
+                mensaje += "\n";
+            }
+            mensaje += "Error, su ubicación geográfica es falsa";
+        }
+        
+        this.removeTestProviders();
+
+        if( mensaje.length() > 0 )
+        {
+            callbackContext.error(mensaje);
+        }
+        else
+        {
+            Context context = this.cordova.getActivity().getApplicationContext();
+            GPSTracker gps = new GPSTracker(context);
+
+            if(gps.canGetLocation())
+            {
+                int contador = 10;
+                do
+                {
+                    contador--;
+
+                    if( gps.location == null )
+                    {
+                        gps.stopUsingGPS();
+                        gps = new GPSTracker(context);
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }while( contador > 0 );
+
+                if( gps.location != null )
+                {
+                    try
+                    {
+                        JSONObject item = new JSONObject();
+                        item.put("latitud", gps.getLatitude());
+                        item.put("longitud",gps.getLongitude());
+                        
+                        callbackContext.success(item.toString());
+                    }
+                    catch( JSONException ex )
+                    {
+                        callbackContext.error("Error al obtener la ubicación geográfica");
+                    }
+                }
+                else
+                {
+                    callbackContext.error("Error al obtener la ubicación geográfica");
+                }
+                gps.stopUsingGPS();
+            }
+            else
+            {
+                callbackContext.error("Debe habilitar el GPS o la Red para poder obtener la ubicación geográfica");
+            }
+        }
+        /*
 		try
 		{    
             String mensaje = "";
@@ -91,6 +168,7 @@ public class ReadSettings extends CordovaPlugin {
 		{
 			callbackContext.error("ERROR");
 		}
+        */
     }
 
     public boolean isMockLocationEnabled() {
@@ -230,7 +308,7 @@ class GPSTracker extends Service implements LocationListener {
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("GPS Enabled", "GPS Enabled");
+                    
                     if (locationManager != null) {
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -251,7 +329,7 @@ class GPSTracker extends Service implements LocationListener {
                                 LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("Network", "Network");
+                        
                         if (locationManager != null) {
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);

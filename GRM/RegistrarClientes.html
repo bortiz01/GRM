@@ -89,7 +89,7 @@
                         function(result) { 
                             setTimeout(function() {
                                 if (!result.cancelled) {
-                                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, options);
+                                    
                                     codigoCliente = result.text;
                                     window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
                                 }                      
@@ -113,8 +113,8 @@
                             if (clientes[i].codigo == codigo) {
                                 if (!confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?')) {
                                     
-                                    var lat = getLatitud();
-                                    var lon = getLongitud();
+                                    var lat = getLatitudX();
+                                    var lon = getLongitudX();
                 
                                     clientes[i].codigo = codigo;
                                     clientes[i].latitud = lat;
@@ -216,18 +216,29 @@
                 }
                 function readWSRegCliente(resultado) {    
                     if (resultado != null) {
-                        if (resultado == "SI") {
-                            registrarCliente(codigoCliente);
-                        } else {
-                            alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                        
+                        if( resultado.latitud <= 0 ||  resultado.longitud <= 0)
+                        {
+                            alert("Error, no se ha logrado obtener la ubicación geográfica. Vuelva a intentarlo");   
+                            return;
                         }
+                        
+                        localStorage.setItem("latitudeX", String(resultado.latitud));
+                        localStorage.setItem("longitudX", String(resultado.longitud));
+                        
+                        registrarCliente(codigoCliente);
+                        
                     } else {
-                        alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                        alert("Error, no se ha logrado obtener la ubicación geográfica. Vuelva a intentarlo");
                     }
                 }
                 
-                function readWSRegClienteError() {
-                    alert("Error, debe configurar su celular para que tome la hora y zona horaria de la red telefónica");
+                function readWSRegClienteError(mensaje) {
+                    if (mensaje != null) {
+                        alert(String(mensaje));   
+                    } else {
+                        alert("Error, no se puede leer la configuración de su celular");    
+                    }
                 }
             </script>
         </div>

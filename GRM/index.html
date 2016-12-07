@@ -261,6 +261,31 @@
             
                 return longitud;
             }
+            
+            
+            
+            
+            
+            function getLatitudX() {
+                var latitud = 0;
+            
+                if (localStorage.getItem("latitudeX") != undefined) {
+                    latitud = localStorage.getItem("latitudeX");
+                }
+            
+                return latitud;
+            }
+            
+            function getLongitudX() {
+                var longitud = 0;
+            
+                if (localStorage.getItem("longitudX") != undefined) {
+                    longitud = localStorage.getItem("longitudX");
+                }
+            
+                return longitud;
+            }
+            
             function readSettingsWork(resultado) {    
                 if (resultado != null) {
                     if (resultado == "SI") {
