@@ -138,8 +138,6 @@
                             
                             result[i].per_hoy = "L. " + String(result[i].venta.toFixed(2));
                             result[i].per_demanda = "L. " + String(result[i].demanda.toFixed(2));
-                            //result[i].per_sku = String(result[i].sku.toFixed(2));
-                            //result[i].per_dias = String(result[i].dias.toFixed(2));
                         }
                         
                         dataVendedores = new kendo.data.DataSource({
@@ -159,8 +157,6 @@
                 {
                     alert("Error en conexión.");
                 }
-                
-                
                 
                 function getType3(code) 
                 {
@@ -205,7 +201,7 @@
                         case 470:
                         case 480:
                         case 490:
-                        case 490:
+
                         case 492:
                         case 510:
                         case 520:
@@ -222,14 +218,18 @@
                             return 30;
                     }
                 }
+                
                 function goToMapVendedor(codigoS) 
                 {
                     try
                     {
+                        vendedorMapa = codigoS;
+                        fechaMapa = fechaDeHoy()
+                        
                         var vType = "GET";
-                        //var vUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
-                        var vUrl = "http://portal.diapa.net:120/Home/GetCoordenadas";
-                        var vData = 'codigo=' + String(codigoS) + '&tipo=' + String(30)  ;
+                        //var vUrl = "http://localhost:1564/Home/RegistrosVisitaVendedor";
+                        var vUrl = "http://portal.diapa.net:120/Home/RegistrosVisitaVendedor";
+                        var vData = 'Vendedor=' + String(vendedorMapa) + '&Fecha=' + fechaMapa  ;
                         var vContentType = "application/json; charset=utf-8";
                         var vDataType = "json";
                         var vProcessData = true; 
@@ -259,30 +259,7 @@
                 {
                     try
                     {
-                        if ( result.latitud == null ) 
-                        {
-                            alert("No hay coordenadas para el usuario especificado");
-                            return;	
-                        }
-                        
-                        if ( result.latitud == undefined ) 
-                        {
-                            alert("No hay coordenadas para el usuario especificado");
-                            return;	
-                        }
-                        
-                        if ( result.latitud == "" ) 
-                        {
-                            alert("No hay coordenadas para el usuario especificado");
-                            return;	
-                        }
-                         
-                        localStorage.setItem("latitudeMG", parseFloat(result.latitud));
-                        localStorage.setItem("longitudeMG", parseFloat(result.longitud));
-                                    
-                        localStorage.setItem("fechaMG", String(result.fecha));
-                        localStorage.setItem("horaMG", String(result.hora));
-                        
+                        localStorage.setItem('visitas', JSON.stringify(result));
                         app.navigate("MapaGoogle.html","fade");   
                     }
                     catch(err)
@@ -294,7 +271,35 @@
                 
                 function ServiceNotListMapV(result) 
                 {
+                    localStorage.removeItem('visitas');
                     alert("Error en conexión.");
+                }
+                
+                function fechaDeHoy() 
+                {
+                	try
+                	{
+                		var today = new Date();
+                    
+                		var dia = today.getDate();
+                		var mes = today.getMonth() + 1; //January is 0!
+                		var ano = today.getFullYear();
+                	
+                		if (dia < 10) {
+                			dia = '0' + dia
+                		} 
+                 
+                		if (mes < 10) {
+                			mes = '0' + mes
+                		} 
+                   
+                		var fecha = ano + '-' + mes + '-' + dia;
+                		return fecha;
+                	}
+                	catch(err){
+                    	alert( "FechaHoraDeHoy. " + err.toString());
+                    }
+                	return "";
                 }
             </script>
         </div>

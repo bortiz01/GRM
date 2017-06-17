@@ -83,6 +83,8 @@
             var codigoCliente = "";
             var codigoRegistro = "";
             var options = { enableHighAccuracy: true, maximumAge:500 };
+            var fechaMapa = "";
+            var vendedorMapa = "";
             
             $(document).ready(function() {
                 try {
@@ -279,8 +281,8 @@
             function getLongitudX() {
                 var longitud = 0;
             
-                if (localStorage.getItem("longitudX") != undefined) {
-                    longitud = localStorage.getItem("longitudX");
+                if (localStorage.getItem("longitudeX") != undefined) {
+                    longitud = localStorage.getItem("longitudeX");
                 }
             
                 return longitud;

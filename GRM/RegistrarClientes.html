@@ -27,12 +27,12 @@
                 <div style="text-align:center;">
                     <a  id="aBotonCargar" 
                         data-role="button" 
-                        data-animated="true" 
-                        style="display:inline-block; width:86%; font-size: 1.1em; background-color: #00b312;" 
+                        data-animated="true"
+                        style="display:none; width:86%; font-size: 1.1em; background-color: #00b312;" 
                         onClick="callWSSendClientes()">Descargar </a>
                 </div>
             </div>
-            <br />
+
             <div class="indicators_container">
                 Clientes
                 <div class="deitel_container" >
@@ -57,7 +57,8 @@
                 </div>
             </div>
             <script>
-                function showRClientes(e) {
+                function showRClientes(e) 
+                {
                     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
                 
                     var v1 = w * 0.7;
@@ -65,14 +66,26 @@
                     document.getElementById('imgScan2').style.width = v1 + "px";
                     document.getElementById('imgScan2').style.height = v1 + "px";
                 
-                    leerClientes();
+                    callWSSendClientes();
                 }
                 
-                function leerClientes() {
-                    try { 
-                        var clientes = JSON.parse(localStorage.getItem("clientes"));
+                function leerClientes() 
+                {
+                    try 
+                    { 
+                        var tClientes = localStorage.getItem("clientes");
+                        var clientes = [];
+                        
+                        if( tClientes != null )
+                        {
+                            if( tClientes.length > 0 )
+                            {
+                                clientes = JSON.parse(tClientes);
+                            }
+                        }
                 
-                        if (clientes != null) {
+                        if (clientes != null) 
+                        {
                             var registrados = clientes.length;
                             document.getElementById("lb3").innerHTML = registrados;
                             return;
@@ -84,14 +97,21 @@
                     }
                 }
                 
-                function scanCodeCliente() {
+                function scanCodeCliente() 
+                {
                     cordova.plugins.barcodeScanner.scan(
-                        function(result) { 
-                            setTimeout(function() {
-                                if (!result.cancelled) {
+                        function(result) 
+                        { 
+                            setTimeout(function() 
+                            {
+                                if (!result.cancelled) 
+                                {
                                     
                                     codigoCliente = result.text;
-                                    window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
+                                    //window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
+                                    
+                                    var newOptions = { enableHighAccuracy: true, maximumAge:500, timeout: 5000  };
+                                    navigator.geolocation.getCurrentPosition(readWSRegCliente, readWSRegClienteError, newOptions);
                                 }                      
                             }, 0);
                         }, // success
@@ -101,10 +121,21 @@
                         );
                 }
                 
-                function registrarCliente(codigo) {
-                    try {
-                        var clientes = JSON.parse(localStorage.getItem("clientes"));
-                
+                function registrarCliente(codigo) 
+                {
+                    try 
+                    {
+                        var tClientes = localStorage.getItem("clientes");
+                        var clientes = [];
+                        
+                        if( tClientes != null )
+                        {
+                            if( tClientes.length > 0 )
+                            {
+                                clientes = JSON.parse(tClientes);
+                            }
+                        }
+                        
                         if (clientes == null) {
                             clientes = [];
                         }
@@ -121,40 +152,56 @@
                                     clientes[i].longitud = lon;
                 
                                     localStorage.setItem("clientes", JSON.stringify(clientes));
-                                    leerClientes();
                                     
                                     alert("Cliente: " + codigo + ", registrado con éxito.");
+                                    
+                                    callWSSendClientes();
                                 }
                                 return;
                             }
                         }
                 
-                        var lat = getLatitud();
-                        var lon = getLongitud();
+                        var lat = getLatitudX();
+                        var lon = getLongitudX();
                 
-                        var jcliente = [];
-                        jcliente.codigo = codigo;
-                        jcliente.latitud = lat;
-                        jcliente.longitud = lon;
+                        //var jcliente = [];
+                        //jcliente.codigo = codigo;
+                        //jcliente.latitud = lat;
+                        //jcliente.longitud = lon;
                         
                         clientes.push(
                             { codigo: codigo, latitud: lat, longitud: lon}
                         );
                         
                         localStorage.setItem("clientes", JSON.stringify(clientes));
-                        leerClientes();
                 
                         alert("Cliente: " + codigo + ", registrado con éxito.");
+                        
+                        callWSSendClientes();
+                        
                     } catch (err) {
                         alert("Error al registrar el cliente");
                     }
                 }
                 
-                function callWSSendClientes() {
-                    try {
+                function callWSSendClientes() 
+                {
+                    try 
+                    {
                         app.pane.loader.show();
-                        var txtClientes = "";                        
-                        var clientes = JSON.parse(localStorage.getItem("clientes"));
+                        var txtClientes = "";         
+                        
+                        var tClientes = localStorage.getItem("clientes");
+                        var clientes = [];
+                        
+                        if( tClientes != null )
+                        {
+                            if( tClientes.length > 0 )
+                            {
+                                clientes = JSON.parse(tClientes);
+                            }
+                        }
+                        
                         var id = getId();
                 
                         var contador = 0;
@@ -169,8 +216,8 @@
                         if (contador == 0) {
                             app.pane.loader.hide();
                 
-                            alert("No hay registros de clientes pendientes de enviar");
-                            localStorage.removeItem("clientes");
+                            //alert("No hay registros de clientes pendientes de enviar");
+                            //localStorage.removeItem("clientes");
                             leerClientes();   
                             return;
                         }
@@ -196,7 +243,7 @@
                                    },
                                    error: function(xhr, ajaxOptions, thrownError) { 
                                        app.pane.loader.hide();
-                                       alert("Error en conexión.");
+                                       leerClientes();   
                                    }
                                });  
                     } catch (err) {
@@ -204,41 +251,39 @@
                     }
                 }
                 
-                function ServiceFindRV(result) {
-                    try { 
+                function ServiceFindRV(result) 
+                {
+                    try 
+                    { 
                         app.pane.loader.hide();
                         localStorage.removeItem("clientes");
                         leerClientes();   
-                        alert("Registro de visitas enviados con éxito");
-                    } catch (err) {
-                        alert(err.toString());   
-                    }
-                }
-                function readWSRegCliente(resultado) {    
-                    if (resultado != null) {
-                        
-                        if( resultado.latitud <= 0 ||  resultado.longitud <= 0)
-                        {
-                            alert("Error, no se ha logrado obtener la ubicación geográfica. Vuelva a intentarlo");   
-                            return;
-                        }
-                        
-                        localStorage.setItem("latitudeX", String(resultado.latitud));
-                        localStorage.setItem("longitudX", String(resultado.longitud));
-                        
-                        registrarCliente(codigoCliente);
-                        
-                    } else {
-                        alert("Error, no se ha logrado obtener la ubicación geográfica. Vuelva a intentarlo");
+                    } catch (err) 
+                    {
+                        alert("ServiceFindRV. " + err.toString());   
                     }
                 }
                 
-                function readWSRegClienteError(mensaje) {
-                    if (mensaje != null) {
-                        alert(String(mensaje));   
-                    } else {
-                        alert("Error, no se puede leer la configuración de su celular");    
+                function readWSRegCliente(position) 
+                {    
+                    try
+                    {
+                        localStorage.setItem("latitudeX", String(position.coords.latitude));
+                        localStorage.setItem("longitudeX", String(position.coords.longitude));
+                        
+                        registrarCliente(codigoCliente);
                     }
+                    catch(err)
+                    {
+                        alert("Error al obtener la posicion geografica. " + err.toString());
+                    }
+                }
+                
+                function readWSRegClienteError(error) 
+                {
+                    localStorage.removeItem("latitudeX");
+                    localStorage.removeItem("longitudeX");
+                    alert("Error, " + error.message);
                 }
             </script>
         </div>
