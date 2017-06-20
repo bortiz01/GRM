@@ -48,6 +48,7 @@
                     </table>
                 </div>
             </div>
+            
             <div style="margin:auto; width:100%; padding-top:1em;">
                 <div style="text-align:center;">
                     <img id="imgScan2" src="styles/images/scan.png" 
@@ -99,6 +100,10 @@
                 
                 function scanCodeCliente() 
                 {
+                    
+                    app.navigate("libro-ruta-cliente.html", "zoom");
+                    
+                    /*
                     cordova.plugins.barcodeScanner.scan(
                         function(result) 
                         { 
@@ -119,6 +124,7 @@
                             alert("Scanning failed: " + error);
                         }  // error
                         );
+                    */
                 }
                 
                 function registrarCliente(codigo) 
@@ -203,7 +209,8 @@
                         }
                         
                         var id = getId();
-                
+                        var codigo = getCodigo();
+                        
                         var contador = 0;
                 
                         for (var i = 0; i < clientes.length; i++) {
@@ -234,7 +241,7 @@
                                    type          : vaType, //GET or POST or PUT or DELETE verb
                                    url           : vaUrl, // Location of the service
                                    cache         : false,
-                                   data          : "{ 'UsuarioId': '" + id + "', 'Text': '" + txtClientes + "' }",
+                                   data          : "{ 'UsuarioId': '" + id + "', 'Text': '" + txtClientes + "', 'Supervisor' : '" + codigo + "' }",
                                    contentType   : vaContentType, // content type sent to server
                                    dataType      : vaDataType, //Expected data format from server
                                    processdata   : vaProcessData, //True or False
@@ -255,6 +262,8 @@
                 {
                     try 
                     { 
+                        localStorage.setItem("vendedor-sup", JSON.stringify(result) );
+                        
                         app.pane.loader.hide();
                         localStorage.removeItem("clientes");
                         leerClientes();   
@@ -270,8 +279,8 @@
                     {
                         localStorage.setItem("latitudeX", String(position.coords.latitude));
                         localStorage.setItem("longitudeX", String(position.coords.longitude));
-                        
-                        registrarCliente(codigoCliente);
+                        //registrarCliente(codigoCliente);
+                        app.navigate("libro-ruta-cliente.html", "zoom");
                     }
                     catch(err)
                     {

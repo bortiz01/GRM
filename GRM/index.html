@@ -206,10 +206,12 @@
                 alert("Error, " + error.message);
             }
             
-            function loginShow() {
+            function loginShow() 
+            {
                 var codigo = getCodigo();
             
-                if (codigo != -1) {
+                if (codigo != -1) 
+                {
                     app.navigate("inicio.html", "zoom");
                 }
             } 
@@ -224,30 +226,36 @@
                 return codigo;
             }
             
-            function getTipo() {
+            function getTipo() 
+            {
                 var tipo = -1;
             
-                if (localStorage.getItem("tipo") != undefined) {
+                if (localStorage.getItem("tipo") != undefined) 
+                {
                     tipo = parseInt(localStorage.getItem("tipo"));
                 }
             
                 return tipo;
             }
             
-            function getId() {
+            function getId() 
+            {
                 var id = -1;
             
-                if (localStorage.getItem("id") != undefined) {
+                if (localStorage.getItem("id") != undefined) 
+                {
                     id = parseInt(localStorage.getItem("id"));
                 }
             
                 return id;
             }
             
-            function getLatitud() {
+            function getLatitud() 
+            {
                 var latitud = 0;
             
-                if (localStorage.getItem("latitude") != undefined) {
+                if (localStorage.getItem("latitude") != undefined) 
+                {
                     latitud = localStorage.getItem("latitude");
                 }
             

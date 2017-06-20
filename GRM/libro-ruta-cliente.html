@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+        
+        <script src="kendo/js/CriptoJS/aes.js"></script>
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        
+        <script src="kendo/js/CriptoJS/js"></script>
+    </head>
+    <style type="text/css"> 
+            body
+            {
+                pointer-events: all !important;
+            }
+            .input-esp
+            {
+                    
+            }
+    </style>
+    
+    <body>
+        
+        <div id="tabstrip-libro-ruta-cliente" 
+             data-title="Registrar Cliente" 
+             data-role="view"
+             data-show="initLibroRutaCliente"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Registrar Cliente</span>
+                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div> 
+            
+            <div class="indicators_container">
+                Registrar Cliente
+                <div class="deitel_container" >
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Cliente
+                            </td>
+                            <td class="right_column">
+                                <input  type="text" 
+                                        style=" width: 70%;
+                                             
+                                                background-color: #999999;
+                                                outline-style: none;
+                                                border-width: 0 0 0px;
+                                                border-radius: 2px;
+                                                padding: 1px;" 
+                                        id="codigo-cliente"
+                                        value="101254"
+                                 readonly/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="left_column">
+                                Vendedor
+                            </td>
+                            <td class="right_column">
+                                <select style=" width: 70%;    
+                                                
+                                                background-color: #999999;
+                                                outline-style: none;
+                                                border-width: 0 0 0px;
+                                                border-radius: 2px;
+                                                padding: 1px;"   
+                                    id="frecuencia" >
+                                   <option value="19">Vendedor 1</option>
+                                   <option value="81">Vendedor 2</option>
+                                   <option value="84">Vendedor 3</option>
+                                   <option value="90">Vendedor 4</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="left_column">
+                                Frecuencia
+                            </td>
+                            <td class="right_column">
+                                <select style=" width: 70%;    
+                                                
+                                                background-color: #999999;
+                                                outline-style: none;
+                                                border-width: 0 0 0px;
+                                                border-radius: 2px;
+                                                padding: 1px;"   
+                                    id="frecuencia" >
+                                   <option value="1">Diario</option>
+                                   <option value="7">Semanal</option>
+                                   <option value="15">Quincenal</option>
+                                   <option value="20">Mensual</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="left_column">
+                                Dia Visita
+                            </td>
+                            <td class="right_column">
+                                <select style=" width: 70%; 
+                                                
+                                                background-color: #999999;
+                                                outline-style: none;
+                                                border-width: 0 0 0px;
+                                                border-radius: 2px;
+                                                padding: 1px;"     
+                                    id="dia" 
+                                    class="input">
+                                   <option value="1">Lunes</option>
+                                   <option value="2">Martes</option>
+                                   <option value="3">Miercoles</option>
+                                   <option value="4">Jueves</option>
+                                   <option value="5">Viernes</option>
+                                   <option value="6">Sabado</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="left_column">
+                                Orden
+                            </td>
+                            <td class="right_column">
+                                <input type="number" style=" width: 70%;    
+                                               
+                                                background-color: #999999;
+                                                outline-style: none;
+                                                border-width: 0 0 0px;
+                                                border-radius: 2px;
+                                                padding: 1px;"   
+                                value="1"
+                                id="orden" 
+                                />
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    
+                </div>
+            </div>
+            
+            <div id="divBtnLibros" style="margin:auto; width:100%; padding-top:1em;">
+                <div style="text-align:center;">
+                    <a  id="btnPendientes" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:88%; font-size: .9em; background-color: rgb(117,113,113);" 
+                        onClick="goToPendientes()">Guardar</a>
+                    
+                </div>
+            </div>
+            
+            <script>
+            
+             
+                function initMiPerfil(e) 
+                {
+                    try 
+                    {
+                	    if (localStorage.getItem("password") != undefined) 
+                        {
+                            document.getElementById("password1").value  = localStorage.getItem("password");
+			            }
+		                else 
+                        {
+			                document.getElementById("password1").value  = "";
+		                }
+                    } 
+                    catch (ex) 
+                    {
+                        alert("Error al cargar datos de memoria");
+                    }
+                }
+                
+                function ServicioMiPerfil()
+                {
+                    try
+                    {
+                        var password1 = document.getElementById("password1").value;
+                        var password2 = document.getElementById("password2").value;
+                        var password3 = document.getElementById("password3").value;
+                        
+                        if ( password1 == null || password1 == "" ) 
+                        {
+                             alert("Debe brindar la contraseña actual.");   	
+                             return;
+                        }
+                        
+                        if ( password2 == null || password2 == "" ) 
+                        {
+                             alert("Debe brindar la contraseña nueva.");   	
+                             return;
+                        }
+                        
+                        if ( password3 == null || password3 == "" ) 
+                        {
+                             alert("Debe brindar la confirmación de la contraseña nueva.");   	
+                             return;
+                        }
+                        
+                        if ( password2.length < 6 ) 
+                        {
+                            alert("La contraseña nueva debe tener más de 6 caracteres");   	
+                            return;	
+                        }
+                        
+                        if ( password2.localeCompare(password1) == 0 ) 
+                        {
+                            alert("La contraseña nueva debe ser diferente de la contraseña anterior");   	
+                            return;	
+                        }
+                        
+                        if (password2.localeCompare(password3)  != 0) 
+                        {
+                            alert("La contraseña nueva no concuerda con la confirmación");   	
+                            return;	
+                        }
+                        
+                        var Key1 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV1 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var hash1 = CryptoJS.AES.encrypt(password1,Key1,{iv:IV1, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
+                        var Key2 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV2 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var hash2 = CryptoJS.AES.encrypt(password2,Key2,{iv:IV2, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
+                        var Key3 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV3 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var hash3 = CryptoJS.AES.encrypt(password3,Key3,{iv:IV3, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                    
+                        var vaType = "GET";
+                        //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
+                        var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
+                        var vaData = 'username=' + String(username) + 
+                                     '&actual=' + String(hash1) + 
+                                     '&nueva=' + String(hash2) + 
+                                     '&confirmacion=' + String(hash3);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        data          : vaData, //Data sent to server
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) {//On Successfull service call
+                            ServiceFoundMiPerfil(msg);                    
+                        },
+                        error: ServiceNotFindMiPerfil// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFoundMiPerfil(result) 
+                {
+                    try
+                    {                          
+                        if ( String(result.MENSAJE) == "Contraseña actualizada con éxito." ) 
+                        {
+                            var newpassword = document.getElementById("password2").value;
+                            document.getElementById("password1").value = newpassword;
+                            document.getElementById("password2").value = "";
+                            document.getElementById("password3").value = "";
+                            
+                            localStorage.setItem("password", newpassword);
+                        }
+                        
+                        alert(String(result.MENSAJE));	
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function ServiceNotFindMiPerfil(result) 
+                {
+                    alert("Error en conexión.");
+                }
+            </script>
+        </div>   
+    </body>
+</html>
