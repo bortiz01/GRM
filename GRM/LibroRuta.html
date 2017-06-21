@@ -20,8 +20,20 @@
              >
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
+                    
                     <span data-role="view-title">Libro de Rutas</span>
-                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                    
+                    <select id="dia" data-align="left" onchange="cambioDia()">
+                         <option value="Lunes">Lunes</option>
+                         <option value="Martes">Martes</option>
+                         <option value="Miercoles">Miercoles</option>
+                         <option value="Jueves">Jueves</option>
+                         <option value="Viernes">Viernes</option>
+                         <option value="Sabado">Sabado</option>
+                         <option value="Domingo">Domingo</option>
+                    </select>
+                	
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div> 
             
@@ -44,17 +56,7 @@
             					${nombre}
             				</td>
                             <td style="width: 70%; text-align:right;">
-                    			#if(visitado){#
-                                    <a  class="button" 
-                                        data-role="button" 
-                                        onclick="verEnMapa(${codigo})" 
-                                        style="background-color: black; color: white; font-size:.8em;">Ver
-                                    </a>
-                                #}else{#
-                                    
-                                #}#
-                                
-            				</td>
+                    		</td>
             			</tr>
             		</table>
                 </div>
@@ -63,8 +65,8 @@
                     <div class="template_value">${codigo}</div>
                 </div>
                 <div class="list_percentage">
-            		<div class="template_label">Tipo Cliente</div>
-                    <div class="template_value">${tipo}</div>
+            		<div class="template_label">Frecuencia</div>
+                    <div class="template_value">${frecuencia}</div>
                 </div>
                 <div class="list_percentage">
             		<div class="template_label">Día</div>
@@ -90,24 +92,53 @@
             <script>
                 function showLibroRuta(e) 
                 {
-                     document.getElementById("error-clc").style.display = "none";   
-                    
-                    var libro = JSON.parse(localStorage.getItem("libro"));
-                    
-                    if( libro != null )
+                    try
                     {
-                        var pendientes = [];
+                        var d = new Date();
+                        var n = d.getDay();
                         
-                        if( filtrarLibro )
+                        if( n == 0 )
                         {
-                            pendientes = libro.filter(noVisitado);
-                        }
+                            n = 6;
+                        } 
                         else
                         {
-                            pendientes = libro.filter(siVisitado);
+                            n = n - 1;
                         }
                         
-                        if( pendientes.length == 0 )
+                        document.getElementById('dia').selectedIndex = n;
+                        
+                        document.getElementById("error-clc").style.display = "none";   
+                        
+                        var txtLibro = localStorage.getItem("libro"); 
+                        var libro = [];
+                        
+                        if( txtLibro != null )
+                        {
+                            if( txtLibro.length > 0 )
+                            {
+                                libro = JSON.parse( txtLibro );
+                            }
+                        }
+                        
+                        var combo = document.getElementById("dia");
+                        var dia = combo.options[combo.selectedIndex].value;
+                        
+                        var filtrados = [];
+                        
+                        
+                        for( var key in libro )
+                        {
+                            var item = libro[key];
+                            
+                            if( item.dia == dia )
+                            {
+                                filtrados.push( item );
+                            }
+                        }
+                        
+                        
+                        if( filtrados.length == 0 )
                         {
                             document.getElementById("error-clc").style.display = "block";   
                             var dataVacia = new kendo.data.DataSource({
@@ -118,17 +149,17 @@
                         else
                         {
                             var dataLibroRuta = new kendo.data.DataSource({
-                                data: pendientes
+                                data: filtrados
                             });
-                        
+                            
                             $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataLibroRuta);
                             var scroller = e.view.scroller;
                             scroller.reset();
                         }
                     }
-                    else
+                    catch(err)
                     {
-                        document.getElementById("error-clc").style.display = "block";   
+                        alert("Error al leer el libro de rutas. " + err.toString());
                     }
                 }
                 
@@ -170,6 +201,65 @@
                     catch(err)
                     {
                         alert(err.toString());   
+                    }
+                }
+                
+                
+                function cambioDia() 
+                {
+                    try
+                    {
+                        document.getElementById("error-clc").style.display = "none";   
+                        
+                        var txtLibro = localStorage.getItem("libro"); 
+                        var libro = [];
+                        
+                        if( txtLibro != null )
+                        {
+                            if( txtLibro.length > 0 )
+                            {
+                                libro = JSON.parse( txtLibro );
+                            }
+                        }
+                        
+                        var combo = document.getElementById("dia");
+                        var dia = combo.options[combo.selectedIndex].value;
+                        
+                        var filtrados = [];
+                        
+                        
+                        for( var key in libro )
+                        {
+                            var item = libro[key];
+                            
+                            if( item.dia == dia )
+                            {
+                                filtrados.push( item );
+                            }
+                        }
+                        
+                        
+                        if( filtrados.length == 0 )
+                        {
+                            document.getElementById("error-clc").style.display = "block";   
+                            var dataVacia = new kendo.data.DataSource({
+                                data: []
+                            });
+                            $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataVacia);
+                        }
+                        else
+                        {
+                            var dataLibroRuta = new kendo.data.DataSource({
+                                data: filtrados
+                            });
+                            
+                            $("#custom-listview-libro").data("kendoMobileListView").setDataSource(dataLibroRuta);
+                            
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert("Error al leer el libro de rutas. " + err.toString());
                     }
                 }
             </script>

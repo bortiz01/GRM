@@ -49,6 +49,18 @@
                 </div>
             </div>
             
+            <div id="divBtnLibros" style="margin:auto; width:100%; padding-top:1em;">
+                <div style="text-align:center;">
+                    <a  id="btnPendientes" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:88%; font-size: .9em; background-color: rgb(117,113,113);" 
+                        onClick="verRegistros()">Ver Clientes Registrados de Hoy
+                    </a>
+                    
+                </div>
+            </div>
+            
             <div style="margin:auto; width:100%; padding-top:1em;">
                 <div style="text-align:center;">
                     <img id="imgScan2" src="styles/images/scan.png" 
@@ -57,12 +69,14 @@
                          onClick="scanCodeCliente()">
                 </div>
             </div>
+            
+            
             <script>
                 function showRClientes(e) 
                 {
                     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
                 
-                    var v1 = w * 0.7;
+                    var v1 = w * 0.7; 
                 
                     document.getElementById('imgScan2').style.width = v1 + "px";
                     document.getElementById('imgScan2').style.height = v1 + "px";
@@ -100,10 +114,6 @@
                 
                 function scanCodeCliente() 
                 {
-                    
-                    app.navigate("libro-ruta-cliente.html", "zoom");
-                    
-                    /*
                     cordova.plugins.barcodeScanner.scan(
                         function(result) 
                         { 
@@ -124,70 +134,7 @@
                             alert("Scanning failed: " + error);
                         }  // error
                         );
-                    */
-                }
-                
-                function registrarCliente(codigo) 
-                {
-                    try 
-                    {
-                        var tClientes = localStorage.getItem("clientes");
-                        var clientes = [];
-                        
-                        if( tClientes != null )
-                        {
-                            if( tClientes.length > 0 )
-                            {
-                                clientes = JSON.parse(tClientes);
-                            }
-                        }
-                        
-                        if (clientes == null) {
-                            clientes = [];
-                        }
-                
-                        for (var i = 0; i < clientes.length; i++) {
-                            if (clientes[i].codigo == codigo) {
-                                if (!confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?')) {
-                                    
-                                    var lat = getLatitudX();
-                                    var lon = getLongitudX();
-                
-                                    clientes[i].codigo = codigo;
-                                    clientes[i].latitud = lat;
-                                    clientes[i].longitud = lon;
-                
-                                    localStorage.setItem("clientes", JSON.stringify(clientes));
-                                    
-                                    alert("Cliente: " + codigo + ", registrado con éxito.");
-                                    
-                                    callWSSendClientes();
-                                }
-                                return;
-                            }
-                        }
-                
-                        var lat = getLatitudX();
-                        var lon = getLongitudX();
-                
-                        //var jcliente = [];
-                        //jcliente.codigo = codigo;
-                        //jcliente.latitud = lat;
-                        //jcliente.longitud = lon;
-                        
-                        clientes.push(
-                            { codigo: codigo, latitud: lat, longitud: lon}
-                        );
-                        
-                        localStorage.setItem("clientes", JSON.stringify(clientes));
-                
-                        alert("Cliente: " + codigo + ", registrado con éxito.");
-                        
-                        callWSSendClientes();
-                        
-                    } catch (err) {
-                        alert("Error al registrar el cliente");
-                    }
+                    
                 }
                 
                 function callWSSendClientes() 
@@ -216,10 +163,15 @@
                         for (var i = 0; i < clientes.length; i++) {
                             contador++;
                             txtClientes += clientes[i].codigo + "|" + 
+                                           clientes[i].vendedor + "|" + 
+                                           clientes[i].frecuencia + "|" + 
+                                           clientes[i].dia + "|" + 
+                                           clientes[i].orden + "|" + 
                                            clientes[i].latitud + "|" + 
                                            clientes[i].longitud + ";";
                         }
                         
+                        /*
                         if (contador == 0) {
                             app.pane.loader.hide();
                 
@@ -228,7 +180,8 @@
                             leerClientes();   
                             return;
                         }
-                        
+                        */ 
+                         
                         var vaType = "POST";
                         //var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
                         var vaUrl = "http://portal.diapa.net:120/home/RegistarClientes";
@@ -249,6 +202,7 @@
                                        ServiceFindRV(msg);                    
                                    },
                                    error: function(xhr, ajaxOptions, thrownError) { 
+                                       alert("Error en llamada")
                                        app.pane.loader.hide();
                                        leerClientes();   
                                    }
@@ -262,7 +216,11 @@
                 {
                     try 
                     { 
-                        localStorage.setItem("vendedor-sup", JSON.stringify(result) );
+                        var vendedores = result.vendedores;
+                        var registros = result.registros;
+                        
+                        localStorage.setItem("vendedor-sup", JSON.stringify(vendedores) );
+                        localStorage.setItem("registros-hoy", JSON.stringify(registros) );
                         
                         app.pane.loader.hide();
                         localStorage.removeItem("clientes");
@@ -280,7 +238,10 @@
                         localStorage.setItem("latitudeX", String(position.coords.latitude));
                         localStorage.setItem("longitudeX", String(position.coords.longitude));
                         //registrarCliente(codigoCliente);
+                        
+                        localStorage.setItem("scan-client",codigoCliente);
                         app.navigate("libro-ruta-cliente.html", "zoom");
+                     
                     }
                     catch(err)
                     {
@@ -293,6 +254,18 @@
                     localStorage.removeItem("latitudeX");
                     localStorage.removeItem("longitudeX");
                     alert("Error, " + error.message);
+                }
+                
+                function verRegistros() 
+                {
+                    try
+                    {
+                        app.navigate("registros-hoy.html", "zoom");
+                    }
+                    catch(err)
+                    {
+                        alert("Error al obtener la posicion geografica. " + err.toString());
+                    }
                 }
             </script>
         </div>

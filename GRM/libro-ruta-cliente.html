@@ -55,8 +55,8 @@
                                                 border-width: 0 0 0px;
                                                 border-radius: 2px;
                                                 padding: 1px;" 
-                                        id="codigo-cliente"
-                                        value="101254"
+                                        id="cliente"
+                                        value=""
                                  readonly/>
                             </td>
                         </tr>
@@ -73,11 +73,8 @@
                                                 border-width: 0 0 0px;
                                                 border-radius: 2px;
                                                 padding: 1px;"   
-                                    id="frecuencia" >
-                                   <option value="19">Vendedor 1</option>
-                                   <option value="81">Vendedor 2</option>
-                                   <option value="84">Vendedor 3</option>
-                                   <option value="90">Vendedor 4</option>
+                                    id="vendedores" >
+                                   
                                 </select>
                             </td>
                         </tr>
@@ -94,7 +91,7 @@
                                                 border-width: 0 0 0px;
                                                 border-radius: 2px;
                                                 padding: 1px;"   
-                                    id="frecuencia" >
+                                    id="frecuencias" >
                                    <option value="1">Diario</option>
                                    <option value="7">Semanal</option>
                                    <option value="15">Quincenal</option>
@@ -115,7 +112,7 @@
                                                 border-width: 0 0 0px;
                                                 border-radius: 2px;
                                                 padding: 1px;"     
-                                    id="dia" 
+                                    id="dias" 
                                     class="input">
                                    <option value="1">Lunes</option>
                                    <option value="2">Martes</option>
@@ -156,7 +153,7 @@
                         data-role="button" 
                         data-animated="true" 
                         style="display:inline-block; width:88%; font-size: .9em; background-color: rgb(117,113,113);" 
-                        onClick="goToPendientes()">Guardar</a>
+                        onClick="gardarLRC()">Guardar</a>
                     
                 </div>
             </div>
@@ -164,139 +161,186 @@
             <script>
             
              
-                function initMiPerfil(e) 
+                function initLibroRutaCliente(e) 
                 {
                     try 
                     {
-                	    if (localStorage.getItem("password") != undefined) 
+                        var a = document.getElementById("vendedores");
+                        while( a.length > 0 )
                         {
-                            document.getElementById("password1").value  = localStorage.getItem("password");
-			            }
-		                else 
+                            a.options.remove(0);
+                        }
+                        
+                        var cliente = localStorage.getItem("scan-client");
+                	    var txtVendedores = localStorage.getItem("vendedor-sup");
+                        var vendedores = [];
+                        
+                        if( txtVendedores != null )
                         {
-			                document.getElementById("password1").value  = "";
-		                }
+                            if( txtVendedores.length > 0 )
+                            {
+                                vendedores = JSON.parse( txtVendedores );
+                            }
+                        }
+                        
+                        for( var key in vendedores )
+                        {
+                            var vendedor = vendedores[key];
+                            
+                            var opt = document.createElement('option');
+                            opt.text = vendedor.nombre;
+                            opt.value = vendedor.id;
+                            
+                            var x = document.getElementById("vendedores");
+                            var c = document.createElement("option");
+                            
+                            c.text = vendedor.nombre;
+                            c.value = vendedor.id;
+                            x.options.add(c);
+                        }
+                        
+                        document.getElementById("cliente").value = cliente;
                     } 
                     catch (ex) 
                     {
-                        alert("Error al cargar datos de memoria");
+                        alert("Error al cargar datos de memoria. " + ex.toString());
                     }
                 }
                 
-                function ServicioMiPerfil()
+                function gardarLRC() 
                 {
-                    try
+                    try 
                     {
-                        var password1 = document.getElementById("password1").value;
-                        var password2 = document.getElementById("password2").value;
-                        var password3 = document.getElementById("password3").value;
+                        var vendedores = document.getElementById("vendedores");
+                        var vendedor = vendedores.options[vendedores.selectedIndex].value;
                         
-                        if ( password1 == null || password1 == "" ) 
+                        var frecuencias = document.getElementById("frecuencias");
+                        var frecuencia = frecuencias.options[frecuencias.selectedIndex].value;
+                        
+                        var dias = document.getElementById("dias"); 
+                        var dia = dias.options[dias.selectedIndex].value;
+                        
+                        var orden = document.getElementById("orden").value;
+                        
+                        var cliente = localStorage.getItem("scan-client");
+                        
+                        
+                        if( vendedor == null )
                         {
-                             alert("Debe brindar la contraseña actual.");   	
-                             return;
+                            alert("Debe seleccionar un vendedor");
+                            return;
                         }
                         
-                        if ( password2 == null || password2 == "" ) 
+                        if( frecuencia == null )
                         {
-                             alert("Debe brindar la contraseña nueva.");   	
-                             return;
+                            alert("Debe seleccionar un frecuencia");
+                            return;
                         }
                         
-                        if ( password3 == null || password3 == "" ) 
+                        if( dia == null )
                         {
-                             alert("Debe brindar la confirmación de la contraseña nueva.");   	
-                             return;
+                            alert("Debe seleccionar un dia");
+                            return;
                         }
                         
-                        if ( password2.length < 6 ) 
+                        if( orden == null )
                         {
-                            alert("La contraseña nueva debe tener más de 6 caracteres");   	
-                            return;	
+                            alert("Debe ingresar un orden");
+                            return;
                         }
                         
-                        if ( password2.localeCompare(password1) == 0 ) 
+                        if( vendedor.length == 0 )
                         {
-                            alert("La contraseña nueva debe ser diferente de la contraseña anterior");   	
-                            return;	
+                            alert("Debe seleccionar un vendedor");
+                            return;
                         }
                         
-                        if (password2.localeCompare(password3)  != 0) 
+                        if( frecuencia.length == 0 )
                         {
-                            alert("La contraseña nueva no concuerda con la confirmación");   	
-                            return;	
+                            alert("Debe seleccionar un frecuencia");
+                            return;
                         }
                         
-                        var Key1 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                        var IV1 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                        var hash1 = CryptoJS.AES.encrypt(password1,Key1,{iv:IV1, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-                    
-                        var Key2 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                        var IV2 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                        var hash2 = CryptoJS.AES.encrypt(password2,Key2,{iv:IV2, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-                    
-                        var Key3 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                        var IV3 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                        var hash3 = CryptoJS.AES.encrypt(password3,Key3,{iv:IV3, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-                    
-                        var vaType = "GET";
-                        //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
-                        var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
-                        var vaData = 'username=' + String(username) + 
-                                     '&actual=' + String(hash1) + 
-                                     '&nueva=' + String(hash2) + 
-                                     '&confirmacion=' + String(hash3);
-                        var vaContentType = "application/json; charset=utf-8";
-                        var vaDataType = "json";
-                        var vaProcessData = true; 
+                        if( dia.length == 0 )
+                        {
+                            alert("Debe seleccionar un dia");
+                            return;
+                        }
+                        
+                        if( orden.length == 0 )
+                        {
+                            alert("Debe ingresar un orden");
+                            return;
+                        }
+                        
+                        var tClientes = localStorage.getItem("clientes");
+                        var clientes = [];
+                        
+                        if( tClientes != null )
+                        {
+                            if( tClientes.length > 0 )
+                            {
+                                clientes = JSON.parse(tClientes);
+                            }
+                        }
+                        
+                        if (clientes == null) 
+                        {
+                            clientes = [];
+                        }
                 
-                        $.ajax({
-                        type          : vaType, //GET or POST or PUT or DELETE verb
-                        url           : vaUrl, // Location of the service
-                        data          : vaData, //Data sent to server
-                        contentType   : vaContentType, // content type sent to server
-                        dataType      : vaDataType, //Expected data format from server
-                        processdata   : vaProcessData, //True or False
-                        success       : function(msg) {//On Successfull service call
-                            ServiceFoundMiPerfil(msg);                    
-                        },
-                        error: ServiceNotFindMiPerfil// When Service call fails
-                        });
-                        
-                        
-                    }
-                    catch(err)
-                    {
-                        alert(err.toString());
-                    }
-				}
-                
-                function ServiceFoundMiPerfil(result) 
-                {
-                    try
-                    {                          
-                        if ( String(result.MENSAJE) == "Contraseña actualizada con éxito." ) 
+                        for (var i = 0; i < clientes.length; i++) 
                         {
-                            var newpassword = document.getElementById("password2").value;
-                            document.getElementById("password1").value = newpassword;
-                            document.getElementById("password2").value = "";
-                            document.getElementById("password3").value = "";
-                            
-                            localStorage.setItem("password", newpassword);
+                            if (clientes[i].codigo == cliente) 
+                            {
+                                if (!confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?')) 
+                                {
+                                    
+                                    var lat = getLatitudX();
+                                    var lon = getLongitudX();
+                
+                                    clientes[i].codigo = cliente;
+                                    clientes[i].vendedor = vendedor;
+                                    clientes[i].frecuencia = frecuencia;
+                                    clientes[i].dia = dia;
+                                    clientes[i].orden = orden;
+                                    clientes[i].latitud = lat;
+                                    clientes[i].longitud = lon;
+                
+                                    localStorage.setItem("clientes", JSON.stringify(clientes));
+                                    
+                                    alert("Cliente: " + cliente + ", registrado con éxito.");
+                                    
+                                    app.navigate("#:back");
+                                }
+                                return;
+                            }
                         }
+                
+                        var lat = getLatitudX();
+                        var lon = getLongitudX();
                         
-                        alert(String(result.MENSAJE));	
-                    }
-                    catch(err)
-                    {
-                         alert(err.toString());   
+                        clientes.push(
+                            {   codigo: cliente,
+                                vendedor: vendedor,
+                                frecuencia: frecuencia,
+                                dia: dia,
+                                orden: orden,
+                                latitud: lat, 
+                                longitud: lon
+                            }
+                        );
+                        
+                        localStorage.setItem("clientes", JSON.stringify(clientes));
+                
+                        alert("Cliente: " + cliente + ", registrado con éxito.");
+                        
+                        app.navigate("#:back");
+                    } catch (err) {
+                        alert("Error al registrar el cliente" + err.toString());
                     }
                 }
                 
-                function ServiceNotFindMiPerfil(result) 
-                {
-                    alert("Error en conexión.");
-                }
             </script>
         </div>   
     </body>

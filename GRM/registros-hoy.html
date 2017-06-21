@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-registros-hoy" 
+             data-title="Registros del Día" 
+             data-role="view"
+             data-transition="zoom"
+             data-show="initRegistrosHoy"
+            >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Reportes</span>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div>
+            
+            <ul id="listview-rh"  data-template="reporteTemplate-rh" data-role="listview"></ul>   
+            
+            <script type="text/x-kendo-template" id="reporteTemplate-rh">
+    			<div class="list_title">
+                	<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+            					${cliente_nombre}
+            				</td>
+            			</tr>
+                        <tr>
+                        	<td style="width: 70%; text-align:left;">
+            					<div class="sub_titulo">Código: ${cliente}</div>
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+    			<div class="list_percentage">
+            		<div class="template_label" style="width:30%;">Vendedor</div>
+                    <div class="template_value" style="width:60%;">${vendedor_nombre}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label" style="width:30%;">Frecuencia</div>
+                    <div class="template_value" style="width:60%;">${frecuencia}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label" style="width:30%;">Día</div>
+                    <div class="template_value" style="width:60%;">${dia}</div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label" style="width:30%;">Orden</div>
+                    <div class="template_value" style="width:60%;">${orden}</div>
+                </div>
+                
+                <div class="list_percentage">
+            		<div class="template_label" style="width:30%;">F. Registro</div>
+                    <div class="template_value" style="width:60%;">${fecha}</div>
+                </div>
+                
+                <div class="list_percentage">
+            		<div class="template_label" style="width:30%;">h. Registro</div>
+                    <div class="template_value" style="width:60%;">${hora}</div>
+                </div>
+                <br />
+			</script>
+            
+            <script>
+                function initRegistrosHoy(e)
+                {
+                    try
+                    {
+                        var txtRegistro = localStorage.getItem("registros-hoy");
+                        var registros = [];
+                        
+                        if( txtRegistro != null )
+                        {
+                            if( txtRegistro.length > 0 ) 
+                            {
+                                registros = JSON.parse( txtRegistro );
+                            }
+                        }
+                        var dataReporte = new kendo.data.DataSource({
+                            data: registros
+                        });
+                        
+                        $("#listview-rh").data("kendoMobileListView").setDataSource(dataReporte); 
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>
