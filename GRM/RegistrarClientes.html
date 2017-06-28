@@ -114,26 +114,33 @@
                 
                 function scanCodeCliente() 
                 {
-                    cordova.plugins.barcodeScanner.scan(
-                        function(result) 
-                        { 
-                            setTimeout(function() 
-                            {
-                                if (!result.cancelled) 
+                    try
+                    {
+                          cordova.plugins.barcodeScanner.scan(
+                            function(result) 
+                            { 
+                                setTimeout(function() 
                                 {
-                                    
-                                    codigoCliente = result.text;
-                                    //window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
-                                    
-                                    var newOptions = { enableHighAccuracy: true, maximumAge:500, timeout: 5000  };
-                                    navigator.geolocation.getCurrentPosition(readWSRegCliente, readWSRegClienteError, newOptions);
-                                }                      
-                            }, 0);
-                        }, // success
-                        function(error) { 
-                            alert("Scanning failed: " + error);
-                        }  // error
-                        );
+                                    if (!result.cancelled) 
+                                    {
+                                        
+                                        codigoCliente = result.text;
+                                        //window.plugins.ReadSettings.read([], readWSRegCliente, readWSRegClienteError);
+                                        
+                                        var newOptions = { enableHighAccuracy: true, maximumAge:500, timeout: 5000  };
+                                        navigator.geolocation.getCurrentPosition(readWSRegCliente, readWSRegClienteError, newOptions);
+                                    }                      
+                                }, 0);
+                            }, // success
+                            function(error) { 
+                                alert("Scanning failed: " + error);
+                            }  // error
+                            );  
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
                     
                 }
                 
