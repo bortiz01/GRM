@@ -58,9 +58,9 @@
                     <div class="template_value">${per_cobro}</div>
                 </div>
                 <div class="list_percentage">
-                	<div class="template_label">Localizar</div>
+                	<div class="template_label">Route Manager</div>
                     <div class="template_value">
-                        <a onclick="goToMapVendedor(${id})" style="text-decoration: underline;">Ver Mapa</a>
+                        <a onclick="goToMapVendedor(${id})" style="text-decoration: underline;">Ver</a>
                     </div>
                 </div>
                 <br />
@@ -219,8 +219,19 @@
                     }
                 }
                 
-                function goToMapVendedor(codigoS) 
+                function goToMapVendedor(ra_vendedor) 
                 {
+                    try
+                    {
+                        localStorage.setItem('ra-vendedor', String(ra_vendedor));
+                        app.navigate("reporte-actividad.html","fade");   
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+                    
+                    /*
                     try
                     {
                         vendedorMapa = codigoS;
@@ -253,6 +264,7 @@
                     {
                         alert(err.toString());
                     }
+                    */
                 }
                 
                 function ServiceListMapV(result) 

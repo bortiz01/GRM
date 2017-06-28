@@ -266,10 +266,59 @@
                 {    
                     try
                     {
+                        var tlat = String(position.coords.latitude);
+                        var tlon = String(position.coords.longitude);
+                        
                         localStorage.setItem("latitudeX", String(position.coords.latitude));
                         localStorage.setItem("longitudeX", String(position.coords.longitude));
                         
-                        registrarVisita(codigoRegistro);
+                        var tLibro = localStorage.getItem("libro");
+                        var libro = [];
+                        
+                        if (tLibro != null) 
+                        {
+                            if (tLibro.length > 0) 
+                            {
+                                libro = JSON.parse(tLibro);
+                            }
+                        }
+                        
+                        var lat = "0";
+                        var lon = "0"
+                        
+                        for( var key in libro )
+                        {
+                            var item = libro[key];
+                            
+                            if( String(item.codigo) == String(codigoRegistro) )
+                            {
+                                 lat = item.lat;
+                                 lon = item.lon;
+                            }
+                        }
+                        
+                        if( lat == "0" || lon == "0" )
+                        {
+                            alert("La ubicación del cliente no esta definida.");
+                        }
+                        else
+                        {
+                            var olat = parseFloat(tlat);
+                            var olon = parseFloat(tlon);
+                            
+                            var dlat = parseFloat(lat);
+                            var dlon = parseFloat(lon);
+                            
+                            var distancia = getDistanceFromLatLonInKm( olat, olon, dlat, dlon );
+                            
+                            var tdistancia = distancia.toFixed(2) + " Km";
+                            
+                            alert( "La distancia entre su posicion y la del cliente es: " + tdistancia );
+                            
+                            registrarVisita(codigoRegistro);
+                        }
+                        
+                        
                     }
                     catch(err)
                     {

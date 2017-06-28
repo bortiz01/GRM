@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reporte</title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <script src="kendo/js/kendo.mobile.min.js"></script>
+        <script src="kendo/js/CriptoJS/js"></script>
+
+    </head>
+    <body>
+        <div id="tabstrip-reporte-actividad" 
+             data-title="Reporte Actividad" 
+             data-role="view"
+             data-transition="fade"
+             data-init="initReporteActividad" 
+             data-show="showReporteActividad"
+             >
+            <div data-role="header">
+                <div data-role="navbar" style="background-color: black; color: white;">
+                    <span data-role="view-title">Reporte Actividad</span>
+                    <input data-align="left" id="rafecha" type="date" name="bday" onchange="dateChangeRA()">
+                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                </div>
+            </div> 
+            
+            <div id="error_ra" class="error_list_container" style="display: none">
+                <div id="error-clc" class="error_list">
+                    <br/>
+                    Error, no hay información que mostrar
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+            
+            <div id="boton-ra" style="margin:auto; width:100%; padding-top:.5em;">
+                <div style="text-align:center;">
+                    <a  id="btnPendientes" 
+                        data-role="button" 
+                        data-animated="true" 
+                        style="display:inline-block; width:88%; font-size: .9em; background-color: rgb(117,113,113);" 
+                        onClick="goToMapaRA()">Ver Mapa</a>
+                    
+                </div>
+            </div>
+            <br/>
+            <ul id="custom-ra"  data-template="customListView-ra" data-role="listview"></ul>
+            
+            <script type="text/x-kendo-template" id="customListView-ra">
+    			<div class="list_title">
+                	<table style="width: 100%">
+                    	<tr>
+                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+            					${cliente_nombre}
+            				</td>
+            			</tr>
+            		</table>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label" style="width: 30%;">Frecuencia</div>
+                    <div class="template_value" style="width: 60%;">&nbsp;${frecuencia}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label" style="width: 30%;">Dia</div>
+                    <div class="template_value" style="width: 60%;">&nbsp;${dia}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label" style="width: 30%;">Orden</div>
+                    <div class="template_value" style="width: 60%;">&nbsp;${orden}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label" style="width: 30%;">Fecha</div>
+                    <div class="template_value" style="width: 60%;">&nbsp;${fcelular}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label" style="width: 30%;">Hora</div>
+                    <div class="template_value" style="width: 60%;">&nbsp;${hcelular}</div>
+                </div>
+                <div class="list_percentage">
+                	<div class="template_label" style="width: 30%;">Estado</div>
+                    <div class="template_value" style="width: 60%;">${status}</div>
+                </div>
+               
+                <br />
+			</script>
+            
+            <script>
+                function initReporteActividad(e) 
+                {
+                    try
+                    {
+                        var fecha = fechaDeHoyRA();
+                        document.getElementById("rafecha").value = fecha;  
+                    }
+                    catch(err)
+                    {
+                        alert("init. " + err.toString());
+                    }
+                }
+                
+                function showReporteActividad(e) 
+                {
+                    try
+                    {
+                        callReporteActividad();
+                        
+                        var scroller = e.view.scroller;
+                        scroller.reset();
+                    }
+                    catch(err)
+                    {
+                        alert("show. " + err.toString());
+                    }
+                }
+                
+                function callReporteActividad() 
+            	{
+                    try
+                    {
+                        document.getElementById("error_ra").style.display = "block";
+                        document.getElementById("boton-ra").style.display = "none";
+                        
+                        var vendedor = localStorage.getItem("ra-vendedor");
+                        var fecha = document.getElementById("rafecha").value;
+                        
+                        var vType = "GET";
+                        var vUrl = "http://portal.diapa.net:120/Home/ReporteActividad";
+                        //var vUrl = "http://localhost:1564/home/VendedoresList";
+                        var vData = 'vendedor=' + String(vendedor) + '&fecha=' + String(fecha)  ;
+                        var vContentType = "application/json; charset=utf-8";
+                        var vDataType = "json";
+                        var vProcessData = true; 
+                
+                        $.ajax({
+                        type          : vType, //GET or POST or PUT or DELETE verb
+                        url           : vUrl, // Location of the service
+                        data          : vData, //Data sent to server
+                        contentType   : vContentType, // content type sent to server
+                        dataType      : vDataType, //Expected data format from server
+                        processdata   : vProcessData, //True or False
+                        success       : function(msg) 
+                        {
+                            callReporteActividadS(msg);                    
+                        },
+                        error: ServiceNotListRA// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function callReporteActividadS(result) 
+                {
+                    try
+                    { 
+                        if( result != null )
+                        {
+                            if( result.length > 0 )
+                            {
+                                localStorage.setItem('reporte-actividad', JSON.stringify(result));
+                        
+                                dataVendedores = new kendo.data.DataSource({
+                                    data: result
+                                });
+                                
+                                $("#custom-ra").data("kendoMobileListView").setDataSource(dataVendedores);
+                                        
+                                document.getElementById("error_ra").style.display = "none";
+                                document.getElementById("boton-ra").style.display = "block";
+                                
+                                return;
+                            }
+                        }
+                        
+                        
+                        dataVendedores = new kendo.data.DataSource({
+                            data: []
+                        });
+                                
+                        $("#custom-ra").data("kendoMobileListView").setDataSource(dataVendedores);
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                     
+                }
+
+                function ServiceNotListRA(result) 
+                {
+                    alert("Error en conexión.");
+                }
+                
+                function fechaDeHoyRA() 
+                {
+                	try
+                	{
+                		var today = new Date();
+                    
+                		var dia = today.getDate();
+                		var mes = today.getMonth() + 1; //January is 0!
+                		var ano = today.getFullYear();
+                	
+                		if (dia < 10) 
+                        {
+                			dia = '0' + dia
+                		} 
+                 
+                		if (mes < 10) 
+                        {
+                			mes = '0' + mes
+                		} 
+                   
+                		var fecha = ano + '-' + mes + '-' + dia;
+                		return fecha;
+                	}
+                	catch(err)
+                    {
+                    	alert( "FechaHoraDeHoy. " + err.toString());
+                    }
+                	return "";
+                }
+            
+                function dateChangeRA()
+                {
+                    try
+                    {
+                        callReporteActividad();
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }    
+                
+                function goToMapaRA( )
+                {
+                    try
+                    {
+                        var fecha = document.getElementById("rafecha").value;
+                        localStorage.setItem("ra-fecha",fecha);
+                        
+                        app.navigate("MapaGoogle.html","fade"); 
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>

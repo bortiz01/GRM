@@ -26,6 +26,15 @@
                 </div>
             </div>
             
+            <div id="error_rh" class="error_list_container" style="display: none">
+                <div id="error-clc" class="error_list">
+                    <br/>
+                    Error, no hay información que mostrar
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+            
             <ul id="listview-rh"  data-template="reporteTemplate-rh" data-role="listview"></ul>   
             
             <script type="text/x-kendo-template" id="reporteTemplate-rh">
@@ -69,6 +78,14 @@
             		<div class="template_label" style="width:30%;">h. Registro</div>
                     <div class="template_value" style="width:60%;">${hora}</div>
                 </div>
+                
+                <div class="list_percentage">
+                	<div class="template_label">Borrar Registro</div>
+                    <div class="template_value">
+                        <a onclick="borrarRegistroCliente(${id})" style="text-decoration: underline;">Borrar</a>
+                    </div>
+                </div>
+                
                 <br />
 			</script>
             
@@ -77,9 +94,63 @@
                 {
                     try
                     {
+                        leerRegistrosHoy();
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function borrarRegistroCliente(idRegistro)
+                {
+                    try
+                    {
+                        var id = getId();
+                        
+                        var vaType = "POST";
+                        //var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
+                        var vaUrl = "http://portal.diapa.net:120/home/BorrarRegistro";
+                        var vaData = 'UsuarioId=' + String(id) + '&Id=' + String(idRegistro);
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                        
+                        $.ajax({
+                                   type          : vaType, //GET or POST or PUT or DELETE verb
+                                   url           : vaUrl, // Location of the service
+                                   cache         : false,
+                                   data          : vaData,
+                                   contentType   : vaContentType, // content type sent to server
+                                   dataType      : vaDataType, //Expected data format from server
+                                   processdata   : vaProcessData, //True or False
+                                   success       : function(registros) 
+                                   {
+                                       localStorage.setItem("registros-hoy", JSON.stringify(registros) );
+                                       app.pane.loader.hide();
+                                       leerRegistrosHoy();
+                                   },
+                                   error: function(xhr, ajaxOptions, thrownError) 
+                                   { 
+                                       alert("Error en llamada")
+                                       app.pane.loader.hide();
+                                       leerClientes();   
+                                   }
+                               });  
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    } 
+                }
+                
+                function leerRegistrosHoy()
+                {
+                    try
+                    {
                         var txtRegistro = localStorage.getItem("registros-hoy");
                         var registros = [];
-                        
+                            
                         if( txtRegistro != null )
                         {
                             if( txtRegistro.length > 0 ) 
@@ -90,12 +161,21 @@
                         var dataReporte = new kendo.data.DataSource({
                             data: registros
                         });
-                        
+                            
                         $("#listview-rh").data("kendoMobileListView").setDataSource(dataReporte); 
+                            
+                        if( registros.length == 0 )
+                        {
+                            document.getElementById("error_rh").style.display = "block";
+                        }
+                        else
+                        {
+                            document.getElementById("error_rh").style.display = "none";
+                        }
                     }
                     catch(err)
                     {
-                         alert(err.toString());   
+                        alert(err.toString());   
                     }
                 }
             </script>

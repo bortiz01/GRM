@@ -30,7 +30,6 @@
             <div data-role="header">
                 <div data-role="navbar" style="background-color: black; color: white;">
                     <span data-role="view-title">Mapa</span>
-                    <input data-align="left" id="gfecha" type="date" name="bday" onchange="dateChange()">
                     <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div>
@@ -45,7 +44,6 @@
                   center: centro
               });
               
-              document.getElementById("gfecha").innerHTML = '2017-06-23';   
               document.getElementById("map").style.width = String($(window).width()) + "px";
               document.getElementById("map").style.height = String($(window).height() - 35 ) + "px";
               
@@ -54,153 +52,126 @@
           
           function showMapaGoogle(e)
           {   
-              if( map == null )
+              try
               {
-                  return;
-              }
-              
-          
-              var centro = {lat: 14.091991, lng: -87.200767};
-              map = new google.maps.Map(document.getElementById('map'), {
-                  zoom: 12,
-                  center: centro
-              });
-              
-              var txtVisitas = localStorage.getItem("visitas");
-              var visitas = [];
-              
-              if( txtVisitas != null )
-              {
-                  if( txtVisitas.length > 0 )
+                  if( map == null )
                   {
-                      visitas = JSON.parse( txtVisitas );
+                      return;
                   }
-              }
-              
-              var flightPlanCoordinates = [
-                 
-              ];
-              
-              var lat = 0;
-              var lon = 0;
-              
-              var contador = 0;
-              for( var key in visitas )
-              {
-                  var visita = visitas[key];
                   
-                  var uluru = {lat: parseFloat(visita.x), lng: parseFloat(visita.y)};
-
-                  var marker = new google.maps.Marker({
-                    position: uluru,
-                    map: map,
-                    animation: google.maps.Animation.DROP
-                    //title: 'Nombre ' + visita.cliente_nombre + ', Fecha: ' + visita.fechaCreacion
+                  var centro = {lat: 14.091991, lng: -87.200767};
+                  map = new google.maps.Map(document.getElementById('map'), {
+                      zoom: 12,
+                      center: centro
                   });
                   
-                  var content = '<h4 style="color: black;">Nombre: ' + visita.cliente_nombre + '</h4><p style="color: black;">Fecha: ' + visita.fechaCreacion + '</p>'
-                  var infowindow = new google.maps.InfoWindow()
+                  var txtVisitas = localStorage.getItem("reporte-actividad");
+                  var visitas = [];
                   
-                  google.maps.event.addListener(marker,'click', (function(marker,content,infowindow)
-                  { 
-                    return function() 
-                    {
-                       infowindow.setContent(content);
-                       infowindow.open(map,marker);
-                    };
-                  })(marker,content,infowindow)); 
-                  
-                  if( contador == 0 )
+                  if( txtVisitas != null )
                   {
-                      lat = parseFloat(visita.x);
-                      lon = parseFloat(visita.y);
+                      if( txtVisitas.length > 0 )
+                      {
+                          visitas = JSON.parse( txtVisitas );
+                      }
                   }
                   
-                  contador++;
+                  var flightPlanCoordinates = [
+                     
+                  ];
                   
-                  flightPlanCoordinates.push( uluru );
-              }
-              
-              var center = new google.maps.LatLng(lat, lon);
-              map.panTo(center);
-              
-              var flightPath = new google.maps.Polyline({
-                  path: flightPlanCoordinates,
-                  geodesic: true,
-                  strokeColor: '#FF0000',
-                  strokeOpacity: 1.0,
-                  strokeWeight: 2
-              });
+                  var rojo = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|E94F53';
+                  var azul = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|6FA84B';
+                  var amarillo = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ECBE14';
+                  
+                  var lat = 0;
+                  var lon = 0;
+                  
+                  var contador = 0;
+                  for( var key in visitas )
+                  {
+                      var visita = visitas[key];
+                      
+                      var uluru = {lat: parseFloat(visita.latitud), lng: parseFloat(visita.longitud)};
+                      
+                      var icon = "";
+                      var content = "";
+          
+                      if( visita.status == "Programado" )
+                      {
+                          icon = rojo;
+                          
+                          content = '<h4 style="color: black;">Nombre: ' + visita.cliente_nombre + 
+                                    '</h4><p style="color: black;">Frecuencia: ' + visita.frecuencia + '<br/>Dia: ' + visita.dia + '<br/>Estatus: Programado</p>';
+                      }
+                      
+                      if( visita.status == "Visitado" )
+                      {
+                          icon = azul;
+                          
+                          content = '<h4 style="color: black;">Nombre: ' + visita.cliente_nombre + 
+                                    '</h4><p style="color: black;">Fecha: ' + visita.fcelular + '<br/>Hora: ' + visita.hcelular + '<br/>Estatus: Visitado</p>';
+                      }
+                      
+                      if( visita.status == "Fuera de Ruta" )
+                      {
+                          icon = amarillo;
+                          
+                          content = '<h4 style="color: black;">Nombre: ' + visita.cliente_nombre + 
+                                    '</h4><p style="color: black;">Fecha: ' + visita.fcelular + '<br/>Hora: ' + visita.hcelular + '<br/>Estatus: Fuera de Ruta</p>';
+                      }
+                      
+                      var marker = new google.maps.Marker({
+                        position: uluru,
+                        map: map,
+                        //animation: google.maps.Animation.DROP,
+                        icon: icon,
+                        //title: 'Nombre ' + visita.cliente_nombre + ', Fecha: ' + visita.fechaCreacion
+                      });
+                      
+                      var infowindow = new google.maps.InfoWindow()
+                      
+                      google.maps.event.addListener(marker,'click', (function(marker,content,infowindow)
+                      { 
+                        return function() 
+                        {
+                           infowindow.setContent(content);
+                           infowindow.open(map,marker);
+                        };
+                      })(marker,content,infowindow)); 
+                      
+                      if( contador == 0 )
+                      {
+                          lat = parseFloat(visita.latitud);
+                          lon = parseFloat(visita.longitud);
+                      }
+                      
+                      contador++;
+                      flightPlanCoordinates.push( uluru );
+                  }
+                  
+                  var center = new google.maps.LatLng(lat, lon);
+                  map.panTo(center);
+                  
+                  var flightPath = new google.maps.Polyline({
+                      path: flightPlanCoordinates,
+                      geodesic: true,
+                      strokeColor: '#FF0000',
+                      strokeOpacity: 1.0,
+                      strokeWeight: 2
+                  });
 
-              flightPath.setMap(map);
-              
-              document.getElementById("gfecha").value = fechaMapa;    
-              document.getElementById("map").style.width = String($(window).width()) + "px";
-              document.getElementById("map").style.height = String($(window).height() - 35 ) + "px";
-          }
-          
-          function dateChange()
-          {
-              var valor = document.getElementById("gfecha").value;
-              fechaMapa = valor;
-              
-              reloadMapVendedor();
-          }
-          
-                 
-          function reloadMapVendedor() 
-                {
-                    try
-                    {
-                        var vType = "GET";
-                        //var vUrl = "http://localhost:1564/Home/RegistrosVisitaVendedor";
-                        var vUrl =   "http://portal.diapa.net:120/Home/RegistrosVisitaVendedor";
-                        var vData = 'Vendedor=' + String(vendedorMapa) + '&Fecha=' + String(fechaMapa);
-                        var vContentType = "application/json; charset=utf-8";
-                        var vDataType = "json";
-                        var vProcessData = true; 
-                
-                        $.ajax({
-                        type          : vType, //GET or POST or PUT or DELETE verb
-                        url           : vUrl, // Location of the service
-                        data          : vData, //Data sent to server
-                        contentType   : vContentType, // content type sent to server
-                        dataType      : vDataType, //Expected data format from server
-                        processdata   : vProcessData, //True or False
-                        success       : function(msg) 
-                        {//On Successfull service call
-                            ServiceReloadS(msg);                    
-                        },
-                        error: ServiceReloadF// When Service call fails
-                        });
-                        
-                    }
-                    catch(err)
-                    {
-                        alert(err.toString());
-                    }
-                }
-                
-                function ServiceReloadS(result) 
-                {
-                    try
-                    {
-                        localStorage.setItem('visitas', JSON.stringify(result));
-                        showMapaGoogle();
-                    }
-                    catch(err)
-                    {
-                         alert(err.toString());   
-                    }
-                }
-                
-                function ServiceReloadF(result) 
-                {
-                    localStorage.removeItem('visitas');
-                    alert("Error en conexión.");
-                }
-                
-                
+                  flightPath.setMap(map);
+                  
+                  
+                  document.getElementById("map").style.width = String($(window).width()) + "px";
+                  document.getElementById("map").style.height = String($(window).height() - 35 ) + "px";
+              }
+              catch(err)
+              {
+                  alert( "Error. " + err.toString() );
+              }
+          }      
       </script>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUnERkULujuZ-VolJUfViFhEAfcK2oSl8&callback=initMap" async defer>
       </script>

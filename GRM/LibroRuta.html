@@ -72,7 +72,7 @@
             		<div class="template_label">Día</div>
                     <div class="template_value">${dia}</div>
                 </div>
-                 <div class="list_percentage">
+                <div class="list_percentage">
             		<div class="template_label">Orden</div>
                     <div class="template_value">${orden}</div>
                 </div>
@@ -84,6 +84,14 @@
                         #}else{#
                             No
                         #}#
+                    </div>
+                </div>
+                <div class="list_percentage">
+            		<div class="template_label">Dirección</div>
+                    <div class="template_value">
+                        <a href='http://maps.google.com/maps?daddr=${lat},${lon}&directionsmode=driving'>
+                            Ver
+                        </a>
                     </div>
                 </div>
                 <br />
