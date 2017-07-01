@@ -1,3 +1,6 @@
 {
-  "CorePlugins": []
+  "CorePlugins": [
+    "com.phonegap.plugins.barcodescanner@2.0.0",
+    "cordova-plugin-whitelist"
+  ]
 }
