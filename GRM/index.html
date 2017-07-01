@@ -127,15 +127,19 @@
             
                     var latitude = "NONE";
                     var longitude = "NONE";
-            
-                    if (localStorage.getItem("latitude") != undefined) {
+                    
+                    /*
+                    if (localStorage.getItem("latitude") != undefined) 
+                    {
                         latitude = localStorage.getItem("latitude");
                     }
             
-                    if (localStorage.getItem("longitude") != undefined) {
+                    if (localStorage.getItem("longitude") != undefined) 
+                    {
                         longitude = localStorage.getItem("longitude");
                     }
-            
+                    */
+                    
                     var text = password;   
                     var Key = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
                     var IV = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
@@ -148,6 +152,9 @@
                               '&Password=' + encryptedText +
                               '&Latitud=' + String(latitude) +
                               '&Longitud=' + String(longitude) ; 
+                    
+                    
+                    
                     varContentType = "application/json; charset=utf-8";
                     varDataType = "json";
                     varProcessData = true; 
@@ -191,7 +198,8 @@
                 }
             }
             
-            function ServiceFailed(result) {
+            function ServiceFailed(result) 
+            {
                 alert("No se pudo autentificar al usuario.");
             }
             

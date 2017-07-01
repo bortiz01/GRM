@@ -80,8 +80,8 @@
                 </div>
                 
                 <div class="list_percentage">
-                	<div class="template_label">Borrar Registro</div>
-                    <div class="template_value">
+                	<div class="template_label" style="width:30%;">Borrar</div>
+                    <div class="template_value" style="width:60%;">
                         <a onclick="borrarRegistroCliente(${id})" style="text-decoration: underline;">Borrar</a>
                     </div>
                 </div>
@@ -108,9 +108,9 @@
                     {
                         var id = getId();
                         
-                        var vaType = "POST";
-                        //var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
-                        var vaUrl = "http://portal.diapa.net:120/home/BorrarRegistro";
+                        var vaType = "GET";
+                        //var vaUrl = "http://portal.diapa.net:120/home/BorrarRegistro";
+                        var vaUrl = "http://localhost:1564/home/BorrarRegistro";
                         var vaData = 'UsuarioId=' + String(id) + '&Id=' + String(idRegistro);
                         var vaContentType = "application/json; charset=utf-8";
                         var vaDataType = "json";
@@ -132,7 +132,7 @@
                                    },
                                    error: function(xhr, ajaxOptions, thrownError) 
                                    { 
-                                       alert("Error en llamada")
+                                       alert("Error en llamada");
                                        app.pane.loader.hide();
                                        leerClientes();   
                                    }

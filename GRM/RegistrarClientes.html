@@ -167,7 +167,8 @@
                         
                         var contador = 0;
                 
-                        for (var i = 0; i < clientes.length; i++) {
+                        for (var i = 0; i < clientes.length; i++) 
+                        {
                             contador++;
                             txtClientes += clientes[i].codigo + "|" + 
                                            clientes[i].vendedor + "|" + 
@@ -242,13 +243,16 @@
                 {    
                     try
                     {
-                        localStorage.setItem("latitudeX", String(position.coords.latitude));
-                        localStorage.setItem("longitudeX", String(position.coords.longitude));
-                        //registrarCliente(codigoCliente);
+                        //localStorage.setItem("latitudeX", String(position.coords.latitude));
+                        //localStorage.setItem("longitudeX", String(position.coords.longitude));
+                        //localStorage.setItem("scan-client",codigoCliente);
+                        //app.navigate("libro-ruta-cliente.html", "zoom");
+ 
                         
-                        localStorage.setItem("scan-client",codigoCliente);
-                        app.navigate("libro-ruta-cliente.html", "zoom");
-                     
+                        var lat = String(position.coords.latitude);
+                        var lon = String(position.coords.longitude);
+                        
+                        registrarCliente(codigoCliente,lat,lon);      
                     }
                     catch(err)
                     {
@@ -272,6 +276,71 @@
                     catch(err)
                     {
                         alert("Error al obtener la posicion geografica. " + err.toString());
+                    }
+                }
+                
+                function registrarCliente(codigoCliente, lat, lon) 
+                {
+                    try 
+                    { 
+                        var tClientes = localStorage.getItem("clientes");
+                        var clientes = [];
+                        
+                        if( tClientes != null )
+                        {
+                            if( tClientes.length > 0 )
+                            {
+                                clientes = JSON.parse(tClientes);
+                            }
+                        }
+                        
+                        if (clientes == null) 
+                        {
+                            clientes = [];
+                        }
+                
+                        for (var i = 0; i < clientes.length; i++) 
+                        {
+                            if (clientes[i].codigo == cliente) 
+                            {
+                                if (!confirm('¿Desea remplazar el registro del cliente ' + clientes[i].codigo + '?')) 
+                                {
+                                    clientes[i].codigo = cliente;
+                                    clientes[i].vendedor = '0';
+                                    clientes[i].frecuencia = '0';
+                                    clientes[i].dia = '0';
+                                    clientes[i].orden = '0';
+                                    clientes[i].latitud = lat;
+                                    clientes[i].longitud = lon;
+                
+                                    localStorage.setItem("clientes", JSON.stringify(clientes));
+                                    
+                                    alert("Cliente: " + cliente + ", registrado con éxito.");
+                                }
+                                return;
+                            }
+                        }
+                
+                        
+                        clientes.push(
+                            {   codigo: cliente,
+                                vendedor: '0',
+                                frecuencia: '0',
+                                dia: '0',
+                                orden: '0',
+                                latitud: lat, 
+                                longitud: lon
+                            }
+                        );
+                        
+                        localStorage.setItem("clientes", JSON.stringify(clientes));
+                
+                        alert("Cliente: " + cliente + ", registrado con éxito.");
+                        
+                        callWSSendClientes();
+                    } catch (err) 
+                    {
+                        alert("Error al registrar el cliente" + err.toString());
                     }
                 }
             </script>

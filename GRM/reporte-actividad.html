@@ -24,9 +24,19 @@
                 <div data-role="navbar" style="background-color: black; color: white;">
                     <span data-role="view-title">Reporte Actividad</span>
                     <input data-align="left" id="rafecha" type="date" name="bday" onchange="dateChangeRA()">
-                	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
+                    <a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div> 
+            
+            <div id="filtroDiv">
+                <label style="color: #404040; width:20%; display: inline-block;">Filtro:</label>
+                <select id="filtroRA" style="color: #404040; width:75%; display: inline-block;" onchange="filtroCambio()">
+                     <option value="Todos">Ver todos los registros</option>
+                     <option value="Programado">Solo los clientes programado</option>
+                     <option value="Visitado">Solo los clientes visitado</option>
+                     <option value="Fuera de Ruta">Ver las visitas Fuera de Ruta</option>
+                </select>
+            </div>
             
             <div id="error_ra" class="error_list_container" style="display: none">
                 <div id="error-clc" class="error_list">
@@ -121,7 +131,10 @@
             	{
                     try
                     {
-                        document.getElementById("error_ra").style.display = "block";
+                        document.getElementById("filtroRA").value = "Todos";
+                        
+                        document.getElementById("filtroDiv").style.display = "none";
+                        document.getElementById("error_ra").style.display = "none";
                         document.getElementById("boton-ra").style.display = "none";
                         
                         var vendedor = localStorage.getItem("ra-vendedor");
@@ -165,14 +178,38 @@
                         {
                             if( result.length > 0 )
                             {
+                                var e = document.getElementById("filtroRA");
+                                var filtro = e.options[e.selectedIndex].value;
+                                
                                 localStorage.setItem('reporte-actividad', JSON.stringify(result));
-                        
+                                
+                                var dataFiltrada = [];
+                                
+                                if( filtro == "Todos" )
+                                {
+                                      dataFiltrada = result;
+                                }
+                                else
+                                {
+                                    for( var key in result )
+                                    {
+                                        var item = result[key];
+                                        
+                                        //alert( String(item.status) + "==" + String(filtro) );
+                                        if( String(item.status) == String(filtro) )
+                                        {
+                                            dataFiltrada.push( item );
+                                        }
+                                    }
+                                }
+                                
                                 dataVendedores = new kendo.data.DataSource({
-                                    data: result
+                                    data: dataFiltrada
                                 });
                                 
                                 $("#custom-ra").data("kendoMobileListView").setDataSource(dataVendedores);
-                                        
+                                
+                                document.getElementById("filtroDiv").style.display = "block";
                                 document.getElementById("error_ra").style.display = "none";
                                 document.getElementById("boton-ra").style.display = "block";
                                 
@@ -186,6 +223,10 @@
                         });
                                 
                         $("#custom-ra").data("kendoMobileListView").setDataSource(dataVendedores);
+                        
+                        document.getElementById("filtroDiv").style.display = "none";
+                        document.getElementById("error_ra").style.display = "block";
+                        document.getElementById("boton-ra").style.display = "none";
                     }
                     catch(err)
                     {
@@ -196,7 +237,19 @@
 
                 function ServiceNotListRA(result) 
                 {
-                    alert("Error en conexión.");
+                    try
+                    {
+                        alert("Error en conexión.");
+                    
+                        document.getElementById("filtroDiv").style.display = "none";
+                        document.getElementById("error_ra").style.display = "block";
+                        document.getElementById("boton-ra").style.display = "none";
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString()); 
+                    }
+                    
                 }
                 
                 function fechaDeHoyRA() 
@@ -249,6 +302,29 @@
                         localStorage.setItem("ra-fecha",fecha);
                         
                         app.navigate("MapaGoogle.html","fade"); 
+                    }
+                    catch(err)
+                    {
+                         alert(err.toString());   
+                    }
+                }
+                
+                function filtroCambio()
+                {
+                    try
+                    {
+                        var texto =  localStorage.getItem('reporte-actividad');
+                        var lista = [];
+                        
+                        if( texto != null )
+                        {
+                            if( texto.length > 0 )
+                            {
+                                lista = JSON.parse( texto );                  
+                            }
+                        }
+                        
+                        callReporteActividadS( lista );
                     }
                     catch(err)
                     {
