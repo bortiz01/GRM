@@ -138,8 +138,8 @@
                         
                         var vaType = "GET";
                         var vaUrl = "http://portal.diapa.net:120/home/RegistarVisitas";
-                        //var vaUrl = "http://192.168.15.248:1564/home/RegistarVisitas";
-                        //var vaData = 'Vendedor=' + String(codigo) + '&Text=' + String(txtLibro);
+                        //var vaUrl = "http://localhost:1564/home/RegistarVisitas";
+                        var vaData = 'Vendedor=' + String(codigo) + '&Text=' + String(txtLibro);
                         var vaContentType = "application/json; charset=utf-8";
                         var vaDataType = "json";
                         var vaProcessData = true; 
@@ -148,7 +148,7 @@
                                    type          : vaType, //GET or POST or PUT or DELETE verb
                                    url           : vaUrl, // Location of the service
                                    cache         : false,
-                                   data          : "{ 'Vendedor': '" + codigo + "', 'Text': '" + txtLibro + "' }",
+                                   data          : vaData,
                                    contentType   : vaContentType, // content type sent to server
                                    dataType      : vaDataType, //Expected data format from server
                                    processdata   : vaProcessData, //True or False

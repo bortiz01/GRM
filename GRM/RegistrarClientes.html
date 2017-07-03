@@ -243,16 +243,17 @@
                 {    
                     try
                     {
-                        //localStorage.setItem("latitudeX", String(position.coords.latitude));
-                        //localStorage.setItem("longitudeX", String(position.coords.longitude));
-                        //localStorage.setItem("scan-client",codigoCliente);
-                        //app.navigate("libro-ruta-cliente.html", "zoom");
+                        localStorage.setItem("latitudeX", String(position.coords.latitude));
+                        localStorage.setItem("longitudeX", String(position.coords.longitude));
+                        localStorage.setItem("scan-client",codigoCliente);
+                        app.navigate("libro-ruta-cliente.html", "zoom");
  
-                        
+                        /*
                         var lat = String(position.coords.latitude);
                         var lon = String(position.coords.longitude);
                         
-                        registrarCliente(codigoCliente,lat,lon);      
+                        registrarCliente(codigoCliente,lat,lon);   
+                        */
                     }
                     catch(err)
                     {
