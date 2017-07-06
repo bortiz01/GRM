@@ -7,7 +7,7 @@
         <link href="styles/main.css" rel="stylesheet" />
 
         <script src="cordova.js"></script>
-        <script src="html2canvas.js"></script>
+        <script src="kendo/js/CriptoJS/html2canvas.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
         <script src="kendo/js/CriptoJS/js"></script>
@@ -26,11 +26,11 @@
                 	<a data-align="right" data-role="backbutton" style="background-color: black; color: white;">Volver</a>
                 </div>
             </div> 
-            
+             <script src="kendo/js/CriptoJS/html2canvas.js"></script>
             <ul id="custom-listview3"  data-template="customListViewTemplate3" data-role="listview"></ul>
             
             <script type="text/x-kendo-template" id="customListViewTemplate3">
-    			<div id="to-img-${id}">
+    			<div id="to-img-${id}" style="background-color: rgb(240,240,240);">
                     <div class="list_title">
                     	<table style="width: 100%">
                         	<tr>
@@ -330,28 +330,40 @@
                 {
                     try
                 	{
+                        var base64EncodedImg = "";
                         var element = document.getElementById("to-img-" + id);
                         
                         html2canvas(element, {
                             onrendered: function(canvas) 
                             {
-                                var myImage = canvas.toDataURL("img/png");
-                                alert( myImage );
+                               base64EncodedImg = canvas.toDataURL("img/png");
+                               //alert(base64EncodedImg);
+                                
+                                if (typeof window.plugins.socialsharing !== 'undefined')
+                                {
+                                    if( base64EncodedImg.length == 0 )
+                                    {
+                                        alert("No se puede compartir"); 
+                                    }
+                                    
+                                    setTimeout(function() 
+                                    {
+                                        window.plugins.socialsharing.shareViaWhatsApp('Avance de Venta', base64EncodedImg, null, null, null);
+                                    }, 100);
+                                    //window.plugins.socialsharing.shareViaWhatsApp('Hola amor esto es un ejemplo envia desde la app de diapa, esoty aprendiendo a comprarit info por whatsapp',null, null, null, null);
+                                    
+                                
+                                }
+                                else
+                                {
+                                    alert("Social Sharing plugin is undefined!");
+                                }
                             }
                         });
                         
-                        if (typeof window.plugins.socialsharing !== 'undefined')
-                        {
-                          // plugin is available
-                            alert("Social Sharing plugin is initialized!");
-                            window.plugins.socialsharing.shareViaWhatsApp('Hola amor esto es un ejemplo envia desde la app de diapa, esoty aprendiendo a comprarit info por whatsapp',null, null, null, null);
-                        }else
-                        {
-                            alert("Social Sharing plugin is undefined!");
-                        }
                         
-                        //window.plugins.socialsharing.shareViaTwitter('I can\'t seem to do a presentation without tweeting a selfie. Sue me!', 'data:image/jpg;base64,'+base64EncodedImg, null, null, null);
-                    }
+                       
+                    }   
                 	catch(err)
                     {
                     	alert( "Compartir. " + err.toString());

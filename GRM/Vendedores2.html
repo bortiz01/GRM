@@ -7,6 +7,7 @@
         <link href="styles/main.css" rel="stylesheet" />
 
         <script src="cordova.js"></script>
+        <script src="kendo/js/CriptoJS/html2canvas.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
         <script src="kendo/js/CriptoJS/js"></script>
@@ -27,43 +28,47 @@
             </div> 
             
             <ul id="custom-listview2"  data-template="customListViewTemplate2" data-role="listview"></ul>
-            
+            <script src="kendo/js/CriptoJS/html2canvas.js"></script>
             <script type="text/x-kendo-template" id="customListViewTemplate2">
-    			<div class="list_title">
-                	<table style="width: 100%">
-                    	<tr>
-                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
-            					${id} - ${nombre}
-            				</td>
-                            <td style="width: 70%; text-align:right;">
-                    			<a class="button" data-role="button" onclick="listClick2(${id});" style="background-color: black; color: white; font-size:.8em;">Detalle</a>        
-            				</td>
-            			</tr>
-            		</table>
-                </div>
-    			<div class="list_percentage">
-            		<div class="template_label">Avance de Venta</div>
-                    <div class="template_value">${per_venta}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Venta de hoy</div>
-                    <div class="template_value">${per_hoy}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Demanda</div>
-                    <div class="template_value">${per_demanda}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Avance de Cobro</div>
-                    <div class="template_value">${per_cobro}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Localizar</div>
-                    <div class="template_value">
-                        <a onclick="goToMapSupervisor(${id})" style="text-decoration: underline;">Ver Mapa</a>
+                <div id="to-img-${id}" style="background-color: rgb(240,240,240);">
+        			<div class="list_title">
+                    	<table style="width: 100%">
+                        	<tr>
+                            	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+                					${id} - ${nombre}
+                				</td>
+                                <td style="width: 70%; text-align:right;">
+                        			<a class="button" data-role="button" onclick="listClick2(${id},10);" style="background-color: black; color: white; font-size:.8em;">Detalle</a>        
+                				</td>
+                			</tr>
+                		</table>
                     </div>
+        			<div class="list_percentage">
+                		<div class="template_label">Avance de Venta</div>
+                        <div class="template_value">${per_venta}</div>
+                    </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Venta de hoy</div>
+                        <div class="template_value">${per_hoy}</div>
+                    </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Demanda</div>
+                        <div class="template_value">${per_demanda}</div>
+                    </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Avance de Cobro</div>
+                        <div class="template_value">${per_cobro}</div>
+                    </div>
+                
+                    <div class="list_percentage">
+                    	<div class="template_label">Compartir</div>
+                        <div class="template_value">
+                            <a onclick="compartirSupervisor(${id})" style="text-decoration: underline;">Whatsapp</a>
+                        </div>
+                    </div>
+                
+                    <br />
                 </div>
-                <br />
 			</script>
             
             <script>
@@ -160,9 +165,9 @@
                     alert("Error en conexión.");
                 }
                 
-                function listClick2(var1) 
+                function listClick2(var1,tipo) 
             	{
-                    var tipo = getType2(var1);
+                    //var tipo = getType2(var1);
                     if( tipo == 30 )
                     {
                         alert("No hay detalles que mostrar.");    
@@ -175,66 +180,6 @@
                     }  
                 }
                 
-                function getType2(code) 
-                {
-                    switch(code)
-                    {
-                        case 1000:
-                            return 40;
-                        case 100:
-                        case 200:
-                        case 300:
-                        case 400:
-                        case 500:
-                        case 600:
-                        case 700:
-                        case 800:
-                            return 10;
-                        case 110:
-                        case 120:
-                        case 130:
-                        case 140:
-                        case 150:
-                        case 160:
-                        case 210:
-                        case 220:
-                        case 230:
-                        case 240:
-                        case 250:
-                        case 260:
-                        case 270:
-                        case 280:
-                        case 310:
-                        case 320:
-                        case 330:
-                        case 340:
-                        case 350:
-                        case 410:
-                        case 420:
-                        case 430:
-                        case 440:
-                        case 450:
-                        case 460:
-                        case 470:
-                        case 480:
-                        case 490:
-                        case 490:
-                        case 492:
-                        case 510:
-                        case 520:
-                        case 610:
-                        case 620:
-                        case 710:
-                        case 720:
-                        case 730:
-                        case 740:
-                        case 810:
-                        case 820:
-                            return 20;
-                        default:
-                            return 30;
-                    }
-                }
                 function goToMapSupervisor(codigoS) 
                 {
                     try
@@ -308,6 +253,50 @@
                 {
                     alert("Error en conexión.");
                 }
+            
+                function compartirSupervisor(id)
+                {
+                    try
+                	{
+                        var base64EncodedImg = "";
+                        var element = document.getElementById("to-img-" + id);
+                        
+                        html2canvas(element, {
+                            onrendered: function(canvas) 
+                            {
+                               base64EncodedImg = canvas.toDataURL("img/png");
+                               //alert(base64EncodedImg);
+                                
+                                if (typeof window.plugins.socialsharing !== 'undefined')
+                                {
+                                    if( base64EncodedImg.length == 0 )
+                                    {
+                                        alert("No se puede compartir"); 
+                                    }
+                                    
+                                    setTimeout(function() 
+                                    {
+                                        window.plugins.socialsharing.shareViaWhatsApp('Avance de Venta', base64EncodedImg, null, null, null);
+                                    }, 100);
+                                    //window.plugins.socialsharing.shareViaWhatsApp('Hola amor esto es un ejemplo envia desde la app de diapa, esoty aprendiendo a comprarit info por whatsapp',null, null, null, null);
+                                    
+                                
+                                }
+                                else
+                                {
+                                    alert("Social Sharing plugin is undefined!");
+                                }
+                            }
+                        });
+                        
+                        
+                       
+                    }   
+                	catch(err)
+                    {
+                    	alert( "Compartir. " + err.toString());
+                    }
+                }    
             </script>
         </div>
     </body>
