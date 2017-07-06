@@ -7,6 +7,7 @@
         <link href="styles/main.css" rel="stylesheet" />
 
         <script src="cordova.js"></script>
+        <script src="html2canvas.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
         <script src="kendo/js/CriptoJS/js"></script>
@@ -29,49 +30,51 @@
             <ul id="custom-listview3"  data-template="customListViewTemplate3" data-role="listview"></ul>
             
             <script type="text/x-kendo-template" id="customListViewTemplate3">
-    			<div class="list_title">
-                	<table style="width: 100%">
-                    	<tr>
-                        	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
-            					${id} - ${nombre}
-            				</td>
-                            <td style="width: 70%; text-align:right;">
-                    			
-            				</td>
-            			</tr>
-            		</table>
-                </div>
-    			<div class="list_percentage">
-            		<div class="template_label">Avance de Venta</div>
-                    <div class="template_value">${per_venta}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Venta de hoy</div>
-                    <div class="template_value">${per_hoy}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Demanda</div>
-                    <div class="template_value">${per_demanda}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Avance de Cobro</div>
-                    <div class="template_value">${per_cobro}</div>
-                </div>
-                <div class="list_percentage">
-                	<div class="template_label">Route Manager</div>
-                    <div class="template_value">
-                        <a onclick="goToMapVendedor(${id})" style="text-decoration: underline;">Ver</a>
+    			<div id="to-img-${id}">
+                    <div class="list_title">
+                    	<table style="width: 100%">
+                        	<tr>
+                            	<td style="width: 70%; text-align:left; color: rgb(199,27,27)">
+                					${id} - ${nombre}
+                				</td>
+                                <td style="width: 70%; text-align:right;">
+                        			
+                				</td>
+                			</tr>
+                	    </table>
                     </div>
-                </div>
-                
-                <div class="list_percentage">
-                	<div class="template_label">Compartir</div>
-                    <div class="template_value">
-                        <a onclick="compartir()" style="text-decoration: underline;">Whatsapp</a>
+        			<div class="list_percentage">
+                		<div class="template_label">Avance de Venta</div>
+                        <div class="template_value">${per_venta}</div>
                     </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Venta de hoy</div>
+                        <div class="template_value">${per_hoy}</div>
+                    </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Demanda</div>
+                        <div class="template_value">${per_demanda}</div>
+                    </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Avance de Cobro</div>
+                        <div class="template_value">${per_cobro}</div>
+                    </div>
+                    <div class="list_percentage">
+                    	<div class="template_label">Route Manager</div>
+                        <div class="template_value">
+                            <a onclick="goToMapVendedor(${id})" style="text-decoration: underline;">Ver</a>
+                        </div>
+                    </div>
+                    
+                    <div class="list_percentage">
+                    	<div class="template_label">Compartir</div>
+                        <div class="template_value">
+                            <a onclick="compartir(${id})" style="text-decoration: underline;">Whatsapp</a>
+                        </div>
+                    </div>
+                    
+                    <br />
                 </div>
-                
-                <br />
 			</script>
             
             <script>
@@ -323,11 +326,20 @@
                 	return "";
                 }
                 
-                function compartir()
+                function compartir(id)
                 {
                     try
                 	{
-                        alert(  )
+                        var element = document.getElementById("to-img-" + id);
+                        
+                        html2canvas(element, {
+                            onrendered: function(canvas) 
+                            {
+                                var myImage = canvas.toDataURL("img/png");
+                                alert( myImage );
+                            }
+                        });
+                        
                         if (typeof window.plugins.socialsharing !== 'undefined')
                         {
                           // plugin is available
