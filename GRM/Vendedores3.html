@@ -63,6 +63,14 @@
                         <a onclick="goToMapVendedor(${id})" style="text-decoration: underline;">Ver</a>
                     </div>
                 </div>
+                
+                <div class="list_percentage">
+                	<div class="template_label">Compartir</div>
+                    <div class="template_value">
+                        <a onclick="compartir()" style="text-decoration: underline;">Whatsapp</a>
+                    </div>
+                </div>
+                
                 <br />
 			</script>
             
@@ -308,10 +316,33 @@
                 		var fecha = ano + '-' + mes + '-' + dia;
                 		return fecha;
                 	}
-                	catch(err){
+                	catch(err)
+                    {
                     	alert( "FechaHoraDeHoy. " + err.toString());
                     }
                 	return "";
+                }
+                
+                function compartir()
+                {
+                    try
+                	{
+                        if (typeof window.plugins.socialsharing !== 'undefined')
+                        {
+                          // plugin is available
+                            alert("Social Sharing plugin is initialized!");
+                            window.plugins.socialsharing.shareViaWhatsApp('Hola amor esto es un ejemplo envia desde la app de diapa, esoty aprendiendo a comprarit info por whatsapp',null, null, null, null);
+                        }else
+                        {
+                            alert("Social Sharing plugin is undefined!");
+                        }
+                        
+                        //window.plugins.socialsharing.shareViaTwitter('I can\'t seem to do a presentation without tweeting a selfie. Sue me!', 'data:image/jpg;base64,'+base64EncodedImg, null, null, null);
+                    }
+                	catch(err)
+                    {
+                    	alert( "Compartir. " + err.toString());
+                    }
                 }
             </script>
         </div>
