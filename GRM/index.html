@@ -145,12 +145,12 @@
                 
                 <div style="text-align:center;">
                     <a id="aBoton1" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click003()">Informe del Día</a>
-                    <a id="aBoton2" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()">Supervisar</a>
+                    <a id="aBoton2" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()"></a>
                 </div>
                 
                 <div style="text-align:center;">
                     <a id="aBoton3" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click002()">Reportes</a>
-                    <a id="aBoton4" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()">Promociones</a>
+                    <a id="aBoton4" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()"></a>
                 </div>
                 
                 <div style="text-align:center;">
@@ -177,29 +177,6 @@
                         } 
                         
                         hideLogin();
-                        
-                        var tipo = getTipo();
-                        
-                        if ( tipo == 40 || tipo == 10) 
-                        {
-                             document.getElementById("aBoton2").innerHTML = "Supervisar" 
-                             document.getElementById("aBoton4").innerHTML = "Promociones" 
-                        }
-                        else if( tipo == 20 )
-                        {
-                            document.getElementById("aBoton2").innerHTML = "Supervisar" 
-                            document.getElementById("aBoton4").innerHTML = "Route Manager" 
-                        }
-                        else if( tipo == 30 ) 
-                        {
-                             document.getElementById("aBoton2").innerHTML = "Route Manager" 
-                             document.getElementById("aBoton4").innerHTML = "Promociones" 
-                        }
-                        else
-                        {
-                             document.getElementById("aBoton2").innerHTML = "No Aplica" 	
-                             document.getElementById("aBoton4").innerHTML = "No Aplica" 
-                        }
                         
                         var buttongroup = $("#buttongroup").data("kendoMobileButtonGroup");
                         buttongroup.select(0);
@@ -418,6 +395,10 @@
                         body.style.backgroundSize = "100%";
                         //document.getElementsByClassName("km-content km-widget km-scroll-wrapper").style.backgroundImage = 
                         //    "url('/styles/images/login_back.jpg')"; 
+                        
+                        var username = localStorage.getItem("username");
+                        document.getElementById("username").value = username;
+                        document.getElementById("password").value = "";
                     }
                     catch( err )
                     {
@@ -439,6 +420,29 @@
                         body.style.backgroundImage = "url('/styles/images/background.png')";
                         body.style.backgroundPosition = "center";
                         body.style.backgroundSize = "100%";
+                        
+                        var tipo = getTipo();
+                        
+                        if ( tipo == 40 || tipo == 10) 
+                        {
+                             document.getElementById("aBoton2").innerHTML = "Supervisar" 
+                             document.getElementById("aBoton4").innerHTML = "Promociones" 
+                        }
+                        else if( tipo == 20 )
+                        {
+                            document.getElementById("aBoton2").innerHTML = "Supervisar" 
+                            document.getElementById("aBoton4").innerHTML = "Route Manager" 
+                        }
+                        else if( tipo == 30 ) 
+                        {
+                             document.getElementById("aBoton2").innerHTML = "Route Manager" 
+                             document.getElementById("aBoton4").innerHTML = "Promociones" 
+                        }
+                        else
+                        {
+                             document.getElementById("aBoton2").innerHTML = "No Aplica" 	
+                             document.getElementById("aBoton4").innerHTML = "No Aplica" 
+                        }
                         
                         //document.getElementsByClassName("km-content km-widget km-scroll-wrapper").style.backgroundImage = 
                         //    "url('/styles/images/background.png')"; 

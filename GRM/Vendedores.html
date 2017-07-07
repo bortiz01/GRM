@@ -27,7 +27,9 @@
             </div> 
             
             <ul id="custom-listview"  data-template="customListViewTemplate" data-role="listview"></ul>
+            
             <script src="kendo/js/CriptoJS/html2canvas.js"></script>
+            
             <script type="text/x-kendo-template" id="customListViewTemplate">
                 <div id="to-img-${id}" style="background-color: rgb(240,240,240);">
         			<div class="list_title">
@@ -261,6 +263,7 @@
                 {
                     try
                 	{
+                       
                         var base64EncodedImg = "";
                         var element = document.getElementById("to-img-" + id);
                         

@@ -1,6 +1,7 @@
 {
   "CorePlugins": [
     "com.phonegap.plugins.barcodescanner@2.0.0",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "nl.x-services.plugins.socialsharing@4.3.8"
   ]
 }
