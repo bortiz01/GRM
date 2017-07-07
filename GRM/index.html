@@ -21,15 +21,16 @@
         }
     </style>
 
-    <body>
+    <body class="bodyclass">
 
-        <!--Login-->
-        <div id="view-login" 
-             data-title="Login" 
+        <div id="tabstrip-home" 
+             data-title="Inicio" 
              data-role="view"
-             data-show="loginShow"
+             data-show="initHome"
              >
-            <div id="main_panel">
+            
+            <div id="main_panel" style="display:none">
+                
                 <img src="./styles/images/diapa.png" style="height:80px; width:120px;">
                 <br/>
                 <input value="" id="username"  type="text" name="username" placeholder="Nombre de usuario" />
@@ -39,8 +40,571 @@
                 <div id="contenedor_boton">
                     <a data-role="button" onclick="login()" style="background-color: black; color: white; font-size: .9em">Ingresar</a>
                 </div>
+                
             </div>
+            
+            <div id="numeros" class="indicators_container">
+            	Venta y Cobro
+                <div id="two_panel_container">
+                    <div class="porcentaje_container">
+                        <span id="vpor" class="porcentaje_label">00.0%</span>
+                    </div>
+                    <div class="porcentaje_container">
+                        <span id="cpor" class="porcentaje_label">00.0%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div  id="week_container">
+            	<ul id="buttongroup" data-role="buttongroup" data-select="onSelect">
+                	<li style="background-color: #C71B1B;">&nbsp;S01&nbsp;</li>
+                	<li style="background-color: #C71B1B;">&nbsp;S02&nbsp;</li>
+                	<li style="background-color: #C71B1B;">&nbsp;S03&nbsp;</li>
+                	<li style="background-color: #C71B1B;">&nbsp;S04&nbsp;</li>
+            	</ul>
+            </div>
+            
+            <div id="indicadores" class="indicators_container">
+                Avance de Venta 
+                <div class="deitel_container" >
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Proyectado
+                            </td>
+                            <td class="right_column">
+                                <label id="v1">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Ejecutado
+                            </td>
+                            <td class="right_column">
+                                <label id="v2">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Diferencia
+                            </td>
+                            <td class="right_column">
+                                <label id="v3">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                SKU Activos
+                            </td>
+                            <td class="right_column">
+                                <label id="v4">0.00</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                Avance de Cobro 
+                <div class="deitel_container">
+                    <table class="deitel_table">
+                        <tr>
+                            <td class="left_column">
+                                Proyectado
+                            </td>
+                            <td class="right_column">
+                                <label id="c1">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Ejecutado
+                            </td>
+                            <td class="right_column">
+                                <label id="c2">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Diferencia
+                            </td>
+                            <td class="right_column">
+                                <label id="c3">L. 0.00</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="left_column">
+                                Dias Prom. Pago
+                            </td>
+                            <td class="right_column">
+                                <label id="c4">0.00</label>
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+            </div>
+            
+            <div id="botones" style="margin:auto; width:100%; padding-top:1em;">
+                
+                <div style="text-align:center;">
+                    <a id="aBoton1" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click003()">Informe del Día</a>
+                    <a id="aBoton2" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click001()">Supervisar</a>
+                </div>
+                
+                <div style="text-align:center;">
+                    <a id="aBoton3" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click002()">Reportes</a>
+                    <a id="aBoton4" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click004()">Promociones</a>
+                </div>
+                
+                <div style="text-align:center;">
+                    <a id="aBoton5" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click005()">Cambio Contraseña</a>
+                    <a id="aBoton6" data-role="button" data-animated="true" style="display:inline-block; width:38%; font-size: .9em; background-color: rgb(117,113,113);" onClick="Click006()">Cerrar Sesión</a>
+                </div>
+                
+            </div>
+            
+            <script>
+                function initHome(e) 
+                {
+                    try
+                    {
+                        hideLogin();
+                        
+                        var codigo = getCodigo();
+                        
+                        
+                        if ( codigo == -1) 
+                        {
+                            showLogin();
+                            return;
+                        } 
+                        
+                        hideLogin();
+                        
+                        var tipo = getTipo();
+                        
+                        if ( tipo == 40 || tipo == 10) 
+                        {
+                             document.getElementById("aBoton2").innerHTML = "Supervisar" 
+                             document.getElementById("aBoton4").innerHTML = "Promociones" 
+                        }
+                        else if( tipo == 20 )
+                        {
+                            document.getElementById("aBoton2").innerHTML = "Supervisar" 
+                            document.getElementById("aBoton4").innerHTML = "Route Manager" 
+                        }
+                        else if( tipo == 30 ) 
+                        {
+                             document.getElementById("aBoton2").innerHTML = "Route Manager" 
+                             document.getElementById("aBoton4").innerHTML = "Promociones" 
+                        }
+                        else
+                        {
+                             document.getElementById("aBoton2").innerHTML = "No Aplica" 	
+                             document.getElementById("aBoton4").innerHTML = "No Aplica" 
+                        }
+                        
+                        var buttongroup = $("#buttongroup").data("kendoMobileButtonGroup");
+                        buttongroup.select(0);
+                        callWebService(1);
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+                    
+                   
+                }
+                
+                function onSelect(e) 
+                {
+                    try
+                    {
+                        var index = this.current().index();
+                        index = index + 1;
+                        callWebService(String(index)) ;
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());    
+                    }
+                }
+                
+                function callWebService(semana)
+                {
+                    try
+                    {
+                        var codigo = getCodigo();
+                        var tipo = getTipo();
+                        
+                        var vaType = "GET";
+                        var vaUrl = "http://portal.diapa.net:120/home/VentaPorSemana";
+                        var vaData = 'Codigo=' + String(codigo) + '&Tipo=' + String(tipo) + '&Semana=' + String(semana); 
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                        type          : vaType, //GET or POST or PUT or DELETE verb
+                        url           : vaUrl, // Location of the service
+                        data          : vaData, //Data sent to server
+                        contentType   : vaContentType, // content type sent to server
+                        dataType      : vaDataType, //Expected data format from server
+                        processdata   : vaProcessData, //True or False
+                        success       : function(msg) 
+                        {
+                            ServiceFind(msg);                    
+                        },
+                        error: ServiceNotFind// When Service call fails
+                        });
+                        
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(err.toString());
+                    }
+				}
+                
+                function ServiceFind(result) 
+                {
+                    try
+                    {
+                        var v1 = result.Proyectado_Venta;
+                        var v2 = result.Ejecutado_Venta;
+                        var v3 = v1 - v2;
+                        var v4 = result.sku;
+                        
+                        var c1 = result.Proyectado_Cobro;
+                        var c2 = result.Ejecutado_Cobro;
+                        var c3 = c1 - c2;
+                        var c4 = parseFloat(result.dias).toFixed(2); 
+                        
+                        var vpor = 0;
+                        if( v1 != 0 )
+                        {
+                            vpor = ( v2 / v1 ) * 100.00;
+                        }
+                        
+                        var cpor = 0;
+                        if( c1 != 0 )
+                        {
+                            cpor = ( c2 / c1 ) * 100.00;
+                        }
+                        
+                        document.getElementById("v1").innerHTML  = "L. " + String(v1.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("v2").innerHTML  = "L. " + String(v2.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("v3").innerHTML  = "L. " + String(v3.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("v4").innerHTML  = String(v4);
+                        
+                        document.getElementById("c1").innerHTML  = "L. " +String(c1.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("c2").innerHTML  = "L. " +String(c2.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("c3").innerHTML  = "L. " + String(c3.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+                        document.getElementById("c4").innerHTML  = String(c4);
+                        
+                        document.getElementById("vpor").innerHTML  = String(vpor.toFixed(2)) + "%";
+                        document.getElementById("cpor").innerHTML  = String(cpor.toFixed(2)) + "%";
+                        
+                    }
+                    catch(err)
+                    {
+                         alert(error.toString());   
+                    }
+                     
+                }
+                
+                function ServiceNotFind(result) 
+                {
+                    document.getElementById("v1").innerHTML  = "0.00";
+                    document.getElementById("v2").innerHTML  = "0.00";
+                    document.getElementById("v3").innerHTML  = "0.00";
+                    document.getElementById("v4").innerHTML  = "0.00";
+                        
+                    document.getElementById("c1").innerHTML  = "0.00";
+                    document.getElementById("c2").innerHTML  = "0.00";
+                    document.getElementById("c3").innerHTML  = "0.00";
+                    document.getElementById("c4").innerHTML  = "0.00";
+                        
+                    document.getElementById("vpor").innerHTML = "0%";
+                    document.getElementById("cpor").innerHTML = "0%";
+                }
+                
+                function Click001() 
+                {
+                    var codigo = getCodigo();
+                    var tipo = getTipo();
+                    
+                    if ( tipo == 40) 
+                    {
+                       codigoTempG = codigo;
+                       app.navigate("Vendedores.html","slide:left");   
+                    }
+                    else if( tipo == 10 ) 
+                    {
+                       codigoTempS = codigo;
+                       app.navigate("Vendedores2.html","slide:left");	
+                    }
+                    else if( tipo == 20 ) 
+                    {
+                       codigoTempV = codigo;
+                       app.navigate("Vendedores3.html","slide:left");	
+                    }
+                    else if( tipo == 30 ) 
+                    {
+                       app.navigate("Libro.html","slide:left");
+                    }
+                }
+                
+                function Click002() 
+                {
+                    app.navigate("Reportes.html","slide:right");
+                }
+                
+                function Click003() 
+                {
+                    app.navigate("Informacion.html","slide:right");
+                }
+                
+                function Click004() 
+                {
+                    var tipo = getTipo();
+                    
+                    if( tipo == 20 )
+                    {
+                        app.navigate("RegistrarClientes.html","slide:left");
+                    }
+                    else
+                    {
+                        app.navigate("promos.html","slide:left");
+                    }
+                }
+                
+                function Click005() 
+                {
+                    app.navigate("miperfil.html","slide:right");
+                }
+                
+                function Click006() 
+                {
+                    if (!confirm('¿Desea cerrar sesión?')) 
+                    {
+                        return;
+                    } 
+                    
+                    localStorage.removeItem("codigo");
+                    localStorage.removeItem("tipo");
+                    localStorage.removeItem("id");
+                    
+                    showLogin();
+                    //window.plugins.ReadSettings.exit([],empty,empty);
+                    
+                }
+                
+                function empty()
+                {
+                    
+                }
+                
+                function showLogin()
+                {
+                    try
+                    {
+                        document.getElementById("main_panel").style.display = "block"; 
+                        document.getElementById("numeros").style.display = "none";
+                        document.getElementById("week_container").style.display = "none";
+                        document.getElementById("indicadores").style.display = "none";
+                        document.getElementById("botones").style.display = "none";
+                        
+                        var body = document.getElementsByTagName('body')[0];
+                        body.style.backgroundImage = "url('/styles/images/login_back.jpg')";
+                        body.style.backgroundPosition = "center";
+                        body.style.backgroundSize = "100%";
+                        //document.getElementsByClassName("km-content km-widget km-scroll-wrapper").style.backgroundImage = 
+                        //    "url('/styles/images/login_back.jpg')"; 
+                    }
+                    catch( err )
+                    {
+                        alert(err.toString());
+                    }
+                }
+                
+                function hideLogin()
+                {
+                    try
+                    {
+                        document.getElementById("main_panel").style.display = "none"; 
+                        document.getElementById("numeros").style.display = "block";
+                        document.getElementById("week_container").style.display = "block";
+                        document.getElementById("indicadores").style.display = "block";
+                        document.getElementById("botones").style.display = "block";
+                        
+                        var body = document.getElementsByTagName('body')[0];
+                        body.style.backgroundImage = "url('/styles/images/background.png')";
+                        body.style.backgroundPosition = "center";
+                        body.style.backgroundSize = "100%";
+                        
+                        //document.getElementsByClassName("km-content km-widget km-scroll-wrapper").style.backgroundImage = 
+                        //    "url('/styles/images/background.png')"; 
+                    }
+                    catch( err )
+                    {
+                        alert(err.toString());
+                    }
+                }
+                
+                function login() 
+                {
+                    try 
+                    {
+                        /*
+                        $.ajax({
+                			url: "http://www.google.com",
+                			context: document.body,
+                			error: function(jqXHR, exception) 
+                			{
+                			    alert("No hay internet");	
+                			},
+                			success: function() 
+                			{
+                                //alert("Hay internet");
+                			}
+                		})
+                        */
+                        
+                        var username = document.getElementById("username").value;
+                        var password = document.getElementById("password").value;
+                
+                        if (username == null || username == "") 
+                        {
+                            alert("Complete el nombre de usuario."); 
+                            return;  
+                        }
+                
+                        if (password == null || password == "") 
+                        {
+                            alert("Complete la contraseña."); 
+                            return;
+                        }
+                
+                        var latitude = "NONE";
+                        var longitude = "NONE";
+                        
+                        localStorage.setItem("username", username);
+                        localStorage.setItem("password", password);
+                        
+                        if (localStorage.getItem("latitude") != undefined) 
+                        {
+                            latitude = localStorage.getItem("latitude");
+                        }
+                
+                        if (localStorage.getItem("longitude") != undefined) 
+                        {
+                            longitude = localStorage.getItem("longitude");
+                        }
+                        
+                        
+                        var text = password;   
+                        var Key = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
+                        var encryptedText = CryptoJS.AES.encrypt(text, Key, {iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                
+                        var vaType = "GET";
+                        var vaUrl = "http://portal.diapa.net:120/home/Autentificar";
+                        //vaUrl = "http://localhost:1564/home/Autentificar";
+                        var vaData = 'Email=' + String(username) + 
+                                  '&Password=' + encryptedText +
+                                  '&Latitud=' + 'NONE' +
+                                  '&Longitud=' + 'NONE' ;
+                                  //'&Latitud=' + String(latitude) +
+                                  //'&Longitud=' + String(longitude) ; 
+                        
+                        var vaContentType = "application/json; charset=utf-8";
+                        var vaDataType = "json";
+                        var vaProcessData = true; 
+                
+                        $.ajax({
+                                   type          : vaType,
+                                   url           : vaUrl,      
+                                   data          : vaData, 
+                                   contentType   : vaContentType, 
+                                   dataType      : vaDataType, 
+                                   processdata   : vaProcessData, 
+                                   success       : function(msg){ ServiceSucceeded(msg) },
+                                   error         : function(xhr, ajaxOptions, thrownError){ ServiceFailed(xhr, ajaxOptions, thrownError) }
+                               });
+                    } 
+                    catch (err) 
+                    {
+                        alert(err.toString());
+                    }
+                }
+                
+                function ServiceSucceeded(result) 
+                {
+                    try 
+                    {
+                        if (result.Codigo_Venta == null) 
+                        {
+                            localStorage.removeItem("codigo");
+                            localStorage.removeItem("tipo");
+                            localStorage.removeItem("id");
+                            alert("Sus credenciales no son validas.");
+                        } 
+                        else 
+                        {
+                            localStorage.setItem("codigo", String(result.Codigo_Venta));
+                            localStorage.setItem("tipo", String(result.Tipo));
+                            localStorage.setItem("id", String(result.id));
+                            
+                            //alert("Llego");
+                            //app.navigate("#:back");
+                            
+                            hideLogin();
+                        }
+                    } 
+                    catch (err) 
+                    {   
+                        localStorage.removeItem("codigo");
+                        localStorage.removeItem("tipo");
+                        localStorage.removeItem("id");
+                        alert("Sus credenciales no son validas.");
+                    }
+                }
+                
+                function ServiceFailed(xhr, ajaxOptions, thrownError) 
+                {
+                    alert( JSON.stringify(xhr) ); 
+                    alert( JSON.stringify(ajaxOptions) );
+                    alert( JSON.stringify(thrownError) );
+                    alert("No se pudo autentificar al usuario.");
+                }
+                
+                function encontrado(position) 
+                {
+                    localStorage.setItem("latitude", String(position.coords.latitude));
+                    localStorage.setItem("longitude", String(position.coords.longitude));
+                }
+                
+                function noencontrado(error) 
+                {
+                    localStorage.removeItem("latitude");
+                    localStorage.removeItem("longitude");
+                    alert("Error, " + error.message);
+                }
+                
+                function loginShow() 
+                {
+                    try
+                    {
+                        var username = localStorage.getItem("username");
+                        document.getElementById("username").value = username;
+                    }
+                    catch( err )
+                    {
+                        alert( err.toString() );
+                    }
+                    
+                }
+            </script>
         </div>
+        
         <script>
             app = new kendo.mobile.Application($(document.body));
             
@@ -89,11 +653,9 @@
             
             $(document).ready(function() 
             {
+                /*
                 try 
                 {
-                    
-                    navigator.geolocation.getCurrentPosition(encontrado, noencontrado, options);
-            
                     if (localStorage.getItem("username") != undefined) 
                     {
                         document.getElementById("username").value = localStorage.getItem("username");
@@ -116,255 +678,94 @@
                 {
                     alert("Error al cargar datos de memoria. " + ex.message);
                 }
+                */
             });
             
-            function login() 
-            {
-                try 
+                function getCodigo() 
                 {
-                    $.ajax({
-            			url: "http://www.google.com",
-            			context: document.body,
-            			error: function(jqXHR, exception) 
-            			{
-            			    alert("No hay internet");	
-            			},
-            			success: function() 
-            			{
-                            //alert("Hay internet");
-            			}
-            		})
-                    
-                    var username = element = document.getElementById("username").value;
-                    var password = element = document.getElementById("password").value;
-            
-                    localStorage.setItem("username", username);
-                    localStorage.setItem("password", password);
-            
-                    if (username == null || username == "") 
+                    var codigo = -1;
+                
+                    if (localStorage.getItem("codigo") != undefined) 
                     {
-                        alert("Complete el nombre de usuario."); 
-                        return;  
+                        codigo = parseInt(localStorage.getItem("codigo"));
                     }
-            
-                    if (password == null || password == "") 
+                
+                    return codigo;
+                }
+                
+                function getTipo() 
+                {
+                    var tipo = -1;
+                
+                    if (localStorage.getItem("tipo") != undefined) 
                     {
-                        alert("Complete la contraseña."); 
-                        return;
+                        tipo = parseInt(localStorage.getItem("tipo"));
                     }
-            
-                    var latitude = "NONE";
-                    var longitude = "NONE";
-                    
-                    
+                
+                    return tipo;
+                }
+                
+                function getId() 
+                {
+                    var id = -1;
+                
+                    if (localStorage.getItem("id") != undefined) 
+                    {
+                        id = parseInt(localStorage.getItem("id"));
+                    }
+                
+                    return id;
+                }
+                
+                function getLatitud() 
+                {
+                    var latitud = 0;
+                
                     if (localStorage.getItem("latitude") != undefined) 
                     {
-                        latitude = localStorage.getItem("latitude");
+                        latitud = localStorage.getItem("latitude");
                     }
-            
-                    if (localStorage.getItem("longitude") != undefined) 
+                
+                    return latitud;
+                }
+                
+                function getLongitud() 
+                {
+                    var longitud = 0;
+                
+                    if (localStorage.getItem("longitud") != undefined) 
                     {
-                        longitude = localStorage.getItem("longitude");
+                        longitud = localStorage.getItem("longitud");
                     }
-                    
-                    
-                    var text = password;   
-                    var Key = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                    var IV = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                    var encryptedText = CryptoJS.AES.encrypt(text, Key, {iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-            
-                    var vaType = "GET";
-                    var vaUrl = "http://portal.diapa.net:120/home/Autentificar";
-                    //vaUrl = "http://localhost:1564/home/Autentificar";
-                    var vaData = 'Email=' + String(username) + 
-                              '&Password=' + encryptedText +
-                              '&Latitud=' + 'NONE' +
-                              '&Longitud=' + 'NONE' ;
-                              //'&Latitud=' + String(latitude) +
-                              //'&Longitud=' + String(longitude) ; 
-                    
-                    var vaContentType = "application/json; charset=utf-8";
-                    var vaDataType = "json";
-                    var vaProcessData = true; 
-            
-                    $.ajax({
-                               type          : vaType,
-                               url           : vaUrl,      
-                               data          : vaData, 
-                               contentType   : vaContentType, 
-                               dataType      : vaDataType, 
-                               processdata   : vaProcessData, 
-                               success       : function(msg){ ServiceSucceeded(msg) },
-                               error         : function(xhr, ajaxOptions, thrownError){ ServiceFailed(xhr, ajaxOptions, thrownError) }
-                           });
-                } 
-                catch (err) 
-                {
-                    alert(err.toString());
+                
+                    return longitud;
                 }
-            }
-            
-            function ServiceSucceeded(result) 
-            {
-                try 
+                
+                function getLatitudX() 
                 {
-                    if (result.Codigo_Venta == null) 
+                    var latitud = 0;
+                
+                    if (localStorage.getItem("latitudeX") != undefined) 
                     {
-                        localStorage.removeItem("codigo");
-                        localStorage.removeItem("tipo");
-                        localStorage.removeItem("id");
-                        alert("Sus credenciales no son validas.");
-                    } 
-                    else 
+                        latitud = localStorage.getItem("latitudeX");
+                    }
+                
+                    return latitud;
+                }
+                
+                function getLongitudX() 
+                {
+                    var longitud = 0;
+                
+                    if (localStorage.getItem("longitudeX") != undefined) 
                     {
-                        localStorage.setItem("codigo", String(result.Codigo_Venta));
-                        localStorage.setItem("tipo", String(result.Tipo));
-                        localStorage.setItem("id", String(result.id));
-            
-                        app.navigate("inicio.html", "zoom");
+                        longitud = localStorage.getItem("longitudeX");
                     }
-                } 
-                catch (err) 
-                {   
-                    localStorage.removeItem("codigo");
-                    localStorage.removeItem("tipo");
-                    localStorage.removeItem("id");
-                    alert("Sus credenciales no son validas.");
+                
+                    return longitud;
                 }
-            }
-            
-            function ServiceFailed(xhr, ajaxOptions, thrownError) 
-            {
-                alert( JSON.stringify(xhr) ); 
-                alert( JSON.stringify(ajaxOptions) );
-                alert( JSON.stringify(thrownError) );
-                alert("No se pudo autentificar al usuario.");
-            }
-            
-            function encontrado(position) 
-            {
-                localStorage.setItem("latitude", String(position.coords.latitude));
-                localStorage.setItem("longitude", String(position.coords.longitude));
-            }
-            
-            function noencontrado(error) 
-            {
-                localStorage.removeItem("latitude");
-                localStorage.removeItem("longitude");
-                alert("Error, " + error.message);
-            }
-            
-            function loginShow() 
-            {
-                var codigo = getCodigo();
-            
-                if (codigo != -1) 
-                {
-                    app.navigate("inicio.html", "zoom");
-                }
-            } 
-            
-            function getCodigo() 
-            {
-                var codigo = -1;
-            
-                if (localStorage.getItem("codigo") != undefined) 
-                {
-                    codigo = parseInt(localStorage.getItem("codigo"));
-                }
-            
-                return codigo;
-            }
-            
-            function getTipo() 
-            {
-                var tipo = -1;
-            
-                if (localStorage.getItem("tipo") != undefined) 
-                {
-                    tipo = parseInt(localStorage.getItem("tipo"));
-                }
-            
-                return tipo;
-            }
-            
-            function getId() 
-            {
-                var id = -1;
-            
-                if (localStorage.getItem("id") != undefined) 
-                {
-                    id = parseInt(localStorage.getItem("id"));
-                }
-            
-                return id;
-            }
-            
-            function getLatitud() 
-            {
-                var latitud = 0;
-            
-                if (localStorage.getItem("latitude") != undefined) 
-                {
-                    latitud = localStorage.getItem("latitude");
-                }
-            
-                return latitud;
-            }
-            
-            function getLongitud() {
-                var longitud = 0;
-            
-                if (localStorage.getItem("longitud") != undefined) {
-                    longitud = localStorage.getItem("longitud");
-                }
-            
-                return longitud;
-            }
-            
-            
-            
-            
-            
-            function getLatitudX() {
-                var latitud = 0;
-            
-                if (localStorage.getItem("latitudeX") != undefined) {
-                    latitud = localStorage.getItem("latitudeX");
-                }
-            
-                return latitud;
-            }
-            
-            function getLongitudX() {
-                var longitud = 0;
-            
-                if (localStorage.getItem("longitudeX") != undefined) {
-                    longitud = localStorage.getItem("longitudeX");
-                }
-            
-                return longitud;
-            }
-            
-            function readSettingsWork(resultado) {    
-                if (resultado != null) {
-                    if (resultado == "SI") {
-                        app.navigate(next, "slide:left");    
-                    } else {
-                        alert(String(resultado));
-                    }
-                } else {
-                    alert("Error, no se pueden leer la configuración de su celular");
-                }
-            }
-            
-            function readSettingsNotWork() {
-                alert("Error, no se pueden leer la configuración de su celular");
-            }
-            
-            
         </script>
-            
+        
     </body>
 </html>
     

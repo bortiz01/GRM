@@ -185,8 +185,16 @@
                 {
                     try
                     {
+                         var tipo = -1;
+                
+                        if (localStorage.getItem("tipo") != undefined) 
+                        {
+                            tipo = parseInt(localStorage.getItem("tipo"));
+                        }
+                
+                        
                         var codigo = getCodigo();
-                        var tipo = getTipo();
+                        
                         
                         var vaType = "GET";
                         var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";

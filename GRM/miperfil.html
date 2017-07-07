@@ -81,14 +81,7 @@
                 {
                     try 
                     {
-                	    if (localStorage.getItem("password") != undefined) 
-                        {
-                            document.getElementById("password1").value  = localStorage.getItem("password");
-			            }
-		                else 
-                        {
-			                document.getElementById("password1").value  = "";
-		                }
+                	    
                     } 
                     catch (ex) 
                     {
@@ -100,6 +93,8 @@
                 {
                     try
                     {
+                        var username = localStorage.getItem("username");
+                        
                         var password1 = document.getElementById("password1").value;
                         var password2 = document.getElementById("password2").value;
                         var password3 = document.getElementById("password3").value;
@@ -139,22 +134,16 @@
                             alert("La contraseña nueva no concuerda con la confirmación");   	
                             return;	
                         }
+                        var Key = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
+                        var IV = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
                         
-                        var Key1 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                        var IV1 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                        var hash1 = CryptoJS.AES.encrypt(password1,Key1,{iv:IV1, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-                    
-                        var Key2 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                        var IV2 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                        var hash2 = CryptoJS.AES.encrypt(password2,Key2,{iv:IV2, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
-                    
-                        var Key3 = CryptoJS.enc.Utf8.parse("AAECAwQFBgcICQoLDA0ODw==");
-                        var IV3 = CryptoJS.enc.Utf8.parse("YWlFLVEZZUFNaWl=");
-                        var hash3 = CryptoJS.AES.encrypt(password3,Key3,{iv:IV3, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                        var hash1 = CryptoJS.AES.encrypt(password1,Key,{iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                        var hash2 = CryptoJS.AES.encrypt(password2,Key,{iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
+                        var hash3 = CryptoJS.AES.encrypt(password3,Key,{iv:IV, mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7});
                     
                         var vaType = "GET";
-                        //var vaUrl = "http://portal.diapa.net:120/Home/InformacionDelDia";
-                        var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
+                        var vaUrl = "http:/localhost:1564/Home/CambioContraseña";
+                        //var vaUrl = "http://portal.diapa.net:120/Home/CambioContraseña";
                         var vaData = 'username=' + String(username) + 
                                      '&actual=' + String(hash1) + 
                                      '&nueva=' + String(hash2) + 
