@@ -56,7 +56,8 @@
             					${nombre}
             				</td>
                             <td style="width: 70%; text-align:right;">
-                    		</td>
+                                
+                			</td>
             			</tr>
             		</table>
                 </div>
@@ -86,14 +87,7 @@
                         #}#
                     </div>
                 </div>
-                <div class="list_percentage">
-            		<div class="template_label">Dirección</div>
-                    <div class="template_value">
-                        <a href='http://maps.google.com/maps?saddr=14.041215,-87.190823&daddr=${lat},${lon}&directionsmode=driving'>
-                            Ver Dirección
-                        </a>
-                    </div>
-                </div>
+                
                 <br />
 			</script>
             
@@ -102,6 +96,7 @@
                 {
                     try
                     {
+                        //href='http://maps.google.com/maps?daddr=${lat},${lon}&directionsmode=driving'
                         var d = new Date();
                         var n = d.getDay();
                         

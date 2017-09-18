@@ -244,7 +244,7 @@
                                 {
                                     codigoRegistro = result.text;
                                     
-                                    var newOptions = { enableHighAccuracy: true, maximumAge:500, timeout: 5000  };
+                                    var newOptions = { enableHighAccuracy: false, maximumAge:500, timeout: 10000  };
                                     navigator.geolocation.getCurrentPosition(readWSRegVisita, readWSRegVisitaError, newOptions);
                                     
                                     //window.plugins.ReadSettings.read([], readWSRegVisita, readWSRegVisitaError);
@@ -310,11 +310,16 @@
                             var dlon = parseFloat(lon);
                             
                             var distancia = getDistanceFromLatLonInKm( olat, olon, dlat, dlon );
-                            
                             var tdistancia = distancia.toFixed(2) + " Km";
                             
-                            alert( "La distancia entre su posicion y la del cliente es: " + tdistancia );
+                            alert( "Usted se encuentra a " + tdistancia + " del cliente" );
                             
+                            if( distancia >= 0.50 )
+                            {
+                                alert( "Usted se encuentra a mas de 100 metros del cliente, favor volver a scanear el codigo del cliente" );   
+                                return;
+                            }
+                           
                             registrarVisita(codigoRegistro);
                         }
                         
