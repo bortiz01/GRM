@@ -95,7 +95,7 @@
                                    <option value="1">Diario</option>
                                    <option value="7">Semanal</option>
                                    <option value="15">Quincenal</option>
-                                   <option value="20">Mensual</option>
+                                   <option value="30">Mensual</option>
                                 </select>
                             </td>
                         </tr>
@@ -139,6 +139,28 @@
                                 value="1"
                                 id="orden" 
                                 />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="left_column">
+                                Semana Visita
+                            </td>
+                            <td class="right_column">
+                                <select style=" width: 70%; 
+                                                
+                                                background-color: #999999;
+                                                outline-style: none;
+                                                border-width: 0 0 0px;
+                                                border-radius: 2px;
+                                                padding: 1px;"     
+                                    id="semanas" 
+                                    class="input">
+                                   <option value="1">Semana 1</option>
+                                   <option value="2">Semana 2</option>
+                                   <option value="3">Semana 3</option>
+                                   <option value="4">Semana 4</option>
+                                </select>
                             </td>
                         </tr>
                     </table>
@@ -222,6 +244,9 @@
                         
                         var orden = document.getElementById("orden").value;
                         
+                        var semanas = document.getElementById("semanas");
+                        var semana  = semanas.options[semanas.selectedIndex].value;
+                        
                         var cliente = localStorage.getItem("scan-client");
                         
                         
@@ -273,6 +298,12 @@
                             return;
                         }
                         
+                        if( semana.length == 0 )
+                        {
+                            alert("Debe seleccionar una semana de visita");
+                            return;
+                        }
+                        
                         var tClientes = localStorage.getItem("clientes");
                         var clientes = [];
                         
@@ -304,6 +335,7 @@
                                     clientes[i].frecuencia = frecuencia;
                                     clientes[i].dia = dia;
                                     clientes[i].orden = orden;
+                                    clientes[i].semana = semana;
                                     clientes[i].latitud = lat;
                                     clientes[i].longitud = lon;
                 
@@ -326,6 +358,7 @@
                                 frecuencia: frecuencia,
                                 dia: dia,
                                 orden: orden,
+                                semana: semana,
                                 latitud: lat, 
                                 longitud: lon
                             }
