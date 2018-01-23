@@ -177,6 +177,7 @@
                                            clientes[i].frecuencia + "|" + 
                                            clientes[i].dia + "|" + 
                                            clientes[i].orden + "|" + 
+                                           clientes[i].semana + "|" + 
                                            clientes[i].latitud + "|" + 
                                            clientes[i].longitud + ";";
                         }
@@ -234,7 +235,12 @@
                         
                         app.pane.loader.hide();
                         localStorage.removeItem("clientes");
-                        leerClientes();   
+                        leerClientes();
+                        
+                        //Bayron - inicio de bloque
+                        var registrados = registros.length;
+                        document.getElementById("lb3").innerHTML = registrados;
+                        //Bayron - fin de bloque
                     } catch (err) 
                     {
                         alert("ServiceFindRV. " + err.toString());   
@@ -282,6 +288,7 @@
                     }
                 }
                 
+                /* Bayron - comentado bloque sin utilizar
                 function registrarCliente(codigoCliente, lat, lon) 
                 {
                     try 
@@ -313,6 +320,7 @@
                                     clientes[i].frecuencia = '0';
                                     clientes[i].dia = '0';
                                     clientes[i].orden = '0';
+                                    clientes[i].semana = '0';
                                     clientes[i].latitud = lat;
                                     clientes[i].longitud = lon;
                 
@@ -331,6 +339,7 @@
                                 frecuencia: '0',
                                 dia: '0',
                                 orden: '0',
+                                semana: '0',
                                 latitud: lat, 
                                 longitud: lon
                             }
@@ -345,7 +354,8 @@
                     {
                         alert("Error al registrar el cliente" + err.toString());
                     }
-                }
+                } 
+                Bayon */
             </script>
         </div>
     </body>
