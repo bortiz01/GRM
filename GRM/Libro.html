@@ -132,7 +132,9 @@
                                             libro[i].longitud + "|" +
                                             libro[i].fecha + "|" + 
                                             libro[i].hora + "|" + 
-                                            libro[i].pedido + ";";
+                                            //libro[i].pedido + ";"      //"del - Bayron Ortiz - 22.12.2017
+                                            libro[i].pedido + "|" +       //"add - Bayron Ortiz - 22.12.2017
+                                            libro[i].actualizar + ";"    //"add - Bayron Ortiz - 22.12.2017
                             }
                         }
                         
@@ -316,7 +318,7 @@
                             
                             if( distancia >= 0.50 )
                             {
-                                alert( "Usted se encuentra a mas de 100 metros del cliente, favor volver a scanear el codigo del cliente" );   
+                                alert( "Usted se encuentra a mas de 100 metros del cliente, favor volver a escanear el codigo del cliente" );   
                                 return;
                             }
                            
@@ -359,10 +361,14 @@
                             {
                                 if (libro[i].visitado) 
                                 {
-                                    if (!confirm('¿Desea replazar el marcaje del cliente ' + libro[i].nombre + '?')) 
+                                    if (!confirm('¿Desea reemplazar la marca del cliente ' + libro[i].nombre + '?')) 
                                     {
                                         return;
+                                    //* ==>> BEGIN >> changed by Bayron Ortiz in 25.01.2018
+                                    }else{                            //
+                                        libro[i].actualizar = true;
                                     } 
+                                    //* ==>> END >> changed by Bayron Ortiz in 25.01.2018
                                 }
                                 
                                 var lat = getLatitudX();
@@ -377,7 +383,7 @@
                                 var mensaje = "Cliente " + libro[i].nombre + " registrado con éxito. \n";
                                 mensaje += "\nFecha: " + libro[i].fecha + "\nHora: " + libro[i].hora;
                                 mensaje += "\n\n";
-                                mensaje += "En caso de que haya tomado pedido ingrese el número:";
+                                mensaje += "En caso de que haya tomado pedido, ingrese el número:";
                                 var pedido = prompt(mensaje, "");
                                 
                                 if (pedido == null) {
